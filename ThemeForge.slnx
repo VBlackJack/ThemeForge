@@ -4,4 +4,7 @@
     <Project Path="src/ThemeForge.Controls/ThemeForge.Controls.csproj" />
     <Project Path="src/ThemeForge.Studio/ThemeForge.Studio.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ThemeForge.Theme.Tests/ThemeForge.Theme.Tests.csproj" />
+  </Folder>
 </Solution>

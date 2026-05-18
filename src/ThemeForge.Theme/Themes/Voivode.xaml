@@ -17,7 +17,7 @@
     <sys:String x:Key="ThemeDisplayName">Voivode</sys:String>
     <sys:String x:Key="ThemeFamily">Dark</sys:String>
 
-    <!-- Canonical Dracula slot colors -->
+    <!-- Canonical slot colors -->
     <Color x:Key="BackgroundColor">#FF211F28</Color>
     <Color x:Key="CurrentLineColor">#FF322F3D</Color>
     <Color x:Key="SelectionColor">#FF3E3A4B</Color>

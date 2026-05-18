@@ -17,7 +17,7 @@
     <sys:String x:Key="ThemeDisplayName">Wormwood</sys:String>
     <sys:String x:Key="ThemeFamily">Alt</sys:String>
 
-    <!-- Canonical Dracula slot colors -->
+    <!-- Canonical slot colors -->
     <Color x:Key="BackgroundColor">#FF1F2824</Color>
     <Color x:Key="CurrentLineColor">#FF2F3D36</Color>
     <Color x:Key="SelectionColor">#FF3A4B42</Color>

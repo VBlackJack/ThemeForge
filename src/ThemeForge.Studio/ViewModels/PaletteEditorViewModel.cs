@@ -52,7 +52,7 @@ public sealed partial class PaletteEditorViewModel : ObservableObject
         themeService.ThemeChanged += (_, _) => ReloadFromTheme();
     }
 
-    /// <summary>The 12 canonical Dracula slots (Background/Cyan/Purple...).</summary>
+    /// <summary>The 12 canonical palette slots (Background/Cyan/Purple...).</summary>
     public ObservableCollection<SlotViewModel> CanonicalSlots { get; }
 
     /// <summary>The 12 semantic tokens (Surface/Accent/TextPrimary/Success...).</summary>

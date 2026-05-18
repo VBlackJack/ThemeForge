@@ -17,7 +17,7 @@
     <sys:String x:Key="ThemeDisplayName">Bracken</sys:String>
     <sys:String x:Key="ThemeFamily">Dark</sys:String>
 
-    <!-- Canonical Dracula slot colors -->
+    <!-- Canonical slot colors -->
     <Color x:Key="BackgroundColor">#FF21281F</Color>
     <Color x:Key="CurrentLineColor">#FF313D2F</Color>
     <Color x:Key="SelectionColor">#FF3D4B3A</Color>

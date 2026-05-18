@@ -17,7 +17,7 @@
     <sys:String x:Key="ThemeDisplayName">Folio</sys:String>
     <sys:String x:Key="ThemeFamily">Light</sys:String>
 
-    <!-- Canonical Dracula slot colors -->
+    <!-- Canonical slot colors -->
     <Color x:Key="BackgroundColor">#FFF1F2F4</Color>
     <Color x:Key="CurrentLineColor">#FFDCDFE4</Color>
     <Color x:Key="SelectionColor">#FFCBCFD7</Color>

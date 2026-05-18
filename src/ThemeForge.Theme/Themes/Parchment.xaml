@@ -17,7 +17,7 @@
     <sys:String x:Key="ThemeDisplayName">Parchment</sys:String>
     <sys:String x:Key="ThemeFamily">Light</sys:String>
 
-    <!-- Canonical Dracula slot colors -->
+    <!-- Canonical slot colors -->
     <Color x:Key="BackgroundColor">#FFF4F3F1</Color>
     <Color x:Key="CurrentLineColor">#FFE4E2DC</Color>
     <Color x:Key="SelectionColor">#FFD7D3CB</Color>

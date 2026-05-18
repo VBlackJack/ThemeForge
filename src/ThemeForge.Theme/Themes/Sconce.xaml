@@ -17,7 +17,7 @@
     <sys:String x:Key="ThemeDisplayName">Sconce</sys:String>
     <sys:String x:Key="ThemeFamily">Alt</sys:String>
 
-    <!-- Canonical Dracula slot colors -->
+    <!-- Canonical slot colors -->
     <Color x:Key="BackgroundColor">#FF28231F</Color>
     <Color x:Key="CurrentLineColor">#FF3D342F</Color>
     <Color x:Key="SelectionColor">#FF4B413A</Color>

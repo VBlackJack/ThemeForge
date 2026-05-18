@@ -17,7 +17,7 @@
     <sys:String x:Key="ThemeDisplayName">Mortis</sys:String>
     <sys:String x:Key="ThemeFamily">Dark</sys:String>
 
-    <!-- Canonical Dracula slot colors -->
+    <!-- Canonical slot colors -->
     <Color x:Key="BackgroundColor">#FF1F2528</Color>
     <Color x:Key="CurrentLineColor">#FF2F383D</Color>
     <Color x:Key="SelectionColor">#FF3A454B</Color>

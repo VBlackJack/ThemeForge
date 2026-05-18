@@ -17,7 +17,7 @@
     <sys:String x:Key="ThemeDisplayName">Tarn</sys:String>
     <sys:String x:Key="ThemeFamily">Dark</sys:String>
 
-    <!-- Canonical Dracula slot colors -->
+    <!-- Canonical slot colors -->
     <Color x:Key="BackgroundColor">#FF1F2827</Color>
     <Color x:Key="CurrentLineColor">#FF2F3D3A</Color>
     <Color x:Key="SelectionColor">#FF3A4B48</Color>

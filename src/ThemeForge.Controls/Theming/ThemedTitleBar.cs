@@ -21,7 +21,7 @@ namespace ThemeForge.Controls.Theming;
 /// <summary>
 /// Attached property that switches the Win32 title bar of a WPF
 /// <see cref="Window"/> into the OS immersive dark mode, so the chrome
-/// painted by DWM matches a dark Dracula theme.
+/// painted by DWM matches a dark theme.
 /// </summary>
 /// <remarks>
 /// Usage in XAML:

@@ -6,11 +6,11 @@
 
     <StackPanel>
 
-        <TextBlock Text="Slots Dracula canoniques"
+        <TextBlock Text="Slots canoniques"
                    FontSize="18"
                    FontWeight="SemiBold"
                    Foreground="{DynamicResource TextPrimaryBrush}"/>
-        <TextBlock Text="Les 12 slots de base de la palette Dracula."
+        <TextBlock Text="Les 12 slots de base de la palette."
                    Foreground="{DynamicResource TextSecondaryBrush}"
                    Margin="0,4,0,16"/>
 

@@ -149,5 +149,17 @@
             <dfc:Avatar Initials="?"  Size="40" Margin="0,0,12,0"/>
         </StackPanel>
 
+        <!-- SearchBox examples -->
+        <TextBlock Text="SearchBox" FontWeight="SemiBold" Margin="0,16,0,8"
+                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+
+        <TextBlock Text="States" Margin="0,0,0,4"
+                   Foreground="{DynamicResource TextSecondaryBrush}"/>
+        <StackPanel Orientation="Vertical" Margin="0,0,0,20">
+            <dfc:SearchBox PlaceholderText="Search composites..." Width="320" HorizontalAlignment="Left" Margin="0,0,0,8"/>
+            <dfc:SearchBox PlaceholderText="With pre-filled text" Text="dracula" Width="320" HorizontalAlignment="Left" Margin="0,0,0,8"/>
+            <dfc:SearchBox PlaceholderText="Not clearable" IsClearable="False" Width="320" HorizontalAlignment="Left" Margin="0,0,0,8"/>
+        </StackPanel>
+
     </StackPanel>
 </UserControl>

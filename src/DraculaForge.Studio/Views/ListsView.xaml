@@ -1,0 +1,70 @@
+<UserControl
+    x:Class="DraculaForge.Studio.Views.ListsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Background="Transparent">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Listes et grilles" FontSize="18" FontWeight="SemiBold"
+                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+        <TextBlock Grid.Row="1" Text="ListBox, ListView, DataGrid, TreeView."
+                   Foreground="{DynamicResource TextSecondaryBrush}"
+                   Margin="0,4,0,16"/>
+
+        <UniformGrid Grid.Row="2" Columns="2">
+
+            <StackPanel Margin="0,0,8,0">
+                <TextBlock Text="ListBox" FontWeight="SemiBold" Margin="0,0,0,8"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <ListBox Height="140" Margin="0,0,0,16">
+                    <ListBoxItem Content="Alpha"/>
+                    <ListBoxItem Content="Bravo"/>
+                    <ListBoxItem Content="Charlie" IsSelected="True"/>
+                    <ListBoxItem Content="Delta"/>
+                    <ListBoxItem Content="Echo"/>
+                </ListBox>
+
+                <TextBlock Text="TreeView" FontWeight="SemiBold" Margin="0,0,0,8"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <TreeView Height="140">
+                    <TreeViewItem Header="Themes" IsExpanded="True">
+                        <TreeViewItem Header="Dark"/>
+                        <TreeViewItem Header="Light"/>
+                        <TreeViewItem Header="Alt"/>
+                    </TreeViewItem>
+                    <TreeViewItem Header="Tokens"/>
+                </TreeView>
+            </StackPanel>
+
+            <StackPanel Margin="8,0,0,0">
+                <TextBlock Text="ListView" FontWeight="SemiBold" Margin="0,0,0,8"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <ListView Height="140" Margin="0,0,0,16">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Nom"   Width="120" DisplayMemberBinding="{Binding Name}"/>
+                            <GridViewColumn Header="Famille" Width="100" DisplayMemberBinding="{Binding Family}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+                <TextBlock Text="DataGrid" FontWeight="SemiBold" Margin="0,0,0,8"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <DataGrid Height="140" AutoGenerateColumns="False" CanUserAddRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID"     Width="50"/>
+                        <DataGridTextColumn Header="Nom"    Width="120"/>
+                        <DataGridTextColumn Header="Statut" Width="80"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+
+        </UniformGrid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,125 @@
+DraculaForge
+Copyright 2026 Julien Bombled
+
+This product includes software developed by Julien Bombled and licensed
+under the Apache License, Version 2.0 (see LICENSE).
+
+================================================================================
+Color palettes / theme variants — attribution (v3, post cross-review)
+================================================================================
+
+The framework ships 16 theme variants. The first reproduces the canonical
+Dracula Theme palette by Zeno Rocha (MIT) and is kept as the framework's
+historical root. Drakul is an AA-compliant sibling of Dracula. The other 14
+are original works by Julien Bombled, released under Apache 2.0, engineered
+with the "Geometric Color Palette" / uniform-Oklab-L* philosophy and
+cross-reviewed by four independent audit passes (an independent reviewer, an independent reviewer, an independent reviewer).
+
+--------------------------------------------------------------------------------
+1. Dracula Theme — MIT (Zeno Rocha)
+--------------------------------------------------------------------------------
+
+  - Dracula        Dracula Theme    (MIT)
+                   https://github.com/dracula/dracula-theme
+
+  Note : the canonical Dracula palette has a historical accessibility
+  shortcoming — Comment color #6272A4 ratios to 3.03 vs Background and 1.94
+  vs CurrentLine, both below WCAG 2.1 AA 4.5:1 threshold. We preserve the
+  variant unchanged for canonical fidelity. See variant Drakul (below) for
+  the AA-compliant sibling.
+
+  - Drakul         Apache 2.0 — Julien Bombled
+                   Derivative of the canonical Dracula Theme palette with
+                   Comment slot lifted from #6272A4 to #B3BBD6 to clear
+                   WCAG AA (Comment/CL = 4.79, Comment/Bg = 7.46). Every
+                   other slot byte-identical to Dracula. Named after Vlad II
+                   Dracul (~1395-1447), member of the Societas Draconistarum
+                   (Order of the Dragon, 1408), historical father of Vlad III
+                   Țepeș from whom Stoker derived "Dracula". Public domain.
+
+--------------------------------------------------------------------------------
+2. Original DraculaForge palettes — Apache 2.0 (Julien Bombled)
+--------------------------------------------------------------------------------
+
+Fourteen palettes engineered with honest HSL targets (computed from declared
+parameters, not reverse-engineered from hand-picked hexes) :
+
+  * All 10 Dark variants share an identical 7-accent band at HSL
+    L 0.68 / S 0.65, with hues fixed at Cyan 186°, Green 135°, Orange 27°,
+    Pink 333°, Purple 282°, Red 0°, Yellow 60°. Only the Background hue
+    rotates between variants — the 7 accent hex values are byte-identical
+    across the 10 Darks.
+
+  * The 2 Light variants share an accent band at L 0.32 / S 0.78. Darker
+    and more saturated than the Dark band so accents remain legible on the
+    high-luminance L 0.95 backgrounds (clears WCAG AA on every accent).
+
+  * The 2 Alt variants reuse the Dark band but break exactly one accent
+    for their signature. The break holds same L 0.68 as the base band but
+    elevates S to 0.82 — equal luminance keeps the signature visually paired
+    with the rest of the band, chroma alone sets it apart. This is a design
+    choice over the visually noisier L-bump approach.
+
+  Dark family (Background hue / character)
+  - Striga          H  12°   Romanian night-witch, warm umber
+  - Cinder           H  50°   mourning hearth, warm amber
+  - Bracken             H 110°   graveyard yew, bottle-green
+  - Tarn            H 160°   highland tarn, petrol-teal
+  - Mortis          H 200°   slate-cyan morgue
+  - Slate           H 220°   cold monastery stone, slate-blue
+  - Voivode         H 250°   Wallachian throne, deep indigo
+  - Carmilla        H 285°   velvet violet, Styrian countess (Le Fanu 1872)
+  - Whitby          H 315°   North Sea slate-mauve, where Dracula came ashore
+  - Vesper          H 340°   evening prayer in a ruined chapel
+
+  Light family
+  - Parchment       H  40°   warm vellum cream, scholarly hush
+  - Folio          H 220°   cool ivory, stained-glass morning
+
+  Alt family
+  - Wormwood        Green broken to viridian (H 158°) — Green Fairy / absinthe
+  - Sconce          Orange broken to amber (H 38°)   — Victorian sconce
+
+All names are drawn from public domain sources : folklore (Striga, Bracken, Tarn,
+Mortis), architecture (Sconce, Folio, Parchment), atmosphere (Cinder, Vesper,
+Slate), historical figures (Voivode = Romanian "warlord", Vlad III's title),
+literature (Carmilla 1872, Whitby = Stoker 1897 setting), and herbal/biblical
+references (Wormwood = Revelation 8:11 + Lewis's Screwtape Letters).
+
+The "Dracula" name and Dracula PRO product are trademarks of Zeno Rocha. No
+commercial Dracula PRO scheme name (Pro, Alucard, Blade, Buffy, Lincoln,
+Morbius, Van Helsing) appears in this set.
+
+================================================================================
+Cross-review history
+================================================================================
+
+The v3 palette set is the result of a independent audit performed on
+2026-05-18 :
+
+  - an independent reviewer     — see NOTICE
+  - an independent reviewer          — see NOTICE
+  - an independent reviewer         — see NOTICE
+  - Synthesis           — see NOTICE
+
+Major changes vs v2 :
+  - Honest HSL claims (v2 claimed L 0.74 / S 0.66 ; actual was L 0.68 / S 0.65)
+  - Light accent band darkened to clear WCAG AA on bright surfaces
+  - Comment colors lifted ~6 L points to clear AA on Bg AND CurrentLine
+  - 4 Dark variants retired (Belfry, Sepulcher, Stygian, Nosferatu) to
+    eliminate Background hue clumps
+  - 3 Dark variants added (Cinder, Bracken, Tarn) to fill the 30°-180° wheel gap
+  - 4 renames : Drakula→Voivode (intra-set collision), Mireille→Mortis
+    (tonal mismatch), Lucent→Folio (Lucent Technologies brand collision),
+    Gaslight→Sconce (gaslighting connotation)
+  - Drakula→Voivode Bg darkened from L 0.24 to L 0.14 (fixes accent AA failures)
+
+================================================================================
+Architectural inspiration
+================================================================================
+
+The theming engine architecture (IThemeService + ThemeRevision pattern,
+ResourceDictionary swap, design tokens, semantic brush layering) is inspired
+by the internal theming of Heimdall.Next (https://github.com/jbombled/Heimdall.Next),
+authored by the same person. No source code from Heimdall.Next is copied
+into this repository ; only the pattern is reused.

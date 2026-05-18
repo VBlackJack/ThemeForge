@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/DraculaForge.Theme/DraculaForge.Theme.csproj" />
+    <Project Path="src/DraculaForge.Controls/DraculaForge.Controls.csproj" />
+    <Project Path="src/DraculaForge.Studio/DraculaForge.Studio.csproj" />
+  </Folder>
+</Solution>

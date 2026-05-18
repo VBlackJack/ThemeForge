@@ -1,0 +1,45 @@
+<!--
+  Copyright 2026 Julien Bombled
+  Licensed under the Apache License, Version 2.0
+
+  Aggregate ResourceDictionary that merges every Palier A control style into
+  one entry point. Consumers merge this single dictionary in their
+  Application.Resources to opt into the full DraculaForge.Controls visual.
+
+  Adding a new style:
+    1. Author Styles/<Control>Style.xaml.
+    2. Append the merge entry below — keep the order stable so dependent
+       resources (like DraculaComboBoxToggleButton) resolve correctly.
+-->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <!-- Foundational : scrollbars used by lists, datagrids, scrollviewers -->
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Styles/ScrollBarStyle.xaml"/>
+
+        <!-- Palier A : buttons, text, combo -->
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Styles/ButtonStyle.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Styles/ToggleButtonStyle.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Styles/TextBoxStyle.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Styles/ComboBoxStyle.xaml"/>
+
+        <!-- Palier B1 : selectors, range, progress -->
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Styles/CheckBoxStyle.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Styles/RadioButtonStyle.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Styles/SliderStyle.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Styles/ProgressBarStyle.xaml"/>
+
+        <!-- Palier B2 : lists -->
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Styles/ListBoxStyle.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Styles/ListViewStyle.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Styles/TreeViewStyle.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Styles/DataGridStyle.xaml"/>
+
+        <!-- Palier B3 : containers -->
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Styles/TabControlStyle.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Styles/GroupBoxStyle.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Styles/ExpanderStyle.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Styles/StatusBarStyle.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

@@ -1,0 +1,73 @@
+<!--
+  Copyright 2026 Julien Bombled
+  Licensed under the Apache License, Version 2.0 (framework code + palette).
+
+  Variant: Parchment  |  Family: Light  |  Bg Hue: 40°
+  Tagline: Aged vellum — warm cream paper, ink-dark accents, scholarly hush.
+
+  Engineered with uniform-Oklab-L* bands (v5) — perceptually uniform
+  accent luminance so Yellow stays yellow, Purple stays purple, all
+  accents clear WCAG AA on their Bg / CurrentLine. Comments stay on
+  uniform-WCAG-L (target 0.38) to clear AA on all 10 Darks.
+  See NOTICE and NOTICE
+-->
+
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+    <sys:String x:Key="ThemeDisplayName">Parchment</sys:String>
+    <sys:String x:Key="ThemeFamily">Light</sys:String>
+
+    <!-- Canonical Dracula slot colors -->
+    <Color x:Key="BackgroundColor">#FFF4F3F1</Color>
+    <Color x:Key="CurrentLineColor">#FFE4E2DC</Color>
+    <Color x:Key="SelectionColor">#FFD7D3CB</Color>
+    <Color x:Key="ForegroundColor">#FF1C1A17</Color>
+    <Color x:Key="CommentColor">#FF625842</Color>
+    <Color x:Key="CyanColor">#FF0F707B</Color>
+    <Color x:Key="GreenColor">#FF0F7829</Color>
+    <Color x:Key="OrangeColor">#FF954D12</Color>
+    <Color x:Key="PinkColor">#FFB1165C</Color>
+    <Color x:Key="PurpleColor">#FF8E18C1</Color>
+    <Color x:Key="RedColor">#FFB81717</Color>
+    <Color x:Key="YellowColor">#FF68680D</Color>
+
+    <!-- Semantic surface / text tokens -->
+    <Color x:Key="SurfaceColor">#FFF4F3F1</Color>
+    <Color x:Key="SurfaceAltColor">#FFE4E2DC</Color>
+    <Color x:Key="AccentColor">#FF8E18C1</Color>
+    <Color x:Key="AccentHoverColor">#FFA546CD</Color>
+    <Color x:Key="AccentPressedColor">#FF6A1291</Color>
+    <Color x:Key="TextPrimaryColor">#FF1C1A17</Color>
+    <Color x:Key="TextSecondaryColor">#FF625842</Color>
+    <Color x:Key="BorderColor">#FFE4E2DC</Color>
+    <Color x:Key="SuccessColor">#FF0F7829</Color>
+    <Color x:Key="WarningColor">#FF954D12</Color>
+    <Color x:Key="ErrorColor">#FFB81717</Color>
+    <Color x:Key="InfoColor">#FF0F707B</Color>
+
+    <SolidColorBrush x:Key="BackgroundBrush"          Color="{StaticResource BackgroundColor}"/>
+    <SolidColorBrush x:Key="CurrentLineBrush"         Color="{StaticResource CurrentLineColor}"/>
+    <SolidColorBrush x:Key="SelectionBrush"           Color="{StaticResource SelectionColor}"/>
+    <SolidColorBrush x:Key="ForegroundBrush"          Color="{StaticResource ForegroundColor}"/>
+    <SolidColorBrush x:Key="CommentBrush"             Color="{StaticResource CommentColor}"/>
+    <SolidColorBrush x:Key="CyanBrush"                Color="{StaticResource CyanColor}"/>
+    <SolidColorBrush x:Key="GreenBrush"               Color="{StaticResource GreenColor}"/>
+    <SolidColorBrush x:Key="OrangeBrush"              Color="{StaticResource OrangeColor}"/>
+    <SolidColorBrush x:Key="PinkBrush"                Color="{StaticResource PinkColor}"/>
+    <SolidColorBrush x:Key="PurpleBrush"              Color="{StaticResource PurpleColor}"/>
+    <SolidColorBrush x:Key="RedBrush"                 Color="{StaticResource RedColor}"/>
+    <SolidColorBrush x:Key="YellowBrush"              Color="{StaticResource YellowColor}"/>
+    <SolidColorBrush x:Key="SurfaceBrush"             Color="{StaticResource SurfaceColor}"/>
+    <SolidColorBrush x:Key="SurfaceAltBrush"          Color="{StaticResource SurfaceAltColor}"/>
+    <SolidColorBrush x:Key="AccentBrush"              Color="{StaticResource AccentColor}"/>
+    <SolidColorBrush x:Key="AccentHoverBrush"         Color="{StaticResource AccentHoverColor}"/>
+    <SolidColorBrush x:Key="AccentPressedBrush"       Color="{StaticResource AccentPressedColor}"/>
+    <SolidColorBrush x:Key="TextPrimaryBrush"         Color="{StaticResource TextPrimaryColor}"/>
+    <SolidColorBrush x:Key="TextSecondaryBrush"       Color="{StaticResource TextSecondaryColor}"/>
+    <SolidColorBrush x:Key="BorderBrush"              Color="{StaticResource BorderColor}"/>
+    <SolidColorBrush x:Key="SuccessBrush"             Color="{StaticResource SuccessColor}"/>
+    <SolidColorBrush x:Key="WarningBrush"             Color="{StaticResource WarningColor}"/>
+    <SolidColorBrush x:Key="ErrorBrush"               Color="{StaticResource ErrorColor}"/>
+    <SolidColorBrush x:Key="InfoBrush"                Color="{StaticResource InfoColor}"/>
+
+</ResourceDictionary>

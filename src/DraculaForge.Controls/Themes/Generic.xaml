@@ -1,0 +1,19 @@
+<!--
+  Copyright 2026 Julien Bombled
+  Licensed under the Apache License, Version 2.0
+
+  WPF convention: Themes/Generic.xaml is auto-loaded by the framework when
+  a custom Control needs its default style (via DefaultStyleKey). We merge
+  one style file per composite from here.
+-->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Themes/Card.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Themes/IconButton.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Themes/Badge.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Themes/Chip.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/DraculaForge.Controls;component/Themes/ToggleSwitch.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>

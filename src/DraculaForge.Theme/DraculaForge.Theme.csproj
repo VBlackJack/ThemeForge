@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>DraculaForge.Theme</RootNamespace>
+    <AssemblyName>DraculaForge.Theme</AssemblyName>
+    <PackageId>DraculaForge.Theme</PackageId>
+    <Description>Reusable Dracula theming engine for .NET 10 WPF applications. Provides IThemeService, ThemeRevision pattern, and 15 Dracula ResourceDictionary variants.</Description>
+    <PackageTags>wpf;theme;dracula;dark-mode;light-mode;resource-dictionary</PackageTags>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <IncludeBuildOutput>true</IncludeBuildOutput>
+  </PropertyGroup>
+
+</Project>

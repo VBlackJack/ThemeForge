@@ -15,5 +15,6 @@
         <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Themes/Badge.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Themes/Chip.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Themes/ToggleSwitch.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Themes/Avatar.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

@@ -135,5 +135,19 @@
             <dfc:ToggleSwitch Content="Disabled (on)"    IsChecked="True"   IsEnabled="False" Margin="0,0,0,6"/>
         </StackPanel>
 
+        <!-- Avatar examples -->
+        <TextBlock Text="Avatar" FontWeight="SemiBold" Margin="0,16,0,8"
+                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+
+        <TextBlock Text="Initials, multiple sizes" Margin="0,0,0,4"
+                   Foreground="{DynamicResource TextSecondaryBrush}"/>
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,20" VerticalAlignment="Center">
+            <dfc:Avatar Initials="JB" Size="32" Margin="0,0,12,0"/>
+            <dfc:Avatar Initials="JB" Size="40" Margin="0,0,12,0"/>
+            <dfc:Avatar Initials="JB" Size="56" Margin="0,0,12,0"/>
+            <dfc:Avatar Initials="AB" Size="40" Margin="0,0,12,0"/>
+            <dfc:Avatar Initials="?"  Size="40" Margin="0,0,12,0"/>
+        </StackPanel>
+
     </StackPanel>
 </UserControl>

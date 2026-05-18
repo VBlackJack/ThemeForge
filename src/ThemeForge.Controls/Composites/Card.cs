@@ -66,4 +66,8 @@ public sealed class Card : HeaderedContentControl
         get => (DataTemplate?)GetValue(FooterTemplateProperty);
         set => SetValue(FooterTemplateProperty, value);
     }
+
+    /// <inheritdoc />
+    protected override System.Windows.Automation.Peers.AutomationPeer OnCreateAutomationPeer()
+        => new CardAutomationPeer(this);
 }

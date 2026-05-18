@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>ThemeForge.Controls</RootNamespace>
+    <AssemblyName>ThemeForge.Controls</AssemblyName>
+    <PackageId>ThemeForge.Controls</PackageId>
+    <Description>Themed WPF control styles and composite controls (Card, IconButton, ToggleSwitch...) wired to the ThemeForge.Theme engine.</Description>
+    <PackageTags>wpf;controls;dracula;theme;styles</PackageTags>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ThemeForge.Theme\ThemeForge.Theme.csproj" />
+  </ItemGroup>
+
+</Project>

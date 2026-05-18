@@ -1,4 +1,4 @@
-# DraculaForge
+# ThemeForge
 
 Framework de thématisation Dracula pour applications **.NET 10 WPF**.
 
@@ -12,7 +12,7 @@ Chaque nouveau projet WPF redémarre de zéro côté style : couleurs hardcodée
 mécanique de bascule de thème, et trois mois plus tard chaque app a son propre
 dialecte visuel.
 
-DraculaForge fournit un moteur de theming réutilisable, 15 variantes Dracula
+ThemeForge fournit un moteur de theming réutilisable, 15 variantes Dracula
 prêtes à l'emploi, et une app **Studio** pour les prévisualiser et les ajuster
 en direct avant de les exporter dans ton projet cible.
 
@@ -20,9 +20,9 @@ en direct avant de les exporter dans ton projet cible.
 
 | Projet | Rôle |
 |---|---|
-| `DraculaForge.Theme` | Moteur de theming (`IThemeService`, `ThemeRevision`), 15 ResourceDictionaries Dracula, design tokens partagés |
-| `DraculaForge.Controls` | Styles WPF pour les contrôles standard + composites (`Card`, `IconButton`, `ToggleSwitch`) |
-| `DraculaForge.Studio` | App WPF de démonstration et d'édition live des thèmes |
+| `ThemeForge.Theme` | Moteur de theming (`IThemeService`, `ThemeRevision`), 15 ResourceDictionaries Dracula, design tokens partagés |
+| `ThemeForge.Controls` | Styles WPF pour les contrôles standard + composites (`Card`, `IconButton`, `ToggleSwitch`) |
+| `ThemeForge.Studio` | App WPF de démonstration et d'édition live des thèmes |
 
 ## Variantes incluses
 
@@ -99,7 +99,7 @@ sur fond désaturé) sans dépendance juridique avec le produit commercial.
 <Application.Resources>
   <ResourceDictionary>
     <ResourceDictionary.MergedDictionaries>
-      <ResourceDictionary Source="pack://application:,,,/DraculaForge.Theme;component/Themes/Dracula.xaml" />
+      <ResourceDictionary Source="pack://application:,,,/ThemeForge.Theme;component/Themes/Dracula.xaml" />
     </ResourceDictionary.MergedDictionaries>
   </ResourceDictionary>
 </Application.Resources>

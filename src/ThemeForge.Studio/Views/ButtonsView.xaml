@@ -1,0 +1,49 @@
+<UserControl
+    x:Class="ThemeForge.Studio.Views.ButtonsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Background="Transparent">
+
+    <StackPanel>
+
+        <TextBlock Text="Boutons" FontSize="18" FontWeight="SemiBold"
+                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+        <TextBlock Text="Contrôles WPF natifs — pas encore stylés par ThemeForge.Controls."
+                   Foreground="{DynamicResource TextSecondaryBrush}"
+                   Margin="0,4,0,16"/>
+
+        <TextBlock Text="Button" FontWeight="SemiBold" Margin="0,0,0,8"
+                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+        <WrapPanel Margin="0,0,0,20">
+            <Button Content="Default" Margin="0,0,8,8" Padding="14,6"/>
+            <Button Content="Disabled" Margin="0,0,8,8" Padding="14,6" IsEnabled="False"/>
+            <Button Content="Long label here" Margin="0,0,8,8" Padding="14,6"/>
+            <Button Content="OK" Margin="0,0,8,8" Padding="14,6" IsDefault="True"/>
+            <Button Content="Cancel" Margin="0,0,8,8" Padding="14,6" IsCancel="True"/>
+        </WrapPanel>
+
+        <TextBlock Text="ToggleButton" FontWeight="SemiBold" Margin="0,0,0,8"
+                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+        <WrapPanel Margin="0,0,0,20">
+            <ToggleButton Content="Off" Margin="0,0,8,8" Padding="14,6"/>
+            <ToggleButton Content="On" Margin="0,0,8,8" Padding="14,6" IsChecked="True"/>
+            <ToggleButton Content="Indeterminate" Margin="0,0,8,8" Padding="14,6"
+                          IsThreeState="True" IsChecked="{x:Null}"/>
+        </WrapPanel>
+
+        <TextBlock Text="RepeatButton" FontWeight="SemiBold" Margin="0,0,0,8"
+                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+        <WrapPanel Margin="0,0,0,20">
+            <RepeatButton Content="+" Width="32" Margin="0,0,4,8" Padding="0,4"/>
+            <RepeatButton Content="−" Width="32" Margin="0,0,4,8" Padding="0,4"/>
+        </WrapPanel>
+
+        <TextBlock Text="Hyperlink" FontWeight="SemiBold" Margin="0,0,0,8"
+                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+        <TextBlock Foreground="{DynamicResource TextPrimaryBrush}">
+            Liens : <Hyperlink Foreground="{DynamicResource AccentBrush}">draculatheme.com</Hyperlink>
+            ·       <Hyperlink Foreground="{DynamicResource AccentBrush}">documentation</Hyperlink>
+        </TextBlock>
+
+    </StackPanel>
+</UserControl>

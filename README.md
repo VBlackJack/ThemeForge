@@ -12,102 +12,143 @@ Chaque nouveau projet WPF redémarre de zéro côté style : couleurs hardcodée
 mécanique de bascule de thème, et trois mois plus tard chaque app a son propre
 dialecte visuel.
 
-ThemeForge fournit un moteur de theming réutilisable, 15 variantes Dracula
-prêtes à l'emploi, et une app **Studio** pour les prévisualiser et les ajuster
-en direct avant de les exporter dans ton projet cible.
+ThemeForge fournit un moteur de theming réutilisable, 16 variantes Dracula
+prêtes à l'emploi, des styles WPF prêts à merger, et une app **Studio** pour
+les prévisualiser et les ajuster en direct avant de les exporter dans ton
+projet cible.
 
 ## Composants
 
 | Projet | Rôle |
 |---|---|
-| `ThemeForge.Theme` | Moteur de theming (`IThemeService`, `ThemeRevision`), 15 ResourceDictionaries Dracula, design tokens partagés |
-| `ThemeForge.Controls` | Styles WPF pour les contrôles standard + composites (`Card`, `IconButton`, `ToggleSwitch`) |
+| `ThemeForge.Theme` | Moteur de theming (`IThemeService`, `ThemeRevision`), 16 `ResourceDictionary` de thèmes |
+| `ThemeForge.Controls` | 23 contrôles WPF natifs stylés + 9 composites (`Card`, `IconButton`, `Badge`, `Chip`, `ToggleSwitch`, `Avatar`, `SearchBox`, `Toast`, `ToastHost`) |
 | `ThemeForge.Studio` | App WPF de démonstration et d'édition live des thèmes |
+
+Les styles natifs sont agrégés par
+`ThemeForge.Controls;component/Styles/Studio.xaml`. Les composites suivent la
+convention WPF `Themes/Generic.xaml`.
 
 ## Variantes incluses
 
-**16 variantes** — 1 historique MIT (Dracula) + 1 sibling AA-compliant (Drakul)
-+ 14 originales Apache 2.0, groupées en 3 familles. Set v6 — résultat de **5
-passes de cross-review indépendantes** (independent reviewers
-) avec uniform-Oklab-L* color space. **Convergence finale SHIP** sur
-pass 5.
+**16 variantes** — `Dracula` MIT canonique, `Drakul` sibling AA-compliant
+Apache 2.0, puis 14 palettes originales Apache 2.0 de Julien Bombled. Le set
+v6 a été audité en cross-review à trois voix indépendantes sur la palette et
+sur les noms.
+
+- **Root** (2) : Dracula, Drakul
+- **Dark** (10) : Striga, Cinder, Bracken, Tarn, Mortis, Slate, Voivode,
+  Carmilla, Whitby, Vesper
+- **Light** (2) : Parchment, Folio
+- **Alt** (2) : Wormwood, Sconce
 
 ### La paire Dracula / Drakul
 
 Deux variantes Root sont livrées intentionnellement :
 
-- **Dracula** : palette MIT canonique de Zeno Rocha, **préservée à l'identique**
+- **Dracula** : palette MIT canonique de Zeno Rocha, préservée à l'identique
   pour fidélité historique. Le Comment `#6272A4` ne clear pas WCAG AA
-  (Comment/CL = 1.94:1) — un défaut accessibilité du design original de 2013.
-- **Drakul** : sibling Apache 2.0 du Dracula canonique, **AA-compliant** par
-  un simple lift du Comment vers `#B3BBD6` (Comment/CL = 4.79:1). Tout le reste
-  est byte-identique. Le nom honore Vlad II Dracul (~1395-1447), membre de
-  l'Ordre du Dragon (1408) et père historique de Vlad III Țepeș dont Stoker
-  dériva "Dracula".
+  (Comment/CurrentLine = 1.94:1). C'est un défaut accessibilité du design
+  original.
+- **Drakul** : sibling Apache 2.0 du Dracula canonique, AA-compliant par un
+  lift du Comment vers `#B3BBD6` (Comment/CurrentLine = 4.79:1). Tout le reste
+  est byte-identique. Le nom honore Vlad II Dracul, membre de l'Ordre du
+  Dragon et père historique de Vlad III.
 
-Tu choisis Dracula si tu veux la palette canonique du roi des thèmes ; tu
-choisis Drakul si tu as besoin d'accessibilité AA stricte sans sacrifier
-l'esthétique Dracula DNA.
-
-- **Dark** (10) — Striga, Cinder, Bracken, Tarn, Mortis, Slate, Voivode, Carmilla,
-  Whitby, Vesper (+ `Dracula` MIT comme racine)
-- **Light** (2) — Parchment, Folio
-- **Alt** (2) — Wormwood (signature vert viridian), Sconce (signature ambre)
+Tu choisis Dracula si tu veux la palette canonique. Tu choisis Drakul si tu as
+besoin d'accessibilité AA stricte sans perdre l'ADN Dracula.
 
 ### Geometric Color Palette
 
-Les 14 palettes originales sont **ingénierées**, pas intuitives. Hex valeurs
-**calculées depuis des cibles HSL déclarées** (pas reverse-engineered), conformes
-à la philosophie *Geometric Color Palette* :
+Les 14 palettes originales sont **ingénierées**, pas intuitives. Les valeurs
+hex sont calculées depuis des cibles déclarées, puis auditées. L'objectif :
+garder une identité Dracula pastel/néon, tout en rendant les variantes
+prévisibles.
 
-- **Bande Dark uniforme** : les 10 variantes Dark partagent **les mêmes 7 accents
-  exactement** (HSL L 0.68 / S 0.65, hues fixés à 186°/135°/27°/333°/282°/0°/60°).
-  Seul le **Hue du Background** change entre variantes (rotation 12° → 340° avec
-  espacement minimum 20° pour éviter les clumps visuels).
-- **Bande Light uniforme** : les 2 Light partagent un second jeu d'accents
-  (L 0.32 / S 0.78), assombri par rapport à la v2 pour clear WCAG AA sur les
-  fonds clairs L 0.95.
-- **Alt** : les 2 Alt héritent de la bande Dark et brisent **exactement un**
-  accent à L 0.68 + S 0.82 — même luminance que la base, chroma seule
-  différencie. Choix de design préférable à un bump de L qui ferait sortir
-  visuellement.
-- **WCAG 2.1 AA** : tous les pairs Foreground/Bg, Comment/Bg et Comment/CurrentLine
-  vérifiés ≥ 4.5:1. Audit triple an independent reviewer + an independent reviewer + an independent reviewer.
+- **Bande Dark uniforme** : les 10 variantes Dark partagent les mêmes 7
+  accents. Seul le hue du background change entre variantes.
+- **Bande Light uniforme** : les 2 variantes Light partagent un jeu d'accents
+  plus sombre, lisible sur des surfaces claires.
+- **Alt** : les 2 variantes Alt héritent de la bande Dark et brisent exactement
+  un accent pour créer leur signature.
+- **WCAG 2.1 AA** : les couples Foreground/Background, Comment/Background et
+  Comment/CurrentLine sont vérifiés. Dracula reste la racine historique ; Drakul
+  est la réponse AA.
 
 ### Attribution des palettes
 
 **`Dracula`** : palette MIT canonique de **Zeno Rocha** (Dracula Theme,
-https://draculatheme.com) — racine historique du projet.
+https://draculatheme.com). Elle sert de racine historique au projet.
 
-**Les 12 autres** (Nosferatu, Carmilla, Whitby, Vesper, Striga, Belfry,
-Sepulcher, Mireille, Parchment, Lucent, Wormwood, Gaslight) : créations
-originales de **Julien Bombled** sous Apache 2.0. Noms tirés du folklore
-vampirique, de la littérature gothique du domaine public (Carmilla 1872 de
-Le Fanu, Nosferatu 1922 de Murnau, Dracula 1897 de Stoker), de termes
-atmosphériques/architecturaux/latins, ou de l'œuvre publique de Frédéric
-Mistral (1859).
+**`Drakul`** : variante Apache 2.0 de **Julien Bombled**, dérivée de Dracula
+avec le seul slot Comment ajusté pour clear WCAG AA.
 
-**Important** — aucune valeur RGB ni aucun nom n'est repris des schemes
-commerciaux Dracula PRO (Pro, Alucard, Blade, Buffy, Lincoln, Morbius, Van
-Helsing). Le framework s'inscrit dans l'**ADN Dracula** (palette pastel/néon
-sur fond désaturé) sans dépendance juridique avec le produit commercial.
+**Les 14 originales** : `Striga`, `Cinder`, `Bracken`, `Tarn`, `Mortis`,
+`Slate`, `Voivode`, `Carmilla`, `Whitby`, `Vesper`, `Parchment`, `Folio`,
+`Wormwood`, `Sconce`. Elles sont créées par **Julien Bombled** sous Apache 2.0.
+
+Important : aucun nom ni aucune valeur RGB d'un scheme commercial Dracula n'est
+repris. ThemeForge reprend l'ADN visuel Dracula, pas un produit payant.
 
 ## Utilisation rapide
 
+### Référencer les projets
+
+Aucun package NuGet ThemeForge n'est publié pour l'instant. Référence les deux
+projets depuis ton app WPF consommatrice.
+
 ```xml
-<!-- App.xaml du projet consommateur -->
-<Application.Resources>
-  <ResourceDictionary>
-    <ResourceDictionary.MergedDictionaries>
-      <ResourceDictionary Source="pack://application:,,,/ThemeForge.Theme;component/Themes/Dracula.xaml" />
-    </ResourceDictionary.MergedDictionaries>
-  </ResourceDictionary>
-</Application.Resources>
+<ItemGroup>
+  <ProjectReference Include="..\ThemeForge\src\ThemeForge.Theme\ThemeForge.Theme.csproj" />
+  <ProjectReference Include="..\ThemeForge\src\ThemeForge.Controls\ThemeForge.Controls.csproj" />
+</ItemGroup>
 ```
 
+### Charger un thème au démarrage
+
+Merge les styles de contrôles, puis un thème par défaut. `ThemeService` pourra
+ensuite remplacer le thème actif au runtime.
+
+```xml
+<ResourceDictionary.MergedDictionaries>
+  <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Styles/Studio.xaml"/>
+  <ResourceDictionary Source="pack://application:,,,/ThemeForge.Theme;component/Themes/Dracula.xaml"/>
+</ResourceDictionary.MergedDictionaries>
+```
+
+Dans `App.xaml.cs`, enregistre le service avec `Microsoft.Extensions.DependencyInjection`.
+
 ```csharp
-// Au runtime, basculer de thème
-themeService.ApplyTheme("Helsing");
+private ServiceProvider? _services;
+
+protected override void OnStartup(StartupEventArgs e)
+{
+    base.OnStartup(e);
+    var services = new ServiceCollection();
+    services.AddSingleton<IThemeService>(_ => new ThemeService(this));
+    _services = services.BuildServiceProvider();
+    _services.GetRequiredService<IThemeService>().ApplyTheme(ThemeNames.Dracula);
+}
+```
+
+### Basculer de thème au runtime
+
+`ApplyTheme` est idempotent. Appliquer le thème déjà actif ne déclenche rien.
+
+```csharp
+themeService.ThemeChanged += (_, e) =>
+    Debug.WriteLine($"{e.CurrentTheme} rev {e.Revision}");
+
+themeService.ApplyTheme(ThemeNames.Drakul);
+```
+
+## Lancer Studio
+
+Studio te permet de prévisualiser les 16 variantes, de tester les contrôles, et
+d'éditer 24 slots hex : 12 canoniques + 12 sémantiques.
+
+```pwsh
+dotnet run --project src/ThemeForge.Studio
 ```
 
 ## Architecture
@@ -124,14 +165,28 @@ liaisons one-way pour se ré-évaluer.
 
 ## État
 
-Pre-alpha. MVP en construction (Sem 20, mai 2026).
+Moteur stable v6. ThemeForge shippe aujourd'hui 16 variantes, 23 contrôles WPF
+natifs stylés et 9 composites. Le Studio a été audité côté UI Automation après
+correctifs, avec les sections, le picker de thèmes et l'éditeur de palette
+adressables.
+
+La suite locale compte 53 tests verts : 19 pour `ThemeForge.Theme` et 34 pour
+`ThemeForge.Controls`. La CI GitHub Actions est committée ; elle s'activera au
+premier push sur une remote GitHub.
+
+Pas encore de package NuGet publié.
 
 ## Licence
 
-- **Code et infrastructure** : Apache 2.0 — Julien Bombled (voir `LICENSE`)
-- **Code et infrastructure + 12 palettes originales** : Apache 2.0 —
-  Julien Bombled
-- **Palette `Dracula`** : MIT — Zeno Rocha (racine historique conservée)
+- Code, styles, framework : Apache 2.0 — Julien Bombled
+- 14 palettes originales : Apache 2.0 — Julien Bombled
+- Palette Drakul : Apache 2.0 — Julien Bombled
+- Palette Dracula : MIT — Zeno Rocha (racine historique)
 
-Voir `NOTICE` pour le détail complet de la philosophie Geometric Color
-Palette et la table d'attribution.
+Voir `NOTICE` pour le détail complet de la philosophie Geometric Color Palette
+et la table d'attribution.
+
+## Pour aller plus loin
+
+- `docs/integration-guide.md` : guide d'intégration WPF tiers à venir, voir
+  issue à suivre.

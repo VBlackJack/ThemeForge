@@ -5,6 +5,7 @@
     <Project Path="src/ThemeForge.Studio/ThemeForge.Studio.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/ThemeForge.Controls.Tests/ThemeForge.Controls.Tests.csproj" />
     <Project Path="tests/ThemeForge.Theme.Tests/ThemeForge.Theme.Tests.csproj" />
   </Folder>
 </Solution>

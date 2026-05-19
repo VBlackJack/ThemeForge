@@ -25,6 +25,7 @@ namespace ThemeForge.Theme.Tests;
 public sealed class WcagContrastTests : IDisposable
 {
     private const string ThemeMarkerKey = "ThemeForge.ActiveThemeMarker";
+    private const string AccentTintMarkerKey = "ThemeForge.ActiveAccentTintMarker";
     private const double AaNormalTextMinimum = 4.5;
 
     public WcagContrastTests()
@@ -65,6 +66,39 @@ public sealed class WcagContrastTests : IDisposable
                     "BackgroundBrush vs {0} on theme '{1}' must meet WCAG AA (got {2:F2}:1)",
                     pairedKey,
                     themeName,
+                    ratio);
+            }
+        }
+    }
+
+    [StaFact]
+    public void ApplyAccentTint_OnEveryTheme_MeetsAaContrastBackgroundVsAccent()
+    {
+        ThemeService service = new ThemeService(TestApplication.Instance);
+
+        foreach (string themeName in ThemeNames.All)
+        {
+            service.ApplyTheme(themeName);
+
+            foreach (AccentTint tint in AccentTints.All)
+            {
+                if (tint == AccentTint.Default)
+                {
+                    continue;
+                }
+
+                service.ApplyAccentTint(tint);
+
+                Color background = ReadBrushColor("BackgroundBrush");
+                Color accent = ReadBrushColor("AccentBrush");
+                double ratio = ContrastRatio(background, accent);
+
+                ratio.Should().BeGreaterThanOrEqualTo(
+                    AaNormalTextMinimum,
+                    "BackgroundBrush vs AccentBrush on theme '{0}' with tint '{1}' " +
+                    "must meet WCAG AA (got {2:F2}:1)",
+                    themeName,
+                    tint,
                     ratio);
             }
         }
@@ -119,7 +153,7 @@ public sealed class WcagContrastTests : IDisposable
         IList<ResourceDictionary> merged = app.Resources.MergedDictionaries;
         for (int i = merged.Count - 1; i >= 0; i--)
         {
-            if (merged[i].Contains(ThemeMarkerKey))
+            if (merged[i].Contains(ThemeMarkerKey) || merged[i].Contains(AccentTintMarkerKey))
             {
                 merged.RemoveAt(i);
             }

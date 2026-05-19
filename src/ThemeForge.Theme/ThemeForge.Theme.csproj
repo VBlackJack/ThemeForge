@@ -12,4 +12,8 @@
     <IncludeBuildOutput>true</IncludeBuildOutput>
   </PropertyGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="ThemeForge.Theme.Tests" />
+  </ItemGroup>
+
 </Project>

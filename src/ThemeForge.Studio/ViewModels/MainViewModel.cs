@@ -46,6 +46,8 @@ public sealed partial class MainViewModel : ObservableObject
                 return new ThemeEntry(n, display, ThemeNames.GetFamily(n));
             }));
         _selectedTheme = Themes.FirstOrDefault(t => t.Name == themeService.CurrentTheme);
+        AvailableAccentTints = themeService.AvailableAccentTints;
+        _selectedAccentTint = themeService.CurrentAccentTint;
 
         Sections = new ObservableCollection<GallerySectionViewModel>(sections);
         _selectedSection = Sections.FirstOrDefault();
@@ -56,11 +58,17 @@ public sealed partial class MainViewModel : ObservableObject
     /// <summary>Theme entries exposed to the picker, grouped by Family in the view.</summary>
     public ObservableCollection<ThemeEntry> Themes { get; }
 
+    /// <summary>Accent tints exposed to the accent picker.</summary>
+    public IReadOnlyList<AccentTint> AvailableAccentTints { get; }
+
     /// <summary>Gallery sections shown in the sidebar.</summary>
     public ObservableCollection<GallerySectionViewModel> Sections { get; }
 
     [ObservableProperty]
     private ThemeEntry? _selectedTheme;
+
+    [ObservableProperty]
+    private AccentTint _selectedAccentTint;
 
     [ObservableProperty]
     private GallerySectionViewModel? _selectedSection;
@@ -73,6 +81,16 @@ public sealed partial class MainViewModel : ObservableObject
         }
 
         _themeService.ApplyTheme(value.Name);
+    }
+
+    partial void OnSelectedAccentTintChanged(AccentTint value)
+    {
+        if (value == _themeService.CurrentAccentTint)
+        {
+            return;
+        }
+
+        _themeService.ApplyAccentTint(value);
     }
 
     private void OnThemeChanged(object? sender, ThemeChangedEventArgs e)

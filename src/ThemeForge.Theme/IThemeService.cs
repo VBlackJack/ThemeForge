@@ -37,6 +37,15 @@ public interface IThemeService
     /// </summary>
     IReadOnlyList<string> AvailableThemes { get; }
 
+    /// <summary>The list of accent tints the service can apply. Stable order.</summary>
+    IReadOnlyList<AccentTint> AvailableAccentTints { get; }
+
+    /// <summary>
+    /// The currently applied accent tint. <see cref="AccentTint.Default"/>
+    /// means the active theme's native accent is used.
+    /// </summary>
+    AccentTint CurrentAccentTint { get; }
+
     /// <summary>
     /// Raised after the active theme has been swapped. The handler runs on
     /// the UI thread.
@@ -49,4 +58,16 @@ public interface IThemeService
     /// </summary>
     /// <param name="name">A theme name from <see cref="AvailableThemes"/>.</param>
     void ApplyTheme(string name);
+
+    /// <summary>
+    /// Apply an accent tint override on top of the current theme.
+    /// </summary>
+    /// <remarks>
+    /// Idempotent. <see cref="AccentTint.Default"/> removes any tint override
+    /// and restores the theme's native accent. Applying a tint bumps
+    /// <see cref="ThemeRevision"/> and raises <see cref="ThemeChanged"/> so
+    /// <c>DynamicResource</c> consumers re-evaluate.
+    /// </remarks>
+    /// <param name="tint">The accent tint to apply.</param>
+    void ApplyAccentTint(AccentTint tint);
 }

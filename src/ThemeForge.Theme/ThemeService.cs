@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Windows;
+using System.Windows.Media;
 
 namespace ThemeForge.Theme;
 
@@ -24,17 +25,21 @@ namespace ThemeForge.Theme;
 /// The active theme dictionary is identified by tagging it with a sentinel
 /// resource key (<see cref="ThemeMarkerKey"/>). On every apply, the previous
 /// tagged dictionary is removed and the new one is inserted at index 0 so
-/// theme brushes resolve before any consumer-defined overrides further down
-/// the merge stack.
+/// base theme resources stay first in the merge stack. Accent tint overrides
+/// are appended because WPF resolves duplicate merged-dictionary keys from
+/// the last matching dictionary.
 /// </remarks>
 public sealed class ThemeService : IThemeService
 {
     private const string ThemeMarkerKey = "ThemeForge.ActiveThemeMarker";
+    private const string AccentTintMarkerKey = "ThemeForge.ActiveAccentTintMarker";
     private const string ThemePackUriFormat =
         "pack://application:,,,/ThemeForge.Theme;component/Themes/{0}.xaml";
+    private const double AccentTintLightDelta = 0.08;
 
     private readonly Application _application;
     private string _currentTheme = string.Empty;
+    private AccentTint _currentAccentTint = AccentTint.Default;
     private int _themeRevision;
 
     public ThemeService(Application application, IReadOnlyList<string>? availableThemes = null)
@@ -49,6 +54,10 @@ public sealed class ThemeService : IThemeService
     public int ThemeRevision => _themeRevision;
 
     public IReadOnlyList<string> AvailableThemes { get; }
+
+    public IReadOnlyList<AccentTint> AvailableAccentTints => AccentTints.All;
+
+    public AccentTint CurrentAccentTint => _currentAccentTint;
 
     public event EventHandler<ThemeChangedEventArgs>? ThemeChanged;
 
@@ -70,23 +79,53 @@ public sealed class ThemeService : IThemeService
         ResourceDictionary newDictionary = LoadThemeDictionary(name);
         IList<ResourceDictionary> merged = _application.Resources.MergedDictionaries;
 
-        // Drop any previously tagged active theme dictionary.
-        for (int i = merged.Count - 1; i >= 0; i--)
-        {
-            if (merged[i].Contains(ThemeMarkerKey))
-            {
-                merged.RemoveAt(i);
-            }
-        }
+        RemoveMarkedDictionary(merged, AccentTintMarkerKey);
+        RemoveMarkedDictionary(merged, ThemeMarkerKey);
 
-        // Insert the new dictionary first so theme resources win lookup.
+        // Keep the active base theme at the front; tint overrides are appended
+        // when present because WPF gives later duplicate keys precedence.
         merged.Insert(0, newDictionary);
+        if (_currentAccentTint != AccentTint.Default)
+        {
+            ResourceDictionary tintDictionary = CreateAccentTintDictionary(_currentAccentTint);
+            // WPF lets later merged dictionaries override earlier duplicate keys.
+            merged.Add(tintDictionary);
+        }
 
         string previous = _currentTheme;
         _currentTheme = name;
         _themeRevision++;
 
         ThemeChanged?.Invoke(this, new ThemeChangedEventArgs(previous, name, _themeRevision));
+    }
+
+    public void ApplyAccentTint(AccentTint tint)
+    {
+        if (tint == _currentAccentTint)
+        {
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(_currentTheme))
+        {
+            throw new InvalidOperationException("Apply a theme before applying an accent tint.");
+        }
+
+        IList<ResourceDictionary> merged = _application.Resources.MergedDictionaries;
+        RemoveMarkedDictionary(merged, AccentTintMarkerKey);
+
+        _currentAccentTint = tint;
+        if (tint != AccentTint.Default)
+        {
+            ResourceDictionary tintDictionary = CreateAccentTintDictionary(tint);
+            // WPF lets later merged dictionaries override earlier duplicate keys.
+            merged.Add(tintDictionary);
+        }
+
+        _themeRevision++;
+        ThemeChanged?.Invoke(
+            this,
+            new ThemeChangedEventArgs(_currentTheme, _currentTheme, _themeRevision));
     }
 
     private static ResourceDictionary LoadThemeDictionary(string name)
@@ -102,5 +141,59 @@ public sealed class ThemeService : IThemeService
         }
 
         return dict;
+    }
+
+    private ResourceDictionary CreateAccentTintDictionary(AccentTint tint)
+    {
+        string sourceBrushKey = GetSourceBrushKey(tint);
+        object? resource = _application.Resources[sourceBrushKey];
+        SolidColorBrush sourceBrush = resource as SolidColorBrush
+            ?? throw new InvalidOperationException(
+                $"Accent tint '{tint}' requires SolidColorBrush resource '{sourceBrushKey}'.");
+
+        Color sourceColor = sourceBrush.Color;
+        OklabConverter.Oklab seed = OklabConverter.FromColor(sourceColor);
+        Color hoverColor = OklabConverter.ToColor(OklabConverter.Lighten(seed, AccentTintLightDelta));
+        Color pressedColor = OklabConverter.ToColor(OklabConverter.Darken(seed, AccentTintLightDelta));
+
+        ResourceDictionary dict = new ResourceDictionary
+        {
+            [AccentTintMarkerKey] = tint.ToString(),
+            ["AccentBrush"] = CreateFrozenBrush(sourceColor),
+            ["AccentHoverBrush"] = CreateFrozenBrush(hoverColor),
+            ["AccentPressedBrush"] = CreateFrozenBrush(pressedColor),
+        };
+
+        return dict;
+    }
+
+    private static SolidColorBrush CreateFrozenBrush(Color color)
+    {
+        SolidColorBrush brush = new SolidColorBrush(color);
+        brush.Freeze();
+        return brush;
+    }
+
+    private static string GetSourceBrushKey(AccentTint tint)
+        => tint switch
+        {
+            AccentTint.Cyan => "CyanBrush",
+            AccentTint.Green => "GreenBrush",
+            AccentTint.Orange => "OrangeBrush",
+            AccentTint.Pink => "PinkBrush",
+            AccentTint.Red => "RedBrush",
+            AccentTint.Yellow => "YellowBrush",
+            _ => throw new ArgumentOutOfRangeException(nameof(tint), tint, "Unsupported accent tint."),
+        };
+
+    private static void RemoveMarkedDictionary(IList<ResourceDictionary> merged, string markerKey)
+    {
+        for (int i = merged.Count - 1; i >= 0; i--)
+        {
+            if (merged[i].Contains(markerKey))
+            {
+                merged.RemoveAt(i);
+            }
+        }
     }
 }

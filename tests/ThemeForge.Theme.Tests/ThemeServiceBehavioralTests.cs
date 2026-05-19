@@ -30,6 +30,7 @@ public sealed class ThemeServiceBehavioralTests : IDisposable
     // Hardcoded mirror of ThemeService.ThemeMarkerKey (private const). These
     // tests validate the marker invariant, so the coupling is intentional.
     private const string ThemeMarkerKey = "ThemeForge.ActiveThemeMarker";
+    private const string AccentTintMarkerKey = "ThemeForge.ActiveAccentTintMarker";
 
     public ThemeServiceBehavioralTests()
     {
@@ -170,7 +171,7 @@ public sealed class ThemeServiceBehavioralTests : IDisposable
         IList<ResourceDictionary> merged = app.Resources.MergedDictionaries;
         for (int i = merged.Count - 1; i >= 0; i--)
         {
-            if (merged[i].Contains(ThemeMarkerKey))
+            if (merged[i].Contains(ThemeMarkerKey) || merged[i].Contains(AccentTintMarkerKey))
             {
                 merged.RemoveAt(i);
             }

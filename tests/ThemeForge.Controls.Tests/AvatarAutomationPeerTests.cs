@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using FluentAssertions;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using FluentAssertions;
 using ThemeForge.Controls.Composites;
 using Xunit;
 
@@ -28,9 +28,9 @@ public sealed class AvatarAutomationPeerTests
     public void Ctor_StoresOwner()
     {
         _ = TestApplication.Instance;
-        var avatar = new Avatar();
+        Avatar avatar = new Avatar();
 
-        var peer = new AvatarAutomationPeer(avatar);
+        AvatarAutomationPeer peer = new AvatarAutomationPeer(avatar);
 
         peer.Owner.Should().BeSameAs(avatar);
     }
@@ -39,7 +39,7 @@ public sealed class AvatarAutomationPeerTests
     public void GetClassName_ReturnsAvatarName()
     {
         _ = TestApplication.Instance;
-        var peer = new AvatarAutomationPeer(new Avatar());
+        AvatarAutomationPeer peer = new AvatarAutomationPeer(new Avatar());
 
         peer.GetClassName().Should().Be("Avatar");
     }
@@ -48,8 +48,8 @@ public sealed class AvatarAutomationPeerTests
     public void GetAutomationControlType_WithoutSource_ReturnsText()
     {
         _ = TestApplication.Instance;
-        var avatar = new Avatar { Initials = "JB" };
-        var peer = new AvatarAutomationPeer(avatar);
+        Avatar avatar = new Avatar { Initials = "JB" };
+        AvatarAutomationPeer peer = new AvatarAutomationPeer(avatar);
 
         peer.GetAutomationControlType().Should().Be(AutomationControlType.Text);
     }
@@ -58,7 +58,7 @@ public sealed class AvatarAutomationPeerTests
     public void GetAutomationControlType_WithSource_ReturnsImage()
     {
         _ = TestApplication.Instance;
-        var avatar = new Avatar
+        Avatar avatar = new Avatar
         {
             Initials = "JB",
             Source = BitmapSource.Create(
@@ -71,7 +71,7 @@ public sealed class AvatarAutomationPeerTests
                 pixels: new byte[] { 0, 0, 0, 0 },
                 stride: 4),
         };
-        var peer = new AvatarAutomationPeer(avatar);
+        AvatarAutomationPeer peer = new AvatarAutomationPeer(avatar);
 
         peer.GetAutomationControlType().Should().Be(AutomationControlType.Image);
     }
@@ -80,9 +80,9 @@ public sealed class AvatarAutomationPeerTests
     public void GetName_WithExplicitAutomationProperty_WinsOverInitials()
     {
         _ = TestApplication.Instance;
-        var avatar = new Avatar { Initials = "JB" };
+        Avatar avatar = new Avatar { Initials = "JB" };
         AutomationProperties.SetName(avatar, "Julien Bombled");
-        var peer = new AvatarAutomationPeer(avatar);
+        AvatarAutomationPeer peer = new AvatarAutomationPeer(avatar);
 
         peer.GetName().Should().Be("Julien Bombled");
     }
@@ -91,8 +91,8 @@ public sealed class AvatarAutomationPeerTests
     public void GetName_WithoutExplicitButWithInitials_ReturnsInitials()
     {
         _ = TestApplication.Instance;
-        var avatar = new Avatar { Initials = "JB" };
-        var peer = new AvatarAutomationPeer(avatar);
+        Avatar avatar = new Avatar { Initials = "JB" };
+        AvatarAutomationPeer peer = new AvatarAutomationPeer(avatar);
 
         peer.GetName().Should().Be("JB");
     }
@@ -101,7 +101,7 @@ public sealed class AvatarAutomationPeerTests
     public void GetName_WithNoExplicitNameAndNoInitials_ReturnsEmpty()
     {
         _ = TestApplication.Instance;
-        var peer = new AvatarAutomationPeer(new Avatar());
+        AvatarAutomationPeer peer = new AvatarAutomationPeer(new Avatar());
 
         peer.GetName().Should().BeEmpty();
     }

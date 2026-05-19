@@ -13,10 +13,10 @@
 // limitations under the License.
 
 using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using ThemeForge.Studio.ViewModels;
 using ThemeForge.Studio.Views;
 using ThemeForge.Theme;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ThemeForge.Studio;
 
@@ -32,16 +32,16 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
-        var collection = new ServiceCollection();
+        ServiceCollection collection = new ServiceCollection();
         ConfigureServices(collection);
         _services = collection.BuildServiceProvider();
 
         // Apply the default theme before any window is shown so the first
         // measure pass already has the correct brushes available.
-        var themeService = _services.GetRequiredService<IThemeService>();
+        IThemeService themeService = _services.GetRequiredService<IThemeService>();
         themeService.ApplyTheme(ThemeNames.Dracula);
 
-        var mainWindow = _services.GetRequiredService<MainWindow>();
+        MainWindow mainWindow = _services.GetRequiredService<MainWindow>();
         mainWindow.Show();
     }
 
@@ -56,7 +56,7 @@ public partial class App : Application
         // navigation snappy.
         services.AddSingleton<MainViewModel>(sp =>
         {
-            var themeService = sp.GetRequiredService<IThemeService>();
+            IThemeService themeService = sp.GetRequiredService<IThemeService>();
             return new MainViewModel(
                 themeService,
                 new[]

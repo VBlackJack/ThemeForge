@@ -110,7 +110,7 @@ internal sealed class BadgeAutomationPeer : FrameworkElementAutomationPeer
 
     protected override string GetNameCore()
     {
-        var owner = (Badge)Owner;
+        Badge owner = (Badge)Owner;
         return owner.Content?.ToString() ?? base.GetNameCore();
     }
 

@@ -37,7 +37,7 @@ public sealed class CardAutomationPeer : FrameworkElementAutomationPeer
     protected override string GetNameCore()
     {
         // 1. An explicit AutomationProperties.Name on the Card wins.
-        var explicitName = base.GetNameCore();
+        string explicitName = base.GetNameCore();
         if (!string.IsNullOrEmpty(explicitName))
         {
             return explicitName;

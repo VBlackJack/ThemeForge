@@ -75,7 +75,7 @@ internal sealed class ToggleSwitchAutomationPeer : ToggleButtonAutomationPeer
 
     protected override string GetNameCore()
     {
-        var owner = (ToggleSwitch)Owner;
+        ToggleSwitch owner = (ToggleSwitch)Owner;
 
         if (owner.Content is not null)
         {

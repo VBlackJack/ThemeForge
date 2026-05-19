@@ -102,13 +102,13 @@ public sealed class Avatar : Control
 
     private static void OnSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var avatar = (Avatar)d;
+        Avatar avatar = (Avatar)d;
         avatar.SetValue(IsImageModePropertyKey, e.NewValue is not null);
     }
 
     private static void OnSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var avatar = (Avatar)d;
+        Avatar avatar = (Avatar)d;
         double size = (double)e.NewValue;
         if (size > 0)
         {

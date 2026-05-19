@@ -28,7 +28,7 @@ public sealed class ToastTests
     public void Dismiss_RaisesDismissedEventOnce()
     {
         _ = TestApplication.Instance;
-        var toast = new Toast { Title = "Test", Message = "Body" };
+        Toast toast = new Toast { Title = "Test", Message = "Body" };
         int dismissedCount = 0;
         toast.Dismissed += (_, _) => dismissedCount++;
 
@@ -44,7 +44,7 @@ public sealed class ToastTests
         // when called repeatedly. ToastHost still handles cleanup; a second
         // Dismiss on an already-removed toast remains safe.
         _ = TestApplication.Instance;
-        var toast = new Toast();
+        Toast toast = new Toast();
         int count = 0;
         toast.Dismissed += (_, _) => count++;
 
@@ -58,9 +58,9 @@ public sealed class ToastTests
     public void Dismiss_WithNoSubscriber_DoesNotThrow()
     {
         _ = TestApplication.Instance;
-        var toast = new Toast();
+        Toast toast = new Toast();
 
-        var act = toast.Dismiss;
+        Action act = toast.Dismiss;
 
         act.Should().NotThrow();
     }

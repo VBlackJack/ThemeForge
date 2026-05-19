@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using FluentAssertions;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
+using FluentAssertions;
 using ThemeForge.Controls.Composites;
 using Xunit;
 
@@ -26,9 +26,9 @@ public sealed class SearchBoxAutomationPeerTests
     public void Ctor_StoresOwner()
     {
         _ = TestApplication.Instance;
-        var box = new SearchBox();
+        SearchBox box = new SearchBox();
 
-        var peer = new SearchBoxAutomationPeer(box);
+        SearchBoxAutomationPeer peer = new SearchBoxAutomationPeer(box);
 
         peer.Owner.Should().BeSameAs(box);
     }
@@ -37,7 +37,7 @@ public sealed class SearchBoxAutomationPeerTests
     public void GetClassName_ReturnsSearchBoxName()
     {
         _ = TestApplication.Instance;
-        var peer = new SearchBoxAutomationPeer(new SearchBox());
+        SearchBoxAutomationPeer peer = new SearchBoxAutomationPeer(new SearchBox());
 
         peer.GetClassName().Should().Be("SearchBox");
     }
@@ -46,7 +46,7 @@ public sealed class SearchBoxAutomationPeerTests
     public void GetAutomationControlType_ReturnsEdit()
     {
         _ = TestApplication.Instance;
-        var peer = new SearchBoxAutomationPeer(new SearchBox());
+        SearchBoxAutomationPeer peer = new SearchBoxAutomationPeer(new SearchBox());
 
         // Inherited from TextBoxAutomationPeer.
         peer.GetAutomationControlType().Should().Be(AutomationControlType.Edit);
@@ -56,9 +56,9 @@ public sealed class SearchBoxAutomationPeerTests
     public void GetName_WithExplicitAutomationProperty_WinsOverPlaceholder()
     {
         _ = TestApplication.Instance;
-        var box = new SearchBox { PlaceholderText = "Search composites..." };
+        SearchBox box = new SearchBox { PlaceholderText = "Search composites..." };
         AutomationProperties.SetName(box, "Filter input");
-        var peer = new SearchBoxAutomationPeer(box);
+        SearchBoxAutomationPeer peer = new SearchBoxAutomationPeer(box);
 
         peer.GetName().Should().Be("Filter input");
     }
@@ -67,8 +67,8 @@ public sealed class SearchBoxAutomationPeerTests
     public void GetName_WithoutExplicitButWithPlaceholder_ReturnsPlaceholder()
     {
         _ = TestApplication.Instance;
-        var box = new SearchBox { PlaceholderText = "Search composites..." };
-        var peer = new SearchBoxAutomationPeer(box);
+        SearchBox box = new SearchBox { PlaceholderText = "Search composites..." };
+        SearchBoxAutomationPeer peer = new SearchBoxAutomationPeer(box);
 
         peer.GetName().Should().Be("Search composites...");
     }
@@ -77,7 +77,7 @@ public sealed class SearchBoxAutomationPeerTests
     public void GetName_WithNoExplicitAndNoPlaceholder_ReturnsEmpty()
     {
         _ = TestApplication.Instance;
-        var peer = new SearchBoxAutomationPeer(new SearchBox());
+        SearchBoxAutomationPeer peer = new SearchBoxAutomationPeer(new SearchBox());
 
         peer.GetName().Should().BeEmpty();
     }

@@ -37,11 +37,11 @@ public sealed partial class MainViewModel : ObservableObject
             {
                 // Disambiguate the Dracula/Drakul intentional sibling pair
                 // for the picker so users don't typo-jump between them.
-                var display = n switch
+                string display = n switch
                 {
                     "Dracula" => "Dracula (canon)",
-                    "Drakul"  => "Drakul (AA-compliant)",
-                    _         => n,
+                    "Drakul" => "Drakul (AA-compliant)",
+                    _ => n,
                 };
                 return new ThemeEntry(n, display, ThemeNames.GetFamily(n));
             }));

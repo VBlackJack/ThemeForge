@@ -41,7 +41,7 @@ public sealed class AvatarAutomationPeer : FrameworkElementAutomationPeer
 
     protected override string GetNameCore()
     {
-        var explicitName = base.GetNameCore();
+        string explicitName = base.GetNameCore();
         if (!string.IsNullOrEmpty(explicitName))
         {
             return explicitName;

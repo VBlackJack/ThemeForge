@@ -61,11 +61,11 @@ public sealed partial class PaletteEditorViewModel : ObservableObject
     [RelayCommand]
     private void ResetAll()
     {
-        foreach (var slot in CanonicalSlots)
+        foreach (SlotViewModel slot in CanonicalSlots)
         {
             slot.ResetCommand.Execute(null);
         }
-        foreach (var slot in SemanticSlots)
+        foreach (SlotViewModel slot in SemanticSlots)
         {
             slot.ResetCommand.Execute(null);
         }
@@ -81,9 +81,9 @@ public sealed partial class PaletteEditorViewModel : ObservableObject
 
     private static void Populate(ObservableCollection<SlotViewModel> target, string[] names)
     {
-        foreach (var name in names)
+        foreach (string name in names)
         {
-            var resourceKey = name + "Brush";
+            string resourceKey = name + "Brush";
             if (Application.Current.Resources[resourceKey] is SolidColorBrush brush)
             {
                 target.Add(new SlotViewModel(name, resourceKey, brush.Color));

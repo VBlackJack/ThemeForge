@@ -45,27 +45,27 @@ public static class ThemeNames
     public const string Dracula = "Dracula";
 
     // 10 Dark family (Background hue rotation, ≥ 20° spacing)
-    public const string Striga   = "Striga";   // H  12° — Romanian night-witch
-    public const string Cinder  = "Cinder";  // H  50° — mourning hearth, warm amber
+    public const string Striga = "Striga";   // H  12° — Romanian night-witch
+    public const string Cinder = "Cinder";  // H  50° — mourning hearth, warm amber
     public const string Bracken = "Bracken"; // H 110° — bracken fern, necropolis sentinel
 
     // 16th variant — Dracula sibling, AA-compliant
     public const string Drakul = "Drakul"; // Canonical Dracula MIT + Comment lifted to clear WCAG AA
-    public const string Tarn    = "Tarn";    // H 170° — highland tarn, petrol-teal
-    public const string Mortis   = "Mortis";   // H 200° — slate-cyan morgue
-    public const string Slate    = "Slate";    // H 225° — cold monastery stone
-    public const string Voivode  = "Voivode";  // H 255° — Wallachian throne, deep indigo
+    public const string Tarn = "Tarn";    // H 170° — highland tarn, petrol-teal
+    public const string Mortis = "Mortis";   // H 200° — slate-cyan morgue
+    public const string Slate = "Slate";    // H 225° — cold monastery stone
+    public const string Voivode = "Voivode";  // H 255° — Wallachian throne, deep indigo
     public const string Carmilla = "Carmilla"; // H 290° — Le Fanu velvet violet
-    public const string Whitby   = "Whitby";   // H 320° — North Sea slate-mauve
-    public const string Vesper   = "Vesper";   // H 345° — chapel ruin rose
+    public const string Whitby = "Whitby";   // H 320° — North Sea slate-mauve
+    public const string Vesper = "Vesper";   // H 345° — chapel ruin rose
 
     // 2 Light family
     public const string Parchment = "Parchment"; // H  40° — warm vellum cream
-    public const string Folio    = "Folio";    // H 220° — cool ivory
+    public const string Folio = "Folio";    // H 220° — cool ivory
 
     // 2 Alt family (signature accent broken)
     public const string Wormwood = "Wormwood";  // viridian Green broken
-    public const string Sconce   = "Sconce";    // amber Orange broken
+    public const string Sconce = "Sconce";    // amber Orange broken
 
     /// <summary>
     /// All shipped variant names, ordered as a perceptual hue rotation

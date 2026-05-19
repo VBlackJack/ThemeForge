@@ -43,7 +43,7 @@ public sealed class ThemeServiceBehavioralTests : IDisposable
     [StaFact]
     public void ApplyTheme_FirstCall_BumpsRevisionAndFiresEvent()
     {
-        var service = new ThemeService(TestApplication.Instance);
+        ThemeService service = new ThemeService(TestApplication.Instance);
         ThemeChangedEventArgs? captured = null;
         service.ThemeChanged += (_, args) => captured = args;
 
@@ -60,7 +60,7 @@ public sealed class ThemeServiceBehavioralTests : IDisposable
     [StaFact]
     public void ApplyTheme_BumpsRevisionBeforeFiringEvent()
     {
-        var service = new ThemeService(TestApplication.Instance);
+        ThemeService service = new ThemeService(TestApplication.Instance);
         int revisionInsideHandler = -1;
         service.ThemeChanged += (sender, _) =>
         {
@@ -75,7 +75,7 @@ public sealed class ThemeServiceBehavioralTests : IDisposable
     [StaFact]
     public void ApplyTheme_TwiceWithSameName_IsNoOp()
     {
-        var service = new ThemeService(TestApplication.Instance);
+        ThemeService service = new ThemeService(TestApplication.Instance);
         int fireCount = 0;
         service.ThemeChanged += (_, _) => fireCount++;
 
@@ -89,8 +89,8 @@ public sealed class ThemeServiceBehavioralTests : IDisposable
     [StaFact]
     public void ApplyTheme_SequentialApplies_TrackPreviousAndBumpRevision()
     {
-        var service = new ThemeService(TestApplication.Instance);
-        var events = new List<ThemeChangedEventArgs>();
+        ThemeService service = new ThemeService(TestApplication.Instance);
+        List<ThemeChangedEventArgs> events = new List<ThemeChangedEventArgs>();
         service.ThemeChanged += (_, args) => events.Add(args);
 
         service.ApplyTheme(ThemeNames.Dracula);
@@ -108,15 +108,15 @@ public sealed class ThemeServiceBehavioralTests : IDisposable
     [StaFact]
     public void ApplyTheme_AfterMultipleApplies_OnlyOneTaggedDictionaryRemains()
     {
-        var service = new ThemeService(TestApplication.Instance);
-        var merged = TestApplication.Instance.Resources.MergedDictionaries;
+        ThemeService service = new ThemeService(TestApplication.Instance);
+        IList<ResourceDictionary> merged = TestApplication.Instance.Resources.MergedDictionaries;
 
         service.ApplyTheme(ThemeNames.Dracula);
         service.ApplyTheme(ThemeNames.Drakul);
         service.ApplyTheme(ThemeNames.Striga);
 
         int tagged = 0;
-        foreach (var dict in merged)
+        foreach (ResourceDictionary dict in merged)
         {
             if (dict.Contains(ThemeMarkerKey))
             {
@@ -129,8 +129,8 @@ public sealed class ThemeServiceBehavioralTests : IDisposable
     [StaFact]
     public void ApplyTheme_InsertsActiveThemeAtIndexZero()
     {
-        var service = new ThemeService(TestApplication.Instance);
-        var merged = TestApplication.Instance.Resources.MergedDictionaries;
+        ThemeService service = new ThemeService(TestApplication.Instance);
+        IList<ResourceDictionary> merged = TestApplication.Instance.Resources.MergedDictionaries;
 
         service.ApplyTheme(ThemeNames.Dracula);
 
@@ -141,7 +141,7 @@ public sealed class ThemeServiceBehavioralTests : IDisposable
     [StaFact]
     public void ApplyTheme_ForEveryTheme_ExposesSharedDesignTokens()
     {
-        var service = new ThemeService(TestApplication.Instance);
+        ThemeService service = new ThemeService(TestApplication.Instance);
 
         foreach (string themeName in ThemeNames.All)
         {
@@ -160,13 +160,13 @@ public sealed class ThemeServiceBehavioralTests : IDisposable
     {
         // Application.Current may be null if no [StaFact] has touched
         // TestApplication.Instance yet — nothing to clean in that case.
-        var app = Application.Current;
+        Application? app = Application.Current;
         if (app is null)
         {
             return;
         }
 
-        var merged = app.Resources.MergedDictionaries;
+        IList<ResourceDictionary> merged = app.Resources.MergedDictionaries;
         for (int i = merged.Count - 1; i >= 0; i--)
         {
             if (merged[i].Contains(ThemeMarkerKey))

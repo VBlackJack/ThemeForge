@@ -35,7 +35,7 @@ public sealed class ThemeServiceContractTests
     [StaFact]
     public void Ctor_WithDefaults_ExposesAllCanonicalThemes()
     {
-        var service = new ThemeService(TestApplication.Instance);
+        ThemeService service = new ThemeService(TestApplication.Instance);
 
         service.AvailableThemes.Should().Equal(ThemeNames.All);
     }
@@ -45,7 +45,7 @@ public sealed class ThemeServiceContractTests
     {
         string[] custom = new[] { ThemeNames.Dracula, ThemeNames.Drakul };
 
-        var service = new ThemeService(TestApplication.Instance, custom);
+        ThemeService service = new ThemeService(TestApplication.Instance, custom);
 
         service.AvailableThemes.Should().Equal(custom);
     }
@@ -53,7 +53,7 @@ public sealed class ThemeServiceContractTests
     [StaFact]
     public void InitialState_CurrentThemeEmpty_RevisionZero()
     {
-        var service = new ThemeService(TestApplication.Instance);
+        ThemeService service = new ThemeService(TestApplication.Instance);
 
         service.CurrentTheme.Should().BeEmpty();
         service.ThemeRevision.Should().Be(0);
@@ -62,7 +62,7 @@ public sealed class ThemeServiceContractTests
     [StaFact]
     public void ApplyTheme_WithNull_Throws()
     {
-        var service = new ThemeService(TestApplication.Instance);
+        ThemeService service = new ThemeService(TestApplication.Instance);
 
         Action act = () => service.ApplyTheme(null!);
 
@@ -72,7 +72,7 @@ public sealed class ThemeServiceContractTests
     [StaFact]
     public void ApplyTheme_WithEmpty_Throws()
     {
-        var service = new ThemeService(TestApplication.Instance);
+        ThemeService service = new ThemeService(TestApplication.Instance);
 
         Action act = () => service.ApplyTheme(string.Empty);
 
@@ -82,7 +82,7 @@ public sealed class ThemeServiceContractTests
     [StaFact]
     public void ApplyTheme_WithWhitespace_Throws()
     {
-        var service = new ThemeService(TestApplication.Instance);
+        ThemeService service = new ThemeService(TestApplication.Instance);
 
         Action act = () => service.ApplyTheme("   ");
 
@@ -92,7 +92,7 @@ public sealed class ThemeServiceContractTests
     [StaFact]
     public void ApplyTheme_WithUnknownName_ThrowsWithNameInMessage()
     {
-        var service = new ThemeService(TestApplication.Instance);
+        ThemeService service = new ThemeService(TestApplication.Instance);
 
         Action act = () => service.ApplyTheme("NotARealTheme");
 

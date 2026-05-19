@@ -61,7 +61,7 @@ public sealed partial class SlotViewModel : ObservableObject
             return;
         }
 
-        if (TryParseHex(value, out var parsed))
+        if (TryParseHex(value, out Color parsed))
         {
             Color = parsed;
             Application.Current.Resources[_resourceKey] = new SolidColorBrush(parsed);
@@ -95,7 +95,7 @@ public sealed partial class SlotViewModel : ObservableObject
             return false;
         }
 
-        var s = raw.Trim().TrimStart('#');
+        string s = raw.Trim().TrimStart('#');
         if (s.Length != 6 && s.Length != 8)
         {
             return false;

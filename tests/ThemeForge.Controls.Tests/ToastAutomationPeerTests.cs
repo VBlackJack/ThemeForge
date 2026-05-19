@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using FluentAssertions;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
+using FluentAssertions;
 using ThemeForge.Controls.Composites;
 using Xunit;
 
@@ -26,9 +26,9 @@ public sealed class ToastAutomationPeerTests
     public void Ctor_StoresOwner()
     {
         _ = TestApplication.Instance;
-        var toast = new Toast();
+        Toast toast = new Toast();
 
-        var peer = new ToastAutomationPeer(toast);
+        ToastAutomationPeer peer = new ToastAutomationPeer(toast);
 
         peer.Owner.Should().BeSameAs(toast);
     }
@@ -37,7 +37,7 @@ public sealed class ToastAutomationPeerTests
     public void GetClassName_ReturnsToastName()
     {
         _ = TestApplication.Instance;
-        var peer = new ToastAutomationPeer(new Toast());
+        ToastAutomationPeer peer = new ToastAutomationPeer(new Toast());
 
         peer.GetClassName().Should().Be("Toast");
     }
@@ -46,7 +46,7 @@ public sealed class ToastAutomationPeerTests
     public void GetAutomationControlType_ReturnsGroup()
     {
         _ = TestApplication.Instance;
-        var peer = new ToastAutomationPeer(new Toast());
+        ToastAutomationPeer peer = new ToastAutomationPeer(new Toast());
 
         peer.GetAutomationControlType().Should().Be(AutomationControlType.Group);
     }
@@ -55,7 +55,7 @@ public sealed class ToastAutomationPeerTests
     public void GetLiveSetting_ForInfo_ReturnsPolite()
     {
         _ = TestApplication.Instance;
-        var peer = new ToastAutomationPeer(new Toast { Severity = ToastSeverity.Info });
+        ToastAutomationPeer peer = new ToastAutomationPeer(new Toast { Severity = ToastSeverity.Info });
 
         peer.GetLiveSetting().Should().Be(AutomationLiveSetting.Polite);
     }
@@ -64,7 +64,7 @@ public sealed class ToastAutomationPeerTests
     public void GetLiveSetting_ForSuccess_ReturnsPolite()
     {
         _ = TestApplication.Instance;
-        var peer = new ToastAutomationPeer(new Toast { Severity = ToastSeverity.Success });
+        ToastAutomationPeer peer = new ToastAutomationPeer(new Toast { Severity = ToastSeverity.Success });
 
         peer.GetLiveSetting().Should().Be(AutomationLiveSetting.Polite);
     }
@@ -73,7 +73,7 @@ public sealed class ToastAutomationPeerTests
     public void GetLiveSetting_ForWarning_ReturnsPolite()
     {
         _ = TestApplication.Instance;
-        var peer = new ToastAutomationPeer(new Toast { Severity = ToastSeverity.Warning });
+        ToastAutomationPeer peer = new ToastAutomationPeer(new Toast { Severity = ToastSeverity.Warning });
 
         peer.GetLiveSetting().Should().Be(AutomationLiveSetting.Polite);
     }
@@ -82,7 +82,7 @@ public sealed class ToastAutomationPeerTests
     public void GetLiveSetting_ForError_ReturnsAssertive()
     {
         _ = TestApplication.Instance;
-        var peer = new ToastAutomationPeer(new Toast { Severity = ToastSeverity.Error });
+        ToastAutomationPeer peer = new ToastAutomationPeer(new Toast { Severity = ToastSeverity.Error });
 
         peer.GetLiveSetting().Should().Be(AutomationLiveSetting.Assertive);
     }
@@ -91,9 +91,9 @@ public sealed class ToastAutomationPeerTests
     public void GetName_WithExplicitAutomationProperty_WinsOverContent()
     {
         _ = TestApplication.Instance;
-        var toast = new Toast { Title = "Title", Message = "Message" };
+        Toast toast = new Toast { Title = "Title", Message = "Message" };
         AutomationProperties.SetName(toast, "Explicit toast name");
-        var peer = new ToastAutomationPeer(toast);
+        ToastAutomationPeer peer = new ToastAutomationPeer(toast);
 
         peer.GetName().Should().Be("Explicit toast name");
     }
@@ -102,8 +102,8 @@ public sealed class ToastAutomationPeerTests
     public void GetName_WithTitleAndMessage_ReturnsComposed()
     {
         _ = TestApplication.Instance;
-        var toast = new Toast { Title = "Saved", Message = "Profile updated." };
-        var peer = new ToastAutomationPeer(toast);
+        Toast toast = new Toast { Title = "Saved", Message = "Profile updated." };
+        ToastAutomationPeer peer = new ToastAutomationPeer(toast);
 
         peer.GetName().Should().Be("Saved — Profile updated.");
     }
@@ -112,8 +112,8 @@ public sealed class ToastAutomationPeerTests
     public void GetName_WithTitleOnly_ReturnsTitle()
     {
         _ = TestApplication.Instance;
-        var toast = new Toast { Title = "Saved" };
-        var peer = new ToastAutomationPeer(toast);
+        Toast toast = new Toast { Title = "Saved" };
+        ToastAutomationPeer peer = new ToastAutomationPeer(toast);
 
         peer.GetName().Should().Be("Saved");
     }
@@ -122,8 +122,8 @@ public sealed class ToastAutomationPeerTests
     public void GetName_WithMessageOnly_ReturnsMessage()
     {
         _ = TestApplication.Instance;
-        var toast = new Toast { Message = "Profile updated." };
-        var peer = new ToastAutomationPeer(toast);
+        Toast toast = new Toast { Message = "Profile updated." };
+        ToastAutomationPeer peer = new ToastAutomationPeer(toast);
 
         peer.GetName().Should().Be("Profile updated.");
     }
@@ -132,7 +132,7 @@ public sealed class ToastAutomationPeerTests
     public void GetName_WithNothing_ReturnsEmpty()
     {
         _ = TestApplication.Instance;
-        var peer = new ToastAutomationPeer(new Toast());
+        ToastAutomationPeer peer = new ToastAutomationPeer(new Toast());
 
         peer.GetName().Should().BeEmpty();
     }

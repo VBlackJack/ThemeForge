@@ -106,20 +106,20 @@ internal sealed class IconButtonAutomationPeer : ButtonAutomationPeer
 
     protected override string GetNameCore()
     {
-        var owner = (IconButton)Owner;
+        IconButton owner = (IconButton)Owner;
 
         if (!string.IsNullOrWhiteSpace(owner.Label))
         {
             return owner.Label;
         }
 
-        var explicitName = AutomationProperties.GetName(owner);
+        string explicitName = AutomationProperties.GetName(owner);
         if (!string.IsNullOrWhiteSpace(explicitName))
         {
             return explicitName;
         }
 
-        var helpText = AutomationProperties.GetHelpText(owner);
+        string helpText = AutomationProperties.GetHelpText(owner);
         if (!string.IsNullOrWhiteSpace(helpText))
         {
             return helpText;

@@ -22,7 +22,7 @@ public sealed class ThemeChangedEventArgsTests
     [Fact]
     public void Ctor_WithValidArgs_StoresAllProperties()
     {
-        var args = new ThemeChangedEventArgs("Dracula", "Drakul", 2);
+        ThemeChangedEventArgs args = new ThemeChangedEventArgs("Dracula", "Drakul", 2);
 
         args.PreviousTheme.Should().Be("Dracula");
         args.CurrentTheme.Should().Be("Drakul");
@@ -33,7 +33,7 @@ public sealed class ThemeChangedEventArgsTests
     public void Ctor_WithEmptyPrevious_IsAccepted()
     {
         // First apply: previous is the empty initial state.
-        var args = new ThemeChangedEventArgs(string.Empty, "Dracula", 1);
+        ThemeChangedEventArgs args = new ThemeChangedEventArgs(string.Empty, "Dracula", 1);
 
         args.PreviousTheme.Should().BeEmpty();
         args.CurrentTheme.Should().Be("Dracula");
@@ -43,7 +43,7 @@ public sealed class ThemeChangedEventArgsTests
     [Fact]
     public void Ctor_WithNullCurrent_Throws()
     {
-        var act = () => new ThemeChangedEventArgs("Dracula", null!, 1);
+        Action act = () => new ThemeChangedEventArgs("Dracula", null!, 1);
 
         act.Should().Throw<ArgumentException>();
     }
@@ -51,7 +51,7 @@ public sealed class ThemeChangedEventArgsTests
     [Fact]
     public void Ctor_WithEmptyCurrent_Throws()
     {
-        var act = () => new ThemeChangedEventArgs("Dracula", string.Empty, 1);
+        Action act = () => new ThemeChangedEventArgs("Dracula", string.Empty, 1);
 
         act.Should().Throw<ArgumentException>();
     }
@@ -59,7 +59,7 @@ public sealed class ThemeChangedEventArgsTests
     [Fact]
     public void Ctor_WithWhitespaceCurrent_Throws()
     {
-        var act = () => new ThemeChangedEventArgs("Dracula", "   ", 1);
+        Action act = () => new ThemeChangedEventArgs("Dracula", "   ", 1);
 
         act.Should().Throw<ArgumentException>();
     }

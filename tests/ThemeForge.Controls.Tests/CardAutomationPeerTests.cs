@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using FluentAssertions;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
+using FluentAssertions;
 using ThemeForge.Controls.Composites;
 using Xunit;
 
@@ -26,9 +26,9 @@ public sealed class CardAutomationPeerTests
     public void Ctor_StoresOwner()
     {
         _ = TestApplication.Instance;
-        var card = new Card();
+        Card card = new Card();
 
-        var peer = new CardAutomationPeer(card);
+        CardAutomationPeer peer = new CardAutomationPeer(card);
 
         peer.Owner.Should().BeSameAs(card);
     }
@@ -37,7 +37,7 @@ public sealed class CardAutomationPeerTests
     public void GetClassName_ReturnsCardName()
     {
         _ = TestApplication.Instance;
-        var peer = new CardAutomationPeer(new Card());
+        CardAutomationPeer peer = new CardAutomationPeer(new Card());
 
         peer.GetClassName().Should().Be("Card");
     }
@@ -46,7 +46,7 @@ public sealed class CardAutomationPeerTests
     public void GetAutomationControlType_ReturnsGroup()
     {
         _ = TestApplication.Instance;
-        var peer = new CardAutomationPeer(new Card());
+        CardAutomationPeer peer = new CardAutomationPeer(new Card());
 
         peer.GetAutomationControlType().Should().Be(AutomationControlType.Group);
     }
@@ -55,9 +55,9 @@ public sealed class CardAutomationPeerTests
     public void GetName_WithExplicitAutomationProperty_WinsOverHeader()
     {
         _ = TestApplication.Instance;
-        var card = new Card { Header = "Header should be ignored" };
+        Card card = new Card { Header = "Header should be ignored" };
         AutomationProperties.SetName(card, "Explicit name");
-        var peer = new CardAutomationPeer(card);
+        CardAutomationPeer peer = new CardAutomationPeer(card);
 
         peer.GetName().Should().Be("Explicit name");
     }
@@ -66,8 +66,8 @@ public sealed class CardAutomationPeerTests
     public void GetName_WithoutExplicitButWithHeader_ReturnsHeaderToString()
     {
         _ = TestApplication.Instance;
-        var card = new Card { Header = "Settings" };
-        var peer = new CardAutomationPeer(card);
+        Card card = new Card { Header = "Settings" };
+        CardAutomationPeer peer = new CardAutomationPeer(card);
 
         peer.GetName().Should().Be("Settings");
     }
@@ -76,7 +76,7 @@ public sealed class CardAutomationPeerTests
     public void GetName_WithNoExplicitNameAndNoHeader_ReturnsEmpty()
     {
         _ = TestApplication.Instance;
-        var peer = new CardAutomationPeer(new Card());
+        CardAutomationPeer peer = new CardAutomationPeer(new Card());
 
         peer.GetName().Should().BeEmpty();
     }

@@ -67,8 +67,8 @@ public sealed class ThemeService : IThemeService
             return; // idempotent on no-op
         }
 
-        var newDictionary = LoadThemeDictionary(name);
-        var merged = _application.Resources.MergedDictionaries;
+        ResourceDictionary newDictionary = LoadThemeDictionary(name);
+        IList<ResourceDictionary> merged = _application.Resources.MergedDictionaries;
 
         // Drop any previously tagged active theme dictionary.
         for (int i = merged.Count - 1; i >= 0; i--)
@@ -91,8 +91,8 @@ public sealed class ThemeService : IThemeService
 
     private static ResourceDictionary LoadThemeDictionary(string name)
     {
-        var uri = new Uri(string.Format(ThemePackUriFormat, name), UriKind.Absolute);
-        var dict = new ResourceDictionary { Source = uri };
+        Uri uri = new Uri(string.Format(ThemePackUriFormat, name), UriKind.Absolute);
+        ResourceDictionary dict = new ResourceDictionary { Source = uri };
 
         // Tag the dictionary so we can find it again at the next swap. The
         // marker value is irrelevant; only its key presence matters.

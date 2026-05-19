@@ -160,24 +160,24 @@ internal sealed class ChipAutomationPeer : ButtonBaseAutomationPeer
 
     protected override string GetNameCore()
     {
-        var owner = (Chip)Owner;
+        Chip owner = (Chip)Owner;
 
         if (owner.Content is not null)
         {
-            var contentText = owner.Content.ToString();
+            string? contentText = owner.Content.ToString();
             if (!string.IsNullOrWhiteSpace(contentText))
             {
                 return contentText;
             }
         }
 
-        var explicitName = AutomationProperties.GetName(owner);
+        string explicitName = AutomationProperties.GetName(owner);
         if (!string.IsNullOrWhiteSpace(explicitName))
         {
             return explicitName;
         }
 
-        var helpText = AutomationProperties.GetHelpText(owner);
+        string helpText = AutomationProperties.GetHelpText(owner);
         if (!string.IsNullOrWhiteSpace(helpText))
         {
             return helpText;

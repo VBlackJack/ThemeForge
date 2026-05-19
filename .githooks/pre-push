@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+
+repo_root="$(git rev-parse --show-toplevel)"
+script_path="$repo_root/tools/ci-mime.ps1"
+
+if ! command -v pwsh >/dev/null 2>&1; then
+  echo "ThemeForge pre-push hook requires PowerShell 7+ (pwsh)." >&2
+  echo "Install pwsh or bypass once with: git push --no-verify" >&2
+  exit 1
+fi
+
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File "$script_path"

@@ -1,0 +1,2 @@
+# Git hooks must keep LF line endings for POSIX shell execution.
+/.githooks/* text eol=lf

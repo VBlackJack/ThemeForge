@@ -28,25 +28,25 @@
                 <TextBlock Text="Comment"     Margin="8" Foreground="{DynamicResource BackgroundBrush}"/>
             </Border>
             <Border Margin="4" Background="{DynamicResource CyanBrush}"        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Height="60">
-                <TextBlock Text="Cyan"        Margin="8" Foreground="#000"/>
+                <TextBlock Text="Cyan"        Margin="8" Foreground="{DynamicResource BackgroundBrush}"/>
             </Border>
             <Border Margin="4" Background="{DynamicResource GreenBrush}"       BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Height="60">
-                <TextBlock Text="Green"       Margin="8" Foreground="#000"/>
+                <TextBlock Text="Green"       Margin="8" Foreground="{DynamicResource BackgroundBrush}"/>
             </Border>
             <Border Margin="4" Background="{DynamicResource OrangeBrush}"      BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Height="60">
-                <TextBlock Text="Orange"      Margin="8" Foreground="#000"/>
+                <TextBlock Text="Orange"      Margin="8" Foreground="{DynamicResource BackgroundBrush}"/>
             </Border>
             <Border Margin="4" Background="{DynamicResource PinkBrush}"        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Height="60">
-                <TextBlock Text="Pink"        Margin="8" Foreground="#000"/>
+                <TextBlock Text="Pink"        Margin="8" Foreground="{DynamicResource BackgroundBrush}"/>
             </Border>
             <Border Margin="4" Background="{DynamicResource PurpleBrush}"      BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Height="60">
-                <TextBlock Text="Purple"      Margin="8" Foreground="#000"/>
+                <TextBlock Text="Purple"      Margin="8" Foreground="{DynamicResource BackgroundBrush}"/>
             </Border>
             <Border Margin="4" Background="{DynamicResource RedBrush}"         BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Height="60">
-                <TextBlock Text="Red"         Margin="8" Foreground="#000"/>
+                <TextBlock Text="Red"         Margin="8" Foreground="{DynamicResource BackgroundBrush}"/>
             </Border>
             <Border Margin="4" Background="{DynamicResource YellowBrush}"      BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Height="60">
-                <TextBlock Text="Yellow"      Margin="8" Foreground="#000"/>
+                <TextBlock Text="Yellow"      Margin="8" Foreground="{DynamicResource BackgroundBrush}"/>
             </Border>
             <Border Margin="4" Background="{DynamicResource ForegroundBrush}"  BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Height="60">
                 <TextBlock Text="Foreground"  Margin="8" Foreground="{DynamicResource BackgroundBrush}"/>
@@ -78,13 +78,13 @@
 
             <!-- Row 2: accent triad + secondary text -->
             <Border Margin="4" Background="{DynamicResource AccentBrush}"         BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Height="60">
-                <TextBlock Text="Accent"         Margin="8" Foreground="#000"/>
+                <TextBlock Text="Accent"         Margin="8" Foreground="{DynamicResource BackgroundBrush}"/>
             </Border>
             <Border Margin="4" Background="{DynamicResource AccentHoverBrush}"    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Height="60">
-                <TextBlock Text="AccentHover"    Margin="8" Foreground="#000"/>
+                <TextBlock Text="AccentHover"    Margin="8" Foreground="{DynamicResource BackgroundBrush}"/>
             </Border>
             <Border Margin="4" Background="{DynamicResource AccentPressedBrush}"  BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Height="60">
-                <TextBlock Text="AccentPressed"  Margin="8" Foreground="#000"/>
+                <TextBlock Text="AccentPressed"  Margin="8" Foreground="{DynamicResource BackgroundBrush}"/>
             </Border>
             <Border Margin="4" Background="{DynamicResource TextSecondaryBrush}"  BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Height="60">
                 <TextBlock Text="TextSecondary"  Margin="8" Foreground="{DynamicResource BackgroundBrush}"/>
@@ -92,16 +92,16 @@
 
             <!-- Row 3: feedback -->
             <Border Margin="4" Background="{DynamicResource SuccessBrush}"        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Height="60">
-                <TextBlock Text="Success"        Margin="8" Foreground="#000"/>
+                <TextBlock Text="Success"        Margin="8" Foreground="{DynamicResource BackgroundBrush}"/>
             </Border>
             <Border Margin="4" Background="{DynamicResource WarningBrush}"        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Height="60">
-                <TextBlock Text="Warning"        Margin="8" Foreground="#000"/>
+                <TextBlock Text="Warning"        Margin="8" Foreground="{DynamicResource BackgroundBrush}"/>
             </Border>
             <Border Margin="4" Background="{DynamicResource ErrorBrush}"          BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Height="60">
-                <TextBlock Text="Error"          Margin="8" Foreground="#fff"/>
+                <TextBlock Text="Error"          Margin="8" Foreground="{DynamicResource BackgroundBrush}"/>
             </Border>
             <Border Margin="4" Background="{DynamicResource InfoBrush}"           BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Height="60">
-                <TextBlock Text="Info"           Margin="8" Foreground="#000"/>
+                <TextBlock Text="Info"           Margin="8" Foreground="{DynamicResource BackgroundBrush}"/>
             </Border>
         </UniformGrid>
 

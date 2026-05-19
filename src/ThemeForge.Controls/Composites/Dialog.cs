@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -167,6 +168,10 @@ public sealed class Dialog : HeaderedContentControl
 
         Closed?.Invoke(this, EventArgs.Empty);
     }
+
+    /// <inheritdoc />
+    protected override AutomationPeer OnCreateAutomationPeer()
+        => new DialogAutomationPeer(this);
 
     private void OnCloseClicked(object sender, RoutedEventArgs e)
         => Close();

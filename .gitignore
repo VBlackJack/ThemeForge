@@ -20,6 +20,9 @@ TestResults/
 *.local.json
 .env
 .env.*
+AGENTS.md
+CLAUDE.md
+Claude.md
 
 # OS junk
 Thumbs.db

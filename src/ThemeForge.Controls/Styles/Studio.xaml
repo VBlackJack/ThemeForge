@@ -41,5 +41,8 @@
         <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Styles/GroupBoxStyle.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Styles/ExpanderStyle.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Styles/StatusBarStyle.xaml"/>
+
+        <!-- Palier C4 : feedback helpers -->
+        <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Styles/ToolTip.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

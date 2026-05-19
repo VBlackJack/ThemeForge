@@ -15,7 +15,8 @@
         <TextBlock Text="Button" FontWeight="SemiBold" Margin="0,0,0,8"
                    Foreground="{DynamicResource TextPrimaryBrush}"/>
         <WrapPanel Margin="0,0,0,20">
-            <Button Content="Default" Margin="0,0,8,8" Padding="14,6"/>
+            <Button Content="Default" Margin="0,0,8,8" Padding="14,6"
+                    ToolTip="Primary action - keyboard shortcut Ctrl+Enter"/>
             <Button Content="Disabled" Margin="0,0,8,8" Padding="14,6" IsEnabled="False"/>
             <Button Content="Long label here" Margin="0,0,8,8" Padding="14,6"/>
             <Button Content="OK" Margin="0,0,8,8" Padding="14,6" IsDefault="True"/>

@@ -138,6 +138,24 @@ public sealed class ThemeServiceBehavioralTests : IDisposable
         merged[0].Contains(ThemeMarkerKey).Should().BeTrue();
     }
 
+    [StaFact]
+    public void ApplyTheme_ForEveryTheme_ExposesSharedDesignTokens()
+    {
+        var service = new ThemeService(TestApplication.Instance);
+
+        foreach (var themeName in ThemeNames.All)
+        {
+            service.ApplyTheme(themeName);
+
+            TestApplication.Instance.TryFindResource("SpacingMd")
+                .Should().Be(new Thickness(8), $"{themeName} should merge shared spacing tokens");
+            TestApplication.Instance.TryFindResource("RadiusMd")
+                .Should().Be(new CornerRadius(4), $"{themeName} should merge shared radius tokens");
+            TestApplication.Instance.TryFindResource("FontSizeLg")
+                .Should().Be(18d, $"{themeName} should merge shared font size tokens");
+        }
+    }
+
     private static void ClearTaggedDictionaries()
     {
         // Application.Current may be null if no [StaFact] has touched

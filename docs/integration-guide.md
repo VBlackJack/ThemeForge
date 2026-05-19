@@ -238,12 +238,24 @@ Cela aide les screen readers et les tests UIA.
 
 ## 7. Utiliser les design tokens dans tes propres styles
 
-Les tokens actuels sont déclarés dans chaque fichier de thème.
+Les tokens non-couleur communs sont centralisés dans :
 
-Exemple : `src/ThemeForge.Theme/Themes/Dracula.xaml`.
+`src/ThemeForge.Theme/Themes/Shared/DesignTokens.xaml`.
 
-Il n'y a pas de fichier `Themes/Shared/DesignTokens.xaml` dans l'état actuel du
-repo.
+Chaque variante de thème merge ce fichier shared. Tu peux donc utiliser les
+mêmes tokens de spacing, radius et taille de police quel que soit le thème
+actif.
+
+Les tokens partagés :
+
+- `SpacingNone`, `SpacingXxs`, `SpacingXs`, `SpacingSm`, `SpacingMd`,
+  `SpacingLg`, `SpacingXl`, `SpacingXxl`, `SpacingXxxl` (`Thickness`)
+- `RadiusNone`, `RadiusXs`, `RadiusSm`, `RadiusMd`, `RadiusLg`, `RadiusXl`,
+  `RadiusFull` (`CornerRadius`)
+- `FontSizeXs`, `FontSizeSm`, `FontSizeMd`, `FontSizeLg`, `FontSizeXl`
+  (`Double`)
+
+Les couleurs restent déclarées dans chaque fichier de thème.
 
 Les brushes canoniques :
 
@@ -286,9 +298,9 @@ Exemple de style local :
 ```xml
 <Style x:Key="PanelTitle" TargetType="{x:Type TextBlock}">
     <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
-    <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
     <Setter Property="FontWeight" Value="SemiBold"/>
-    <Setter Property="Padding" Value="8,4"/>
+    <Setter Property="FontSize" Value="{DynamicResource FontSizeLg}"/>
+    <Setter Property="Margin" Value="{DynamicResource SpacingMd}"/>
 </Style>
 ```
 

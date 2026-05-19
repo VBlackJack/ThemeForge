@@ -82,7 +82,7 @@ public sealed class ThemeService : IThemeService
         // Insert the new dictionary first so theme resources win lookup.
         merged.Insert(0, newDictionary);
 
-        var previous = _currentTheme;
+        string previous = _currentTheme;
         _currentTheme = name;
         _themeRevision++;
 

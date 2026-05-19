@@ -1,2 +1,26 @@
+# Default: detect text vs binary, store LF in repo and check out LF in working tree.
+* text=auto eol=lf
+
 # Git hooks must keep LF line endings for POSIX shell execution.
 /.githooks/* text eol=lf
+
+# PowerShell scripts: LF, UTF-8 on disk (PSCore-friendly, no BOM).
+*.ps1 text eol=lf working-tree-encoding=UTF-8
+
+# Source and config: explicit text (defensive).
+*.cs       text
+*.csproj   text
+*.editorconfig text
+*.gitattributes text
+*.gitignore    text
+*.js       text
+*.manifest text
+*.md       text
+*.props    text
+*.py       text
+*.slnx     text
+*.xaml     text
+*.yml      text
+
+# Binaries: never touch.
+*.png binary

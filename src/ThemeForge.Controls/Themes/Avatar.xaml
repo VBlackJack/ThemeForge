@@ -12,7 +12,7 @@
 
     <Style TargetType="{x:Type composites:Avatar}">
         <Setter Property="Background"    Value="{DynamicResource AccentBrush}"/>
-        <Setter Property="Foreground"    Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="Foreground"    Value="{DynamicResource BackgroundBrush}"/>
         <Setter Property="FontFamily"    Value="Segoe UI"/>
         <Setter Property="FontWeight"    Value="SemiBold"/>
         <Setter Property="FontSize"      Value="14"/>

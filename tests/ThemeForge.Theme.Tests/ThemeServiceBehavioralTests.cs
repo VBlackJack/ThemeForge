@@ -24,6 +24,7 @@ namespace ThemeForge.Theme.Tests;
 /// <see cref="Application"/> instance (WPF singleton) and therefore clean up
 /// any tagged dictionary before and after each test.
 /// </summary>
+[Collection("ThemeService resource dictionary tests")]
 public sealed class ThemeServiceBehavioralTests : IDisposable
 {
     // Hardcoded mirror of ThemeService.ThemeMarkerKey (private const). These

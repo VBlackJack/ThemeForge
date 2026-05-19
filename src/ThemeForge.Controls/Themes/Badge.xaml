@@ -47,22 +47,22 @@
             <Trigger Property="Severity" Value="Success">
                 <Setter Property="Background"  Value="{DynamicResource SuccessBrush}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource SuccessBrush}"/>
-                <Setter Property="Foreground"  Value="#000"/>
+                <Setter Property="Foreground"  Value="{DynamicResource BackgroundBrush}"/>
             </Trigger>
             <Trigger Property="Severity" Value="Warning">
                 <Setter Property="Background"  Value="{DynamicResource WarningBrush}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource WarningBrush}"/>
-                <Setter Property="Foreground"  Value="#000"/>
+                <Setter Property="Foreground"  Value="{DynamicResource BackgroundBrush}"/>
             </Trigger>
             <Trigger Property="Severity" Value="Error">
                 <Setter Property="Background"  Value="{DynamicResource ErrorBrush}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource ErrorBrush}"/>
-                <Setter Property="Foreground"  Value="#fff"/>
+                <Setter Property="Foreground"  Value="{DynamicResource BackgroundBrush}"/>
             </Trigger>
             <Trigger Property="Severity" Value="Info">
                 <Setter Property="Background"  Value="{DynamicResource InfoBrush}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource InfoBrush}"/>
-                <Setter Property="Foreground"  Value="#000"/>
+                <Setter Property="Foreground"  Value="{DynamicResource BackgroundBrush}"/>
             </Trigger>
         </Style.Triggers>
     </Style>

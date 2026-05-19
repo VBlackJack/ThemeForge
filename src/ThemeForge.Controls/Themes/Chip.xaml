@@ -45,7 +45,7 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="closeBorder" Property="Background" Value="{DynamicResource ErrorBrush}"/>
-                            <Setter TargetName="closeGlyph"  Property="Stroke"     Value="#fff"/>
+                            <Setter TargetName="closeGlyph"  Property="Stroke"     Value="{DynamicResource BackgroundBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -123,7 +123,7 @@
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="chipBorder" Property="Background"  Value="{DynamicResource AccentBrush}"/>
                             <Setter TargetName="chipBorder" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
-                            <Setter Property="Foreground" Value="#000"/>
+                            <Setter Property="Foreground" Value="{DynamicResource BackgroundBrush}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.5"/>

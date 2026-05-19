@@ -14,5 +14,5 @@ run_check() {
   pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File "$script_path"
 }
 
-run_check ci-mime.ps1
+run_check ci-explicit-types.ps1
 run_check ci-xaml-headers.ps1

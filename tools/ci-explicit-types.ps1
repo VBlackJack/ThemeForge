@@ -5,6 +5,7 @@
 [CmdletBinding()]
 param()
 
+# Runs the local checks around the explicit C# type declaration gate.
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
@@ -121,7 +122,7 @@ try {
 
     $elapsed = (Get-Date) - $script:StartedAt
     Write-Host ''
-    Write-Host ("CI mimic passed in {0:mm\:ss}." -f $elapsed)
+    Write-Host ("Local checks passed in {0:mm\:ss}." -f $elapsed)
 }
 finally {
     Pop-Location

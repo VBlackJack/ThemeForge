@@ -32,3 +32,6 @@ desktop.ini
 # Publish output
 publish/
 Dist/
+
+# Local visual review artifacts
+docs/screenshots/

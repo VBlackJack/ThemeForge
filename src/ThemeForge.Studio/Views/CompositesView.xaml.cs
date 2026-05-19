@@ -25,6 +25,18 @@ public partial class CompositesView : UserControl
         InitializeComponent();
     }
 
+    private void OpenDialog_Click(object sender, RoutedEventArgs e)
+    {
+        DialogDemoWindow window = new DialogDemoWindow();
+        Window? owner = Window.GetWindow(this);
+        if (owner is not null)
+        {
+            window.Owner = owner;
+        }
+
+        window.ShowDialog();
+    }
+
     private void OnShowInfo(object sender, RoutedEventArgs e)
         => Push(ToastSeverity.Info, "Info", "Information message.");
 

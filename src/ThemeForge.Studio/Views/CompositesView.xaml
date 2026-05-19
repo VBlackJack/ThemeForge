@@ -178,5 +178,16 @@
         <dfc:ToastHost x:Name="DemoToastHost" Margin="0,0,0,20"
                        Width="320" HorizontalAlignment="Left"/>
 
+        <!-- Dialog example -->
+        <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                CornerRadius="6" Padding="12" Margin="0,0,0,20">
+            <StackPanel>
+                <TextBlock Text="Dialog" FontWeight="SemiBold" Margin="0,0,0,8"
+                           Foreground="{DynamicResource TextPrimaryBrush}"/>
+                <Button Content="Open dialog" Width="160" HorizontalAlignment="Left"
+                        Click="OpenDialog_Click"/>
+            </StackPanel>
+        </Border>
+
     </StackPanel>
 </UserControl>

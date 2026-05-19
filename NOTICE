@@ -5,15 +5,19 @@ This product includes software developed by Julien Bombled and licensed
 under the Apache License, Version 2.0 (see LICENSE).
 
 ================================================================================
-Color palettes / theme variants — attribution (v3, post cross-review)
+Color palettes / theme variants - attribution (v6 final)
 ================================================================================
 
-The framework ships 16 theme variants. The first reproduces the canonical
-Dracula Theme palette by Zeno Rocha (MIT) and is kept as the framework's
-historical root. Drakul is an AA-compliant sibling of Dracula. The other 14
-are original works by Julien Bombled, released under Apache 2.0, engineered
-with the "Geometric Color Palette" / uniform-Oklab-L* philosophy and
-cross-reviewed by four independent audit passes (an independent reviewer, an independent reviewer, an independent reviewer).
+The framework ships 16 theme variants. Dracula reproduces the canonical
+Dracula Theme palette by Zeno Rocha (MIT) and is kept unchanged as the
+historical root. Drakul is an AA-compliant Apache 2.0 sibling derived from
+Dracula by Julien Bombled. The other 14 palettes are original works by Julien
+Bombled, released under Apache 2.0.
+
+The final v6 palette set was validated on 2026-05-18 after five independent
+cross-review passes by independent reviewers. v6 carries the v5
+uniform-Oklab-L* accent model, then adds the Bracken rename and the Drakul
+AA-compliant root sibling.
 
 --------------------------------------------------------------------------------
 1. Dracula Theme — MIT (Zeno Rocha)
@@ -28,7 +32,7 @@ cross-reviewed by four independent audit passes (an independent reviewer, an ind
   variant unchanged for canonical fidelity. See variant Drakul (below) for
   the AA-compliant sibling.
 
-  - Drakul         Apache 2.0 — Julien Bombled
+  - Drakul         Apache 2.0 - Julien Bombled
                    Derivative of the canonical Dracula Theme palette with
                    Comment slot lifted from #6272A4 to #B3BBD6 to clear
                    WCAG AA (Comment/CL = 4.79, Comment/Bg = 7.46). Every
@@ -38,47 +42,51 @@ cross-reviewed by four independent audit passes (an independent reviewer, an ind
                    Țepeș from whom Stoker derived "Dracula". Public domain.
 
 --------------------------------------------------------------------------------
-2. Original ThemeForge palettes — Apache 2.0 (Julien Bombled)
+2. Original ThemeForge palettes - Apache 2.0 (Julien Bombled)
 --------------------------------------------------------------------------------
 
-Fourteen palettes engineered with honest HSL targets (computed from declared
-parameters, not reverse-engineered from hand-picked hexes) :
+Fourteen palettes engineered from declared geometric targets, not
+reverse-engineered from hand-picked hexes :
 
-  * All 10 Dark variants share an identical 7-accent band at HSL
-    L 0.68 / S 0.65, with hues fixed at Cyan 186°, Green 135°, Orange 27°,
-    Pink 333°, Purple 282°, Red 0°, Yellow 60°. Only the Background hue
-    rotates between variants — the 7 accent hex values are byte-identical
-    across the 10 Darks.
+  * All 10 Dark variants share a 7-accent band with uniform Oklab L*
+    0.7185-0.7209. Hues are fixed at Cyan 186 deg, Green 135 deg,
+    Orange 27 deg, Pink 333 deg, Purple 282 deg, Red 0 deg, Yellow 60 deg.
+    Only the Background hue rotates between variants. The 7 accent hex values
+    are byte-identical across the 10 Darks.
 
-  * The 2 Light variants share an accent band at L 0.32 / S 0.78. Darker
-    and more saturated than the Dark band so accents remain legible on the
-    high-luminance L 0.95 backgrounds (clears WCAG AA on every accent).
+  * The 2 Light variants share a darker accent band with uniform Oklab L*
+    0.4995-0.5012 so accents remain legible on bright surfaces.
 
   * The 2 Alt variants reuse the Dark band but break exactly one accent
-    for their signature. The break holds same L 0.68 as the base band but
-    elevates S to 0.82 — equal luminance keeps the signature visually paired
-    with the rest of the band, chroma alone sets it apart. This is a design
-    choice over the visually noisier L-bump approach.
+    for their signature. The broken accent remains in the same Oklab L*
+    band and raises chroma instead of brightness.
+
+  * Comments on the Julien-authored variants target a uniform WCAG relative
+    luminance around 0.38, clearing AA against Background and CurrentLine.
+
+  * 15 of 16 palettes are AA-compliant on the contracted text pairs. The sole
+    exception is Dracula's canonical MIT Comment color, preserved verbatim for
+    historical fidelity. Drakul provides the AA-compliant sibling.
 
   Dark family (Background hue / character)
-  - Striga          H  12°   Romanian night-witch, warm umber
-  - Cinder           H  50°   mourning hearth, warm amber
-  - Bracken             H 110°   graveyard yew, bottle-green
-  - Tarn            H 160°   highland tarn, petrol-teal
-  - Mortis          H 200°   slate-cyan morgue
-  - Slate           H 220°   cold monastery stone, slate-blue
-  - Voivode         H 250°   Wallachian throne, deep indigo
-  - Carmilla        H 285°   velvet violet, Styrian countess (Le Fanu 1872)
-  - Whitby          H 315°   North Sea slate-mauve, where Dracula came ashore
-  - Vesper          H 340°   evening prayer in a ruined chapel
+  - Striga          H  12 deg   Romanian night-witch, warm umber
+  - Cinder          H  50 deg   mourning hearth, warm amber
+  - Bracken         H 110 deg   dark fern, apothecary green
+  - Tarn            H 170 deg   highland tarn, petrol-teal
+  - Mortis          H 200 deg   slate-cyan morgue
+  - Slate           H 225 deg   cold monastery stone, slate-blue
+  - Voivode         H 255 deg   Wallachian throne, deep indigo
+  - Carmilla        H 290 deg   velvet violet, Styrian countess (Le Fanu 1872)
+  - Whitby          H 320 deg   North Sea slate-mauve, where Dracula came ashore
+  - Vesper          H 345 deg   evening prayer in a ruined chapel
 
   Light family
-  - Parchment       H  40°   warm vellum cream, scholarly hush
-  - Folio          H 220°   cool ivory, stained-glass morning
+  - Parchment       H  40 deg   warm vellum cream, scholarly hush
+  - Folio           H 220 deg   cool ivory, stained-glass morning
 
   Alt family
-  - Wormwood        Green broken to viridian (H 158°) — Green Fairy / absinthe
-  - Sconce          Orange broken to amber (H 38°)   — Victorian sconce
+  - Wormwood        Green broken to viridian (H 158 deg) - Green Fairy / absinthe
+  - Sconce          Orange broken to amber (H 38 deg) - Victorian sconce
 
 All names are drawn from public domain sources : folklore (Striga, Bracken, Tarn,
 Mortis), architecture (Sconce, Folio, Parchment), atmosphere (Cinder, Vesper,
@@ -94,25 +102,20 @@ Morbius, Van Helsing) appears in this set.
 Cross-review history
 ================================================================================
 
-The v3 palette set is the result of a independent audit performed on
-2026-05-18 :
+The v6 palette set is the result of five independent review passes performed on
+2026-05-18 by independent reviewers :
 
-  - an independent reviewer     — see NOTICE
-  - an independent reviewer          — see NOTICE
-  - an independent reviewer         — see NOTICE
-  - Synthesis           — see NOTICE
+  - Pass 1 / v2 : uniform-HSL-L initial set; HSL claims and AA failures found.
+  - Pass 2 / v3 : exact HSL regeneration; Yellow and Comment failures found.
+  - Pass 3 / v4 : uniform-WCAG-L pass; trademark and perception issues found.
+  - Pass 4 / v5 : uniform-Oklab-L* accent bands; Sage and Dracula blockers found.
+  - Pass 5 / v6 : Bracken rename plus Drakul sibling; final SHIP verdict.
 
-Major changes vs v2 :
-  - Honest HSL claims (v2 claimed L 0.74 / S 0.66 ; actual was L 0.68 / S 0.65)
-  - Light accent band darkened to clear WCAG AA on bright surfaces
-  - Comment colors lifted ~6 L points to clear AA on Bg AND CurrentLine
-  - 4 Dark variants retired (Belfry, Sepulcher, Stygian, Nosferatu) to
-    eliminate Background hue clumps
-  - 3 Dark variants added (Cinder, Bracken, Tarn) to fill the 30°-180° wheel gap
-  - 4 renames : Drakula→Voivode (intra-set collision), Mireille→Mortis
-    (tonal mismatch), Lucent→Folio (Lucent Technologies brand collision),
-    Gaslight→Sconce (gaslighting connotation)
-  - Drakula→Voivode Bg darkened from L 0.24 to L 0.14 (fixes accent AA failures)
+Primary sources :
+  - v2/v3 arbitration : NOTICE
+  - v4 arbitration    : NOTICE
+  - v5 arbitration    : NOTICE
+  - v6 final verdict  : NOTICE
 
 ================================================================================
 Architectural inspiration

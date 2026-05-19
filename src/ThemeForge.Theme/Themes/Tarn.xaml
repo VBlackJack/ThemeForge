@@ -1,15 +1,17 @@
 <!--
   Copyright 2026 Julien Bombled
   Licensed under the Apache License, Version 2.0 (framework code + palette).
+  Palette attribution: original palette by Julien Bombled, Apache 2.0;
+  see NOTICE for the canonical attribution record.
 
   Variant: Tarn  |  Family: Dark  |  Bg Hue: 170°
   Tagline: Highland tarn — petrol-teal dark, the still water that does not reflect.
 
-  Engineered with uniform-Oklab-L* bands (v5) — perceptually uniform
+  Engineered with uniform-Oklab-L* bands (v6 final) — perceptually uniform
   accent luminance so Yellow stays yellow, Purple stays purple, all
   accents clear WCAG AA on their Bg / CurrentLine. Comments stay on
   uniform-WCAG-L (target 0.38) to clear AA on all 10 Darks.
-  See NOTICE and NOTICE
+  See NOTICE.
 -->
 
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=System.Runtime">

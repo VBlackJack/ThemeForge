@@ -6,13 +6,14 @@
   Tagline: Drakul — Vlad II of the Order of the Dragon (1408), AA-compliant
            sibling of the canonical Dracula MIT palette.
 
-  Palette origin: this is a derivative of the canonical Dracula Theme palette
+  Palette attribution: derived from the canonical Dracula Theme palette
   (Zeno Rocha, MIT) with the Comment slot lifted from #6272A4 to #B3BBD6 so
   that Comment/Background and Comment/CurrentLine both clear WCAG 2.1 AA
   (4.5:1). Every other slot is byte-identical to canonical Dracula. The name
   honors Vlad II Dracul (~1395-1447), prince of Wallachia and member of the
   Societas Draconistarum (Order of the Dragon), historical father of Vlad III
-  Țepeș from which Stoker derived "Dracula". Public domain.
+  Țepeș from which Stoker derived "Dracula". Public domain. See NOTICE for
+  the canonical attribution record.
 
   This variant exists because the canonical Dracula Comment (#6272A4) ratios
   to 3.03 vs Background and 1.94 vs CurrentLine — a known historical

@@ -15,27 +15,28 @@
 namespace ThemeForge.Theme;
 
 /// <summary>
-/// Canonical names for every shipped theme variant. v3 — HSL-exact,
-/// cross-reviewed by an independent reviewer + an independent reviewer + an independent reviewer.
+/// Canonical names for every shipped v6 theme variant.
 /// </summary>
 /// <remarks>
 /// The set ships 16 variants : the historical Dracula MIT palette by Zeno
 /// Rocha (kept as the framework's root), Drakul (Dracula sibling AA-compliant),
-/// plus 14 original Apache 2.0 palettes by Julien Bombled engineered with the
-/// v5 uniform-Oklab-L* philosophy :
+/// plus 14 original Apache 2.0 palettes by Julien Bombled. The final v6 palette
+/// was validated after five independent cross-review passes by an independent reviewer, an independent reviewer,
+/// and an independent reviewer. It carries the v5 uniform-Oklab-L* accent model, then adds
+/// the Bracken rename and Drakul sibling :
 /// <list type="bullet">
-///   <item>All 10 Dark variants share a 7-accent band targeting uniform
-///         WCAG relative luminance ≈ 0.32 (S 0.65). HSL L is hue-compensated
-///         per accent so Yellow doesn't fail AA while Purple sails through.</item>
-///   <item>The 2 Light variants share an accent band at uniform WCAG L
-///         ≈ 0.14 (S 0.85). Clears 4.5:1 against Light Bg WCAG L 0.88.</item>
+///   <item>All 10 Dark variants share a 7-accent band at Oklab L*
+///         0.7185-0.7209.</item>
+///   <item>The 2 Light variants share a darker accent band at Oklab L*
+///         0.4995-0.5012.</item>
 ///   <item>The 2 Alt variants reuse the Dark band but break exactly one
-///         accent (S elevated to 0.82, same WCAG L target).</item>
-///   <item>Background hue rotation : minimum 30° spacing between Dark
-///         siblings. Tarn shifted to H 170° to break v3 collision with
-///         Wormwood at H 150°.</item>
-///   <item>Comments tuned per Bg hue for uniform WCAG L ≈ 0.36, clearing
-///         AA against CurrentLine on all 10 Darks (v3 had 6 failures).</item>
+///         signature accent while staying in the same Oklab L* band.</item>
+///   <item>Comments on Julien-authored variants target uniform WCAG relative
+///         luminance around 0.38 and clear AA against Background and
+///         CurrentLine.</item>
+///   <item>15 of 16 palettes clear the contracted AA text pairs. Dracula keeps
+///         the canonical MIT Comment color unchanged; Drakul provides the
+///         AA-compliant sibling.</item>
 /// </list>
 /// </remarks>
 public static class ThemeNames
@@ -52,11 +53,11 @@ public static class ThemeNames
     public const string Drakul = "Drakul"; // Canonical Dracula MIT + Comment lifted to clear WCAG AA
     public const string Tarn    = "Tarn";    // H 170° — highland tarn, petrol-teal
     public const string Mortis   = "Mortis";   // H 200° — slate-cyan morgue
-    public const string Slate    = "Slate";    // H 220° — cold monastery stone
-    public const string Voivode  = "Voivode";  // H 250° — Wallachian throne, deep indigo
-    public const string Carmilla = "Carmilla"; // H 285° — Le Fanu velvet violet
-    public const string Whitby   = "Whitby";   // H 315° — North Sea slate-mauve
-    public const string Vesper   = "Vesper";   // H 340° — chapel ruin rose
+    public const string Slate    = "Slate";    // H 225° — cold monastery stone
+    public const string Voivode  = "Voivode";  // H 255° — Wallachian throne, deep indigo
+    public const string Carmilla = "Carmilla"; // H 290° — Le Fanu velvet violet
+    public const string Whitby   = "Whitby";   // H 320° — North Sea slate-mauve
+    public const string Vesper   = "Vesper";   // H 345° — chapel ruin rose
 
     // 2 Light family
     public const string Parchment = "Parchment"; // H  40° — warm vellum cream

@@ -1,0 +1,141 @@
+<!--
+  Copyright 2026 Julien Bombled
+  Licensed under the Apache License, Version 2.0
+
+  Default styles for the Toast composite and its host. Layout uses an
+  accent bar on the left tinted by Severity (Info/Success/Warning/Error)
+  over a dark Surface background, so the text stays high-contrast
+  regardless of severity tone.
+-->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:composites="clr-namespace:ThemeForge.Controls.Composites">
+
+    <Style x:Key="Toast.CloseButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Background"      Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding"         Value="0"/>
+        <Setter Property="Focusable"       Value="False"/>
+        <Setter Property="Cursor"          Value="Arrow"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="bd"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="10">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type composites:Toast}">
+        <Setter Property="Background"     Value="{DynamicResource SurfaceAltBrush}"/>
+        <Setter Property="Foreground"     Value="{DynamicResource TextPrimaryBrush}"/>
+        <Setter Property="BorderBrush"    Value="{DynamicResource BorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding"        Value="12,10"/>
+        <Setter Property="MinWidth"       Value="280"/>
+        <Setter Property="Margin"         Value="0,0,0,8"/>
+        <Setter Property="Opacity"        Value="0"/>
+        <Setter Property="FontFamily"     Value="Segoe UI"/>
+        <Setter Property="FontSize"       Value="13"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type composites:Toast}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6"
+                            SnapsToDevicePixels="True"
+                            ClipToBounds="True">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Severity accent bar (4px, full-height) -->
+                            <Border x:Name="PART_SeverityBar"
+                                    Grid.Column="0"
+                                    Width="4"
+                                    Background="{DynamicResource InfoBrush}"/>
+
+                            <!-- Content -->
+                            <StackPanel Grid.Column="1" Margin="{TemplateBinding Padding}">
+                                <TextBlock Text="{TemplateBinding Title}"
+                                           FontWeight="SemiBold"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           TextWrapping="Wrap"/>
+                                <TextBlock Text="{TemplateBinding Message}"
+                                           Margin="0,2,0,0"
+                                           Foreground="{DynamicResource TextSecondaryBrush}"
+                                           TextWrapping="Wrap"/>
+                            </StackPanel>
+
+                            <!-- Close button -->
+                            <Button x:Name="PART_CloseButton"
+                                    Grid.Column="2"
+                                    Style="{StaticResource Toast.CloseButtonStyle}"
+                                    Width="20" Height="20"
+                                    Margin="0,8,8,0"
+                                    VerticalAlignment="Top">
+                                <Path Data="M 1,1 L 9,9 M 9,1 L 1,9"
+                                      Stroke="{DynamicResource TextSecondaryBrush}"
+                                      StrokeThickness="1.5"
+                                      Width="10" Height="10"
+                                      Stretch="Uniform"/>
+                            </Button>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Severity" Value="Success">
+                            <Setter TargetName="PART_SeverityBar" Property="Background" Value="{DynamicResource SuccessBrush}"/>
+                        </Trigger>
+                        <Trigger Property="Severity" Value="Warning">
+                            <Setter TargetName="PART_SeverityBar" Property="Background" Value="{DynamicResource WarningBrush}"/>
+                        </Trigger>
+                        <Trigger Property="Severity" Value="Error">
+                            <Setter TargetName="PART_SeverityBar" Property="Background" Value="{DynamicResource ErrorBrush}"/>
+                        </Trigger>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                     From="0" To="1" Duration="0:0:0.2"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type composites:ToastHost}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type composites:ToastHost}">
+                    <ItemsPresenter/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical"/>
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

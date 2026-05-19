@@ -161,5 +161,22 @@
             <dfc:SearchBox PlaceholderText="Not clearable" IsClearable="False" Width="320" HorizontalAlignment="Left" Margin="0,0,0,8"/>
         </StackPanel>
 
+        <!-- Toast examples -->
+        <TextBlock Text="Toast" FontWeight="SemiBold" Margin="0,0,0,8"
+                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+
+        <TextBlock Text="Click to push (auto-dismiss after 3s)" Margin="0,0,0,4"
+                   Foreground="{DynamicResource TextSecondaryBrush}"/>
+
+        <WrapPanel Margin="0,0,0,8">
+            <Button Content="Info"    Click="OnShowInfo"    Margin="0,0,8,8"/>
+            <Button Content="Success" Click="OnShowSuccess" Margin="0,0,8,8"/>
+            <Button Content="Warning" Click="OnShowWarning" Margin="0,0,8,8"/>
+            <Button Content="Error"   Click="OnShowError"   Margin="0,0,8,8"/>
+        </WrapPanel>
+
+        <dfc:ToastHost x:Name="DemoToastHost" Margin="0,0,0,20"
+                       Width="320" HorizontalAlignment="Left"/>
+
     </StackPanel>
 </UserControl>

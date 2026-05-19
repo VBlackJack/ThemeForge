@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Windows;
 using System.Windows.Controls;
+using ThemeForge.Controls.Composites;
 
 namespace ThemeForge.Studio.Views;
 
@@ -21,5 +23,27 @@ public partial class CompositesView : UserControl
     public CompositesView()
     {
         InitializeComponent();
+    }
+
+    private void OnShowInfo(object sender, RoutedEventArgs e)
+        => Push(ToastSeverity.Info, "Info", "Information message.");
+
+    private void OnShowSuccess(object sender, RoutedEventArgs e)
+        => Push(ToastSeverity.Success, "Success", "Action completed.");
+
+    private void OnShowWarning(object sender, RoutedEventArgs e)
+        => Push(ToastSeverity.Warning, "Warning", "Heads up — check this.");
+
+    private void OnShowError(object sender, RoutedEventArgs e)
+        => Push(ToastSeverity.Error, "Error", "Something went wrong.");
+
+    private void Push(ToastSeverity severity, string title, string message)
+    {
+        DemoToastHost.Items.Add(new Toast
+        {
+            Severity = severity,
+            Title = title,
+            Message = message,
+        });
     }
 }

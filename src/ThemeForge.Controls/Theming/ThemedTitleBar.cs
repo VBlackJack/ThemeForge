@@ -67,7 +67,7 @@ public static class ThemedTitleBar
 
     private static void Apply(Window window, bool enabled)
     {
-        var handle = new WindowInteropHelper(window).Handle;
+        IntPtr handle = new WindowInteropHelper(window).Handle;
         if (handle == IntPtr.Zero)
         {
             return;

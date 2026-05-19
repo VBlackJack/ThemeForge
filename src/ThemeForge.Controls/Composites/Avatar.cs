@@ -109,7 +109,7 @@ public sealed class Avatar : Control
     private static void OnSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var avatar = (Avatar)d;
-        var size = (double)e.NewValue;
+        double size = (double)e.NewValue;
         if (size > 0)
         {
             avatar.Width = size;

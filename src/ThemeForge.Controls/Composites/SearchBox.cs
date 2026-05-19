@@ -150,7 +150,7 @@ public sealed class SearchBox : TextBox
 
         if (e.Key == Key.Enter && SearchCommand is not null)
         {
-            var parameter = SearchCommandParameter ?? Text;
+            object parameter = SearchCommandParameter ?? Text;
             if (SearchCommand.CanExecute(parameter))
             {
                 SearchCommand.Execute(parameter);

@@ -27,7 +27,7 @@ public sealed class ThemeServiceContractTests
     [Fact]
     public void Ctor_WithNullApplication_Throws()
     {
-        var act = () => new ThemeService(application: null!);
+        Action act = () => new ThemeService(application: null!);
 
         act.Should().Throw<ArgumentNullException>();
     }
@@ -43,7 +43,7 @@ public sealed class ThemeServiceContractTests
     [StaFact]
     public void Ctor_WithInjectedAvailableThemes_PreservesProvidedList()
     {
-        var custom = new[] { ThemeNames.Dracula, ThemeNames.Drakul };
+        string[] custom = new[] { ThemeNames.Dracula, ThemeNames.Drakul };
 
         var service = new ThemeService(TestApplication.Instance, custom);
 
@@ -64,7 +64,7 @@ public sealed class ThemeServiceContractTests
     {
         var service = new ThemeService(TestApplication.Instance);
 
-        var act = () => service.ApplyTheme(null!);
+        Action act = () => service.ApplyTheme(null!);
 
         act.Should().Throw<ArgumentException>();
     }
@@ -74,7 +74,7 @@ public sealed class ThemeServiceContractTests
     {
         var service = new ThemeService(TestApplication.Instance);
 
-        var act = () => service.ApplyTheme(string.Empty);
+        Action act = () => service.ApplyTheme(string.Empty);
 
         act.Should().Throw<ArgumentException>();
     }
@@ -84,7 +84,7 @@ public sealed class ThemeServiceContractTests
     {
         var service = new ThemeService(TestApplication.Instance);
 
-        var act = () => service.ApplyTheme("   ");
+        Action act = () => service.ApplyTheme("   ");
 
         act.Should().Throw<ArgumentException>();
     }
@@ -94,7 +94,7 @@ public sealed class ThemeServiceContractTests
     {
         var service = new ThemeService(TestApplication.Instance);
 
-        var act = () => service.ApplyTheme("NotARealTheme");
+        Action act = () => service.ApplyTheme("NotARealTheme");
 
         act.Should().Throw<ArgumentException>()
            .WithMessage("*NotARealTheme*");

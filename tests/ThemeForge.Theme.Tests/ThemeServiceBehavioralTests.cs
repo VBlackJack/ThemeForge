@@ -143,7 +143,7 @@ public sealed class ThemeServiceBehavioralTests : IDisposable
     {
         var service = new ThemeService(TestApplication.Instance);
 
-        foreach (var themeName in ThemeNames.All)
+        foreach (string themeName in ThemeNames.All)
         {
             service.ApplyTheme(themeName);
 

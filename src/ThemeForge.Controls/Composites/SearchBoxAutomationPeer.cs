@@ -32,7 +32,7 @@ public sealed class SearchBoxAutomationPeer : TextBoxAutomationPeer
 
     protected override string GetNameCore()
     {
-        var explicitName = base.GetNameCore();
+        string explicitName = base.GetNameCore();
         if (!string.IsNullOrEmpty(explicitName))
         {
             return explicitName;

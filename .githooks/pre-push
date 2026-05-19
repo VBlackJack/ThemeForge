@@ -2,7 +2,6 @@
 set -eu
 
 repo_root="$(git rev-parse --show-toplevel)"
-script_path="$repo_root/tools/ci-mime.ps1"
 
 if ! command -v pwsh >/dev/null 2>&1; then
   echo "ThemeForge pre-push hook requires PowerShell 7+ (pwsh)." >&2
@@ -10,4 +9,10 @@ if ! command -v pwsh >/dev/null 2>&1; then
   exit 1
 fi
 
-pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File "$script_path"
+run_check() {
+  script_path="$repo_root/tools/$1"
+  pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File "$script_path"
+}
+
+run_check ci-mime.ps1
+run_check ci-xaml-headers.ps1

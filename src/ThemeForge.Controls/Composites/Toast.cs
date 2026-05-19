@@ -99,6 +99,7 @@ public sealed class Toast : Control
     public event EventHandler? Dismissed;
 
     private DispatcherTimer? _dismissTimer;
+    private bool _isDismissed;
 
     public override void OnApplyTemplate()
     {
@@ -110,9 +111,18 @@ public sealed class Toast : Control
         }
     }
 
-    /// <summary>Dismiss the toast manually. Raises <see cref="Dismissed"/>.</summary>
+    /// <summary>
+    /// Dismiss the toast. Raises <see cref="Dismissed"/> the first time it
+    /// is called; subsequent calls are no-ops (single-shot contract).
+    /// </summary>
     public void Dismiss()
     {
+        if (_isDismissed)
+        {
+            return;
+        }
+
+        _isDismissed = true;
         StopTimer();
         Dismissed?.Invoke(this, EventArgs.Empty);
     }

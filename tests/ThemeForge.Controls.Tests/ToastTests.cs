@@ -38,13 +38,11 @@ public sealed class ToastTests
     }
 
     [StaFact]
-    public void Dismiss_CalledTwice_RaisesEventTwice()
+    public void Dismiss_CalledTwice_RaisesEventOnce()
     {
-        // Current contract: Dismiss is not guarded; each call raises the event.
-        // ToastHost handles the cleanup so a second Dismiss on an already-removed
-        // toast is a no-op from the host's perspective (Items.Remove on missing
-        // item is safe). If a "single-shot" guard becomes desirable, change the
-        // contract and update this test.
+        // Single-shot contract: Dismiss raises the event at most once even
+        // when called repeatedly. ToastHost still handles cleanup; a second
+        // Dismiss on an already-removed toast remains safe.
         _ = TestApplication.Instance;
         var toast = new Toast();
         int count = 0;
@@ -53,7 +51,7 @@ public sealed class ToastTests
         toast.Dismiss();
         toast.Dismiss();
 
-        count.Should().Be(2);
+        count.Should().Be(1);
     }
 
     [StaFact]

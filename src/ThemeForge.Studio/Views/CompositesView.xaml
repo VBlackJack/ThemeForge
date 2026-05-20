@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:dfc="clr-namespace:ThemeForge.Controls.Composites;assembly=ThemeForge.Controls"
+    xmlns:views="clr-namespace:ThemeForge.Studio.Views"
     Background="Transparent">
 
     <UserControl.Resources>
@@ -21,6 +22,8 @@
                    Foreground="{DynamicResource TextSecondaryBrush}"
                    Margin="0,4,0,16"
                    TextWrapping="Wrap"/>
+
+        <views:NumericUpDownDemoView/>
 
         <!-- Card examples -->
         <TextBlock Text="Card" FontWeight="SemiBold" Margin="0,0,0,8"

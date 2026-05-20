@@ -25,6 +25,7 @@
 
         <views:SegmentedControlDemoView/>
         <views:NumericUpDownDemoView/>
+        <views:BreadcrumbDemoView/>
 
         <!-- Card examples -->
         <TextBlock Text="Card" FontWeight="SemiBold" Margin="0,0,0,8"

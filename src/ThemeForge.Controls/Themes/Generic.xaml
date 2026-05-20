@@ -12,6 +12,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Themes/Card.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Themes/Badge.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Themes/Breadcrumb.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Themes/Chip.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Themes/Dialog.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Themes/IconButton.xaml"/>

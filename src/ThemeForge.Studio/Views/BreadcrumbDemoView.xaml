@@ -1,0 +1,74 @@
+<!--
+  Copyright 2026 Julien Bombled
+  Licensed under the Apache License, Version 2.0
+
+  Studio demo surface for the Breadcrumb composite.
+-->
+<UserControl
+    x:Class="ThemeForge.Studio.Views.BreadcrumbDemoView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dfc="clr-namespace:ThemeForge.Controls.Composites;assembly=ThemeForge.Controls"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    Background="Transparent">
+
+    <StackPanel Margin="0,16,0,20">
+        <TextBlock Text="Breadcrumb"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,8"
+                   Foreground="{DynamicResource TextPrimaryBrush}"/>
+
+        <TextBlock Text="Chemins"
+                   Margin="0,0,0,4"
+                   Foreground="{DynamicResource TextSecondaryBrush}"/>
+
+        <Grid MaxWidth="640" HorizontalAlignment="Left">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="160"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Grid.Column="0"
+                       Text="Projet"
+                       VerticalAlignment="Center"
+                       Foreground="{DynamicResource TextSecondaryBrush}"/>
+            <dfc:Breadcrumb Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="0,0,0,8">
+                <sys:String>Accueil</sys:String>
+                <sys:String>Projets</sys:String>
+                <dfc:BreadcrumbItem Content="ThemeForge" IsCurrent="True"/>
+            </dfc:Breadcrumb>
+
+            <TextBlock Grid.Row="1"
+                       Grid.Column="0"
+                       Text="Section"
+                       VerticalAlignment="Center"
+                       Foreground="{DynamicResource TextSecondaryBrush}"/>
+            <dfc:Breadcrumb Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="0,0,0,8">
+                <sys:String>Bibliothèque</sys:String>
+                <dfc:BreadcrumbItem Content="Composants" IsCurrent="True"/>
+            </dfc:Breadcrumb>
+
+            <TextBlock Grid.Row="2"
+                       Grid.Column="0"
+                       Text="État"
+                       VerticalAlignment="Center"
+                       Foreground="{DynamicResource TextSecondaryBrush}"/>
+            <dfc:Breadcrumb Grid.Row="2"
+                            Grid.Column="1">
+                <sys:String>Racine</sys:String>
+                <dfc:BreadcrumbItem Content="Archive" IsEnabled="False"/>
+                <dfc:BreadcrumbItem Content="Courant" IsCurrent="True"/>
+            </dfc:Breadcrumb>
+        </Grid>
+    </StackPanel>
+</UserControl>

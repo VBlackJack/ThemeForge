@@ -11,6 +11,7 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/jbombled/ThemeForge</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <IsPackable>false</IsPackable>
 
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>

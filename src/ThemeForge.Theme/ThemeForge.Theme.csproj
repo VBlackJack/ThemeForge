@@ -5,9 +5,17 @@
     <UseWPF>true</UseWPF>
     <RootNamespace>ThemeForge.Theme</RootNamespace>
     <AssemblyName>ThemeForge.Theme</AssemblyName>
+    <IsPackable>true</IsPackable>
     <PackageId>ThemeForge.Theme</PackageId>
-    <Description>Reusable Dracula theming engine for .NET 10 WPF applications. Provides IThemeService, ThemeRevision pattern, and 15 Dracula ResourceDictionary variants.</Description>
-    <PackageTags>wpf;theme;dracula;dark-mode;light-mode;resource-dictionary</PackageTags>
+    <Version>1.0.0-preview.1</Version>
+    <Authors>Julien Bombled</Authors>
+    <Company>Julien Bombled</Company>
+    <Description>Reusable WPF theming engine with Dracula-inspired palettes and runtime theme switching.</Description>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/VBlackJack/ThemeForge</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/VBlackJack/ThemeForge</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>wpf;theming;dracula;dotnet</PackageTags>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <IncludeBuildOutput>true</IncludeBuildOutput>
   </PropertyGroup>

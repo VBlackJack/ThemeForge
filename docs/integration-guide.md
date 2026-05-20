@@ -194,9 +194,15 @@ Tu n'as rien à référencer par clé.
 </StackPanel>
 ```
 
-Note sur `ToolTip` : le popup lui-même n'a pas de style dédié ThemeForge.
+Note sur `ToolTip` : il est aussi thémé par ThemeForge.
 
-Il reste sur le comportement WPF/Windows par défaut.
+Le style implicite vit dans `Styles/ToolTip.xaml`.
+
+`Styles/Studio.xaml` le merge déjà avec les autres styles natifs.
+
+Chaque `ToolTip` attaché à un contrôle récupère donc le style automatiquement.
+
+Il reprend la surface, la bordure, le texte, la typo et le rayon du thème actif.
 
 ## 6. Utiliser les composites
 
@@ -208,7 +214,7 @@ Tu ajoutes le namespace XAML :
 xmlns:dfc="clr-namespace:ThemeForge.Controls.Composites;assembly=ThemeForge.Controls"
 ```
 
-Les 9 composites livrés :
+Les 13 composites livrés :
 
 - `Card` : conteneur avec header, body et footer optionnels.
 - `IconButton` : bouton avec icône vectorielle et label optionnel.
@@ -219,6 +225,10 @@ Les 9 composites livrés :
 - `SearchBox` : champ de recherche avec placeholder, clear et commande.
 - `Toast` : notification éphémère avec titre, message et sévérité.
 - `ToastHost` : pile verticale qui héberge et retire les toasts.
+- `Breadcrumb` : fil d'Ariane cliquable pour la navigation hiérarchique.
+- `Dialog` : surface de dialogue avec header, contenu, footer et accent sémantique.
+- `NumericUpDown` : saisie numérique avec boutons d'incrémentation.
+- `SegmentedControl` : groupe de segments à sélection unique.
 
 Exemple minimal :
 
@@ -232,9 +242,145 @@ Exemple minimal :
 </StackPanel>
 ```
 
-Huit composites exposent un `AutomationPeer` custom.
+Le dossier `Composites` contient désormais 14 `AutomationPeer` custom.
+
+Ces peers couvrent les contrôles composites qui ont une sémantique UIA dédiée.
+
+Ils couvrent aussi les conteneurs d'items `BreadcrumbItem` et `SegmentItem`.
 
 Cela aide les screen readers et les tests UIA.
+
+Si `Content` ou `Header` reçoit autre chose qu'une chaîne, le peer ne fabrique pas de nom accessible.
+
+Il ignore cet objet pour éviter d'annoncer un nom de type .NET.
+
+Une icône, une shape ou un élément WPF ne devient donc pas un nom accessible automatique.
+
+Dans ce cas, définis `AutomationProperties.Name` sur le composite.
+
+```xml
+<dfc:Chip AutomationProperties.Name="Filtre actif">
+    <Rectangle Width="12" Height="12"/>
+</dfc:Chip>
+```
+
+### Breadcrumb
+
+`Breadcrumb` hérite de `ItemsControl`.
+
+Il peut recevoir des `BreadcrumbItem` en XAML ou une collection via `ItemsSource`.
+
+`BreadcrumbItem` hérite de `ButtonBase`.
+
+Il expose donc `Click`, `Command` et `CommandParameter`.
+
+Propriété dédiée :
+
+- `IsCurrent` (`bool`) : marque le segment actif.
+
+Exemple minimal :
+
+```xml
+<dfc:Breadcrumb>
+    <dfc:BreadcrumbItem Content="Accueil" Command="{Binding GoHomeCommand}"/>
+    <dfc:BreadcrumbItem Content="Projet" Command="{Binding GoProjectCommand}"/>
+    <dfc:BreadcrumbItem Content="Détails" IsCurrent="True"/>
+</dfc:Breadcrumb>
+```
+
+### Dialog
+
+`Dialog` hérite de `HeaderedContentControl`.
+
+`Header` porte le titre.
+
+`Content` porte le corps principal.
+
+Propriétés dédiées :
+
+- `Footer` (`object?`) : affiche un contenu d'action ou d'état en bas.
+- `FooterTemplate` (`DataTemplate?`) : template le contenu de `Footer`.
+- `Severity` (`DialogSeverity`) : choisit l'accent sémantique.
+- `IconGeometry` (`Geometry?`) : affiche une icône avant le header.
+- `IsClosable` (`bool`) : affiche ou masque le bouton de fermeture.
+- `CloseCommand` (`ICommand?`) : commande exécutée par `Close()` quand elle peut s'exécuter.
+
+Événement dédié :
+
+- `Closed` (`EventHandler?`) : levé une seule fois quand le dialogue se ferme.
+
+Méthode utile :
+
+- `Close()` : ferme le dialogue, exécute `CloseCommand`, puis lève `Closed`.
+
+Exemple minimal :
+
+```xml
+<dfc:Dialog Header="Supprimer le projet"
+            Severity="Warning"
+            CloseCommand="{Binding CloseDialogCommand}">
+    <dfc:Dialog.Content>
+        <TextBlock Text="Cette action est irréversible."/>
+    </dfc:Dialog.Content>
+    <dfc:Dialog.Footer>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Annuler" Command="{Binding CloseDialogCommand}"/>
+            <Button Content="Supprimer" Command="{Binding DeleteProjectCommand}" Margin="8,0,0,0"/>
+        </StackPanel>
+    </dfc:Dialog.Footer>
+</dfc:Dialog>
+```
+
+### NumericUpDown
+
+`NumericUpDown` hérite de `RangeBase`.
+
+Il reprend `Value`, `Minimum`, `Maximum`, `SmallChange` et `LargeChange`.
+
+Propriétés dédiées :
+
+- `DecimalPlaces` (`int`) : définit le nombre de décimales affichées, de `0` à `15`.
+- `IsReadOnly` (`bool`) : empêche la modification par saisie, molette et boutons.
+
+Méthodes utiles :
+
+- `IncreaseValue()` : ajoute `SmallChange` à `Value`.
+- `DecreaseValue()` : retire `SmallChange` à `Value`.
+
+Exemple minimal :
+
+```xml
+<dfc:NumericUpDown Minimum="0"
+                   Maximum="100"
+                   Value="{Binding OpacityPercent, Mode=TwoWay}"
+                   SmallChange="1"
+                   LargeChange="10"
+                   DecimalPlaces="0"/>
+```
+
+### SegmentedControl
+
+`SegmentedControl` hérite de `ListBox`.
+
+Il force `SelectionMode` à `Single`.
+
+`SegmentItem` hérite de `ListBoxItem`.
+
+Propriétés utiles héritées :
+
+- `ItemsSource` (`IEnumerable`) : fournit les segments depuis une collection.
+- `SelectedItem` (`object?`) : porte l'élément sélectionné.
+- `SelectedIndex` (`int`) : porte l'index sélectionné.
+
+Exemple minimal :
+
+```xml
+<dfc:SegmentedControl SelectedIndex="{Binding SelectedViewIndex, Mode=TwoWay}">
+    <dfc:SegmentItem Content="Aperçu"/>
+    <dfc:SegmentItem Content="Détails"/>
+    <dfc:SegmentItem Content="Historique"/>
+</dfc:SegmentedControl>
+```
 
 ## 7. Utiliser les design tokens dans tes propres styles
 

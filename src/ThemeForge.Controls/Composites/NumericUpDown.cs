@@ -38,6 +38,7 @@ public sealed class NumericUpDown : RangeBase
     static NumericUpDown()
     {
         DefaultStyleKeyProperty.OverrideMetadata(typeof(NumericUpDown), new FrameworkPropertyMetadata(typeof(NumericUpDown)));
+        ValueProperty.OverrideMetadata(typeof(NumericUpDown), new FrameworkPropertyMetadata(0.0, null, CoerceNumericValue));
         MinimumProperty.OverrideMetadata(typeof(NumericUpDown), new FrameworkPropertyMetadata(double.MinValue));
         MaximumProperty.OverrideMetadata(typeof(NumericUpDown), new FrameworkPropertyMetadata(double.MaxValue));
         SmallChangeProperty.OverrideMetadata(typeof(NumericUpDown), new FrameworkPropertyMetadata(1.0));
@@ -121,10 +122,17 @@ public sealed class NumericUpDown : RangeBase
     private static bool ValidateDecimalPlaces(object value)
     { int places = (int)value; return places >= 0 && places <= MaxDecimalPlaces; }
 
+    private static object CoerceNumericValue(DependencyObject d, object baseValue)
+    {
+        NumericUpDown control = (NumericUpDown)d;
+        double rounded = control.RoundToPrecision((double)baseValue);
+        return Math.Clamp(rounded, control.Minimum, control.Maximum);
+    }
+
     private static void OnDecimalPlacesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         NumericUpDown control = (NumericUpDown)d;
-        control.SetCurrentValue(ValueProperty, control.RoundToPrecision(control.Value));
+        control.CoerceValue(ValueProperty);
         control.UpdateText();
     }
 
@@ -133,7 +141,7 @@ public sealed class NumericUpDown : RangeBase
 
     private void StepValue(double delta)
     {
-        if (!IsReadOnly) { SetCurrentValue(ValueProperty, RoundToPrecision(Value + delta)); }
+        if (!IsReadOnly) { SetCurrentValue(ValueProperty, Value + delta); }
     }
 
     private double RoundToPrecision(double value)
@@ -153,7 +161,7 @@ public sealed class NumericUpDown : RangeBase
             out double parsed);
         if (isParsed)
         {
-            SetCurrentValue(ValueProperty, RoundToPrecision(parsed));
+            SetCurrentValue(ValueProperty, parsed);
         }
 
         UpdateText();

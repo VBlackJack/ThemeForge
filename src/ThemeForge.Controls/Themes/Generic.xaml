@@ -16,6 +16,7 @@
         <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Themes/Dialog.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Themes/IconButton.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Themes/NumericUpDown.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Themes/SegmentedControl.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Themes/ToggleSwitch.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Themes/Avatar.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Themes/SearchBox.xaml"/>

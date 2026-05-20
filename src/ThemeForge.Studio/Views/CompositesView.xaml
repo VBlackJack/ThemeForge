@@ -23,6 +23,7 @@
                    Margin="0,4,0,16"
                    TextWrapping="Wrap"/>
 
+        <views:SegmentedControlDemoView/>
         <views:NumericUpDownDemoView/>
 
         <!-- Card examples -->

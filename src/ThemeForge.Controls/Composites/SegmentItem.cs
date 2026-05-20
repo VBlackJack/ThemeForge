@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 
 namespace ThemeForge.Controls.Composites;
@@ -24,5 +25,20 @@ public sealed class SegmentItem : ListBoxItem
         DefaultStyleKeyProperty.OverrideMetadata(
             typeof(SegmentItem),
             new FrameworkPropertyMetadata(typeof(SegmentItem)));
+    }
+
+    protected override AutomationPeer OnCreateAutomationPeer()
+    {
+        if (ItemsControl.ItemsControlFromItemContainer(this) is SegmentedControl control)
+        {
+            AutomationPeer? peer = FrameworkElementAutomationPeer.FromElement(control)
+                ?? FrameworkElementAutomationPeer.CreatePeerForElement(control);
+            if (peer is SegmentedControlAutomationPeer segmentedControlPeer)
+            {
+                return new SegmentItemAutomationPeer(this, segmentedControlPeer);
+            }
+        }
+
+        return base.OnCreateAutomationPeer();
     }
 }

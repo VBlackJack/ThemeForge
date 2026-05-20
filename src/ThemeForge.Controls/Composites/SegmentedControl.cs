@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 
 namespace ThemeForge.Controls.Composites;
@@ -34,6 +35,9 @@ public sealed class SegmentedControl : ListBox
 
     protected override bool IsItemItsOwnContainerOverride(object item)
         => item is SegmentItem;
+
+    protected override AutomationPeer OnCreateAutomationPeer()
+        => new SegmentedControlAutomationPeer(this);
 
     private static object CoerceSelectionMode(DependencyObject d, object baseValue)
         => SelectionMode.Single;

@@ -83,7 +83,7 @@
             <dfc:SegmentedControl Grid.Row="3"
                                   Grid.Column="1"
                                   SelectedIndex="0">
-                <dfc:SegmentItem>
+                <dfc:SegmentItem AutomationProperties.Name="Validé">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Path Data="M 2,8 L 6,12 L 14,3"
                               Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=dfc:SegmentItem}}"

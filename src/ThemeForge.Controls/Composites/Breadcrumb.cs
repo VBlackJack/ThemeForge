@@ -14,6 +14,7 @@
 
 using System.Collections.Specialized;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 
 namespace ThemeForge.Controls.Composites;
@@ -32,6 +33,9 @@ public sealed class Breadcrumb : ItemsControl
 
     protected override bool IsItemItsOwnContainerOverride(object item)
         => item is BreadcrumbItem;
+
+    protected override AutomationPeer OnCreateAutomationPeer()
+        => new BreadcrumbAutomationPeer(this);
 
     protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
     {

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls.Primitives;
 
 namespace ThemeForge.Controls.Composites;
@@ -38,4 +39,10 @@ public sealed class BreadcrumbItem : ButtonBase
             typeof(BreadcrumbItem),
             new FrameworkPropertyMetadata(typeof(BreadcrumbItem)));
     }
+
+    protected override AutomationPeer OnCreateAutomationPeer()
+        => new BreadcrumbItemAutomationPeer(this);
+
+    internal void AutomationInvoke()
+        => OnClick();
 }

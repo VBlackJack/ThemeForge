@@ -23,6 +23,7 @@ public static class AccentTints
     public static IReadOnlyList<AccentTint> All { get; } = new[]
     {
         AccentTint.Default,
+        AccentTint.Blue,
         AccentTint.Cyan,
         AccentTint.Green,
         AccentTint.Orange,

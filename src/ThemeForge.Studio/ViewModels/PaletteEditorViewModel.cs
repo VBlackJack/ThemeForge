@@ -43,11 +43,17 @@ public sealed partial class PaletteEditorViewModel : ObservableObject
         "Success", "Warning", "Error", "Info",
     };
 
+    private static readonly string[] ExtendedSlotNames =
+    {
+        "Blue",
+    };
+
     public PaletteEditorViewModel(IThemeService themeService)
     {
         ArgumentNullException.ThrowIfNull(themeService);
         CanonicalSlots = new ObservableCollection<SlotViewModel>();
         SemanticSlots = new ObservableCollection<SlotViewModel>();
+        ExtendedSlots = new ObservableCollection<SlotViewModel>();
         ReloadFromTheme();
         themeService.ThemeChanged += (_, _) => ReloadFromTheme();
     }
@@ -57,6 +63,9 @@ public sealed partial class PaletteEditorViewModel : ObservableObject
 
     /// <summary>The 12 semantic tokens (Surface/Accent/TextPrimary/Success...).</summary>
     public ObservableCollection<SlotViewModel> SemanticSlots { get; }
+
+    /// <summary>The extended accent slots (Blue).</summary>
+    public ObservableCollection<SlotViewModel> ExtendedSlots { get; }
 
     [RelayCommand]
     private void ResetAll()
@@ -69,14 +78,20 @@ public sealed partial class PaletteEditorViewModel : ObservableObject
         {
             slot.ResetCommand.Execute(null);
         }
+        foreach (SlotViewModel slot in ExtendedSlots)
+        {
+            slot.ResetCommand.Execute(null);
+        }
     }
 
     private void ReloadFromTheme()
     {
         CanonicalSlots.Clear();
         SemanticSlots.Clear();
+        ExtendedSlots.Clear();
         Populate(CanonicalSlots, CanonicalSlotNames);
         Populate(SemanticSlots, SemanticSlotNames);
+        Populate(ExtendedSlots, ExtendedSlotNames);
     }
 
     private static void Populate(ObservableCollection<SlotViewModel> target, string[] names)

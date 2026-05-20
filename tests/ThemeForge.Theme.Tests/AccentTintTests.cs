@@ -61,6 +61,18 @@ public sealed class AccentTintTests : IDisposable
     }
 
     [StaFact]
+    public void ApplyAccentTint_BlueAfterTheme_PatchesAccentBrush()
+    {
+        ThemeService service = new ThemeService(TestApplication.Instance);
+        service.ApplyTheme(ThemeNames.Dracula);
+        Color expected = ReadBrushColor("BlueBrush");
+
+        service.ApplyAccentTint(AccentTint.Blue);
+
+        ReadBrushColor("AccentBrush").Should().Be(expected);
+    }
+
+    [StaFact]
     public void ApplyAccentTint_PurpleAfterTheme_PatchesAccentBrush()
     {
         ThemeService service = new ThemeService(TestApplication.Instance);
@@ -70,6 +82,20 @@ public sealed class AccentTintTests : IDisposable
         service.ApplyAccentTint(AccentTint.Purple);
 
         ReadBrushColor("AccentBrush").Should().Be(expected);
+    }
+
+    [StaFact]
+    public void EveryTheme_DefinesBlueExtendedSlot()
+    {
+        ThemeService service = new ThemeService(TestApplication.Instance);
+        foreach (string themeName in ThemeNames.All)
+        {
+            service.ApplyTheme(themeName);
+            object? resource = TestApplication.Instance.Resources["BlueBrush"];
+            resource.Should().BeOfType<SolidColorBrush>(
+                "theme '{0}' must define the extended BlueBrush slot",
+                themeName);
+        }
     }
 
     [StaFact]

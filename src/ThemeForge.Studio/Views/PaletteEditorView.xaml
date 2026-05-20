@@ -85,5 +85,11 @@
         <ItemsControl ItemsSource="{Binding SemanticSlots}"
                       ItemTemplate="{StaticResource SlotItemTemplate}"/>
 
+        <TextBlock Text="Slots étendus" FontWeight="SemiBold"
+                   Foreground="{DynamicResource TextPrimaryBrush}"
+                   Margin="0,20,0,8"/>
+        <ItemsControl ItemsSource="{Binding ExtendedSlots}"
+                      ItemTemplate="{StaticResource SlotItemTemplate}"/>
+
     </StackPanel>
 </UserControl>

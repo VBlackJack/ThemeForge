@@ -60,6 +60,9 @@
     <Color x:Key="ErrorColor">#FFFF5555</Color>
     <Color x:Key="InfoColor">#FF8BE9FD</Color>
 
+    <!-- Extended accent slot — original (Julien Bombled, Apache 2.0), not part of any canonical palette -->
+    <Color x:Key="BlueColor">#FF70AEFF</Color>
+
     <SolidColorBrush x:Key="BackgroundBrush"      Color="{StaticResource BackgroundColor}"/>
     <SolidColorBrush x:Key="CurrentLineBrush"     Color="{StaticResource CurrentLineColor}"/>
     <SolidColorBrush x:Key="SelectionBrush"       Color="{StaticResource SelectionColor}"/>
@@ -85,5 +88,7 @@
     <SolidColorBrush x:Key="WarningBrush"         Color="{StaticResource WarningColor}"/>
     <SolidColorBrush x:Key="ErrorBrush"           Color="{StaticResource ErrorColor}"/>
     <SolidColorBrush x:Key="InfoBrush"            Color="{StaticResource InfoColor}"/>
+
+    <SolidColorBrush x:Key="BlueBrush"            Color="{StaticResource BlueColor}"/>
 
 </ResourceDictionary>

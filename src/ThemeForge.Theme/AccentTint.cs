@@ -27,6 +27,9 @@ public enum AccentTint
     /// <summary>Use the theme's native accent brush without an override.</summary>
     Default,
 
+    /// <summary>Use the extended blue accent slot.</summary>
+    Blue,
+
     /// <summary>Use the canonical cyan accent slot.</summary>
     Cyan,
 

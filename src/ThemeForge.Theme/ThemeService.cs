@@ -177,6 +177,7 @@ public sealed class ThemeService : IThemeService
     private static string GetSourceBrushKey(AccentTint tint)
         => tint switch
         {
+            AccentTint.Blue => "BlueBrush",
             AccentTint.Cyan => "CyanBrush",
             AccentTint.Green => "GreenBrush",
             AccentTint.Orange => "OrangeBrush",

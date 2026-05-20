@@ -181,6 +181,7 @@ public sealed class ThemeService : IThemeService
             AccentTint.Green => "GreenBrush",
             AccentTint.Orange => "OrangeBrush",
             AccentTint.Pink => "PinkBrush",
+            AccentTint.Purple => "PurpleBrush",
             AccentTint.Red => "RedBrush",
             AccentTint.Yellow => "YellowBrush",
             _ => throw new ArgumentOutOfRangeException(nameof(tint), tint, "Unsupported accent tint."),

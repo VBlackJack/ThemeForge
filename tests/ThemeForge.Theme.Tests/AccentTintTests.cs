@@ -61,6 +61,18 @@ public sealed class AccentTintTests : IDisposable
     }
 
     [StaFact]
+    public void ApplyAccentTint_PurpleAfterTheme_PatchesAccentBrush()
+    {
+        ThemeService service = new ThemeService(TestApplication.Instance);
+        service.ApplyTheme(ThemeNames.Dracula);
+        Color expected = ReadBrushColor("PurpleBrush");
+
+        service.ApplyAccentTint(AccentTint.Purple);
+
+        ReadBrushColor("AccentBrush").Should().Be(expected);
+    }
+
+    [StaFact]
     public void ApplyAccentTint_CyanAfterTheme_DerivesHoverAndPressed()
     {
         ThemeService service = new ThemeService(TestApplication.Instance);

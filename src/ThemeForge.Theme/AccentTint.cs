@@ -39,6 +39,9 @@ public enum AccentTint
     /// <summary>Use the canonical pink accent slot.</summary>
     Pink,
 
+    /// <summary>Use the canonical purple accent slot.</summary>
+    Purple,
+
     /// <summary>Use the canonical red accent slot.</summary>
     Red,
 

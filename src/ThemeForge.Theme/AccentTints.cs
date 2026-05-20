@@ -27,6 +27,7 @@ public static class AccentTints
         AccentTint.Green,
         AccentTint.Orange,
         AccentTint.Pink,
+        AccentTint.Purple,
         AccentTint.Red,
         AccentTint.Yellow,
     };

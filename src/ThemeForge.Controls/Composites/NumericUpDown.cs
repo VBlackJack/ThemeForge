@@ -14,6 +14,7 @@
 
 using System.Globalization;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -72,7 +73,15 @@ public sealed class NumericUpDown : RangeBase
     }
 
     protected override void OnValueChanged(double oldValue, double newValue)
-    { base.OnValueChanged(oldValue, newValue); UpdateText(); UpdateButtonStates(); }
+    {
+        base.OnValueChanged(oldValue, newValue);
+        UpdateText();
+        UpdateButtonStates();
+        if (FrameworkElementAutomationPeer.FromElement(this) is NumericUpDownAutomationPeer peer)
+        {
+            peer.RaiseValueChanged(oldValue, newValue);
+        }
+    }
 
     protected override void OnMinimumChanged(double oldMinimum, double newMinimum)
     { base.OnMinimumChanged(oldMinimum, newMinimum); UpdateButtonStates(); }
@@ -105,6 +114,9 @@ public sealed class NumericUpDown : RangeBase
         StepValue(e.Delta > 0 ? SmallChange : -SmallChange);
         e.Handled = true;
     }
+
+    protected override AutomationPeer OnCreateAutomationPeer()
+        => new NumericUpDownAutomationPeer(this);
 
     private static bool ValidateDecimalPlaces(object value)
     { int places = (int)value; return places >= 0 && places <= MaxDecimalPlaces; }

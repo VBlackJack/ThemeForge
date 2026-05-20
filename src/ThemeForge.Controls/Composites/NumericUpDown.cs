@@ -88,27 +88,13 @@ public sealed class NumericUpDown : RangeBase
             return;
         }
 
-        bool isStepKey = e.Key is Key.Up or Key.Down or Key.PageUp or Key.PageDown;
-        double delta = e.Key switch
+        switch (e.Key)
         {
-            Key.Up => SmallChange,
-            Key.Down => -SmallChange,
-            Key.PageUp => LargeChange,
-            Key.PageDown => -LargeChange,
-            _ => 0.0,
-        };
-
-        if (isStepKey)
-        {
-            StepValue(delta);
-            e.Handled = true;
-            return;
-        }
-
-        if (e.Key == Key.Enter)
-        {
-            CommitText();
-            e.Handled = true;
+            case Key.Up: StepValue(SmallChange); e.Handled = true; break;
+            case Key.Down: StepValue(-SmallChange); e.Handled = true; break;
+            case Key.PageUp: StepValue(LargeChange); e.Handled = true; break;
+            case Key.PageDown: StepValue(-LargeChange); e.Handled = true; break;
+            case Key.Enter: CommitText(); break;
         }
     }
 

@@ -43,10 +43,10 @@ public sealed class CardAutomationPeer : FrameworkElementAutomationPeer
             return explicitName;
         }
 
-        // 2. Otherwise, fall back to Header.ToString() when the header is set.
-        if (Owner is Card card && card.Header is { } header)
+        // 2. Otherwise, fall back to text headers only.
+        if (Owner is Card card && card.Header is string headerText)
         {
-            return header.ToString() ?? string.Empty;
+            return headerText;
         }
 
         // 3. No name available — let consumers know via empty string (default).

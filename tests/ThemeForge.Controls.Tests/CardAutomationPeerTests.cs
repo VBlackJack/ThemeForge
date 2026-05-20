@@ -14,6 +14,7 @@
 
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
+using System.Windows.Shapes;
 using FluentAssertions;
 using ThemeForge.Controls.Composites;
 using Xunit;
@@ -79,5 +80,18 @@ public sealed class CardAutomationPeerTests
         CardAutomationPeer peer = new CardAutomationPeer(new Card());
 
         peer.GetName().Should().BeEmpty();
+    }
+
+    [StaFact]
+    public void GetName_WithNonStringHeader_ReturnsEmptyWithoutFqn()
+    {
+        _ = TestApplication.Instance;
+        Card card = new Card { Header = new Rectangle() };
+        CardAutomationPeer peer = new CardAutomationPeer(card);
+
+        string name = peer.GetName();
+
+        name.Should().NotContain("System.Windows");
+        name.Should().BeEmpty();
     }
 }

@@ -77,19 +77,15 @@ internal sealed class ToggleSwitchAutomationPeer : ToggleButtonAutomationPeer
     {
         ToggleSwitch owner = (ToggleSwitch)Owner;
 
-        if (owner.Content is not null)
-        {
-            string? contentText = owner.Content.ToString();
-            if (!string.IsNullOrWhiteSpace(contentText))
-            {
-                return contentText;
-            }
-        }
-
         string explicitName = AutomationProperties.GetName(owner);
         if (!string.IsNullOrWhiteSpace(explicitName))
         {
             return explicitName;
+        }
+
+        if (owner.Content is string contentText && !string.IsNullOrWhiteSpace(contentText))
+        {
+            return contentText;
         }
 
         string helpText = AutomationProperties.GetHelpText(owner);

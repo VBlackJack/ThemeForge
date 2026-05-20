@@ -43,9 +43,9 @@ public sealed class DialogAutomationPeer : FrameworkElementAutomationPeer
             return explicitName;
         }
 
-        if (Owner is Dialog dialog && dialog.Header is { } header)
+        if (Owner is Dialog dialog && dialog.Header is string headerText)
         {
-            return header.ToString() ?? string.Empty;
+            return headerText;
         }
 
         return string.Empty;

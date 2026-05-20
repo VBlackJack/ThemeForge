@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 
@@ -111,7 +112,19 @@ internal sealed class BadgeAutomationPeer : FrameworkElementAutomationPeer
     protected override string GetNameCore()
     {
         Badge owner = (Badge)Owner;
-        return owner.Content?.ToString() ?? base.GetNameCore();
+
+        string explicitName = AutomationProperties.GetName(owner);
+        if (!string.IsNullOrWhiteSpace(explicitName))
+        {
+            return explicitName;
+        }
+
+        if (owner.Content is string contentText && !string.IsNullOrWhiteSpace(contentText))
+        {
+            return contentText;
+        }
+
+        return base.GetNameCore();
     }
 
     protected override string GetClassNameCore() => nameof(Badge);

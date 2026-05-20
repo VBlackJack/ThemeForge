@@ -14,6 +14,7 @@
 
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
+using System.Windows.Shapes;
 using FluentAssertions;
 using ThemeForge.Controls.Composites;
 using Xunit;
@@ -79,5 +80,18 @@ public sealed class DialogAutomationPeerTests
         DialogAutomationPeer peer = new DialogAutomationPeer(new Dialog());
 
         peer.GetName().Should().BeEmpty();
+    }
+
+    [StaFact]
+    public void GetName_WithNonStringHeader_ReturnsEmptyWithoutFqn()
+    {
+        _ = TestApplication.Instance;
+        Dialog dialog = new Dialog { Header = new Rectangle() };
+        DialogAutomationPeer peer = new DialogAutomationPeer(dialog);
+
+        string name = peer.GetName();
+
+        name.Should().NotContain("System.Windows");
+        name.Should().BeEmpty();
     }
 }

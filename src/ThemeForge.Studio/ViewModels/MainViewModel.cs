@@ -25,12 +25,18 @@ namespace ThemeForge.Studio.ViewModels;
 public sealed partial class MainViewModel : ObservableObject
 {
     private readonly IThemeService _themeService;
+    private readonly ISystemThemeFollower _systemThemeFollower;
 
-    public MainViewModel(IThemeService themeService, IEnumerable<GallerySectionViewModel> sections)
+    public MainViewModel(
+        IThemeService themeService,
+        ISystemThemeFollower systemThemeFollower,
+        IEnumerable<GallerySectionViewModel> sections)
     {
         ArgumentNullException.ThrowIfNull(themeService);
+        ArgumentNullException.ThrowIfNull(systemThemeFollower);
         ArgumentNullException.ThrowIfNull(sections);
         _themeService = themeService;
+        _systemThemeFollower = systemThemeFollower;
 
         Themes = new ObservableCollection<ThemeEntry>(
             themeService.AvailableThemes.Select(n =>
@@ -46,6 +52,7 @@ public sealed partial class MainViewModel : ObservableObject
                 return new ThemeEntry(n, display, ThemeNames.GetFamily(n));
             }));
         _selectedTheme = Themes.FirstOrDefault(t => t.Name == themeService.CurrentTheme);
+        _isFollowingSystem = systemThemeFollower.IsFollowingSystem;
         AvailableAccentTints = themeService.AvailableAccentTints;
         _selectedAccentTint = themeService.CurrentAccentTint;
 
@@ -68,6 +75,9 @@ public sealed partial class MainViewModel : ObservableObject
     private ThemeEntry? _selectedTheme;
 
     [ObservableProperty]
+    private bool _isFollowingSystem;
+
+    [ObservableProperty]
     private AccentTint _selectedAccentTint;
 
     [ObservableProperty]
@@ -81,6 +91,22 @@ public sealed partial class MainViewModel : ObservableObject
         }
 
         _themeService.ApplyTheme(value.Name);
+    }
+
+    partial void OnIsFollowingSystemChanged(bool value)
+    {
+        if (value == _systemThemeFollower.IsFollowingSystem)
+        {
+            return;
+        }
+
+        if (value)
+        {
+            _systemThemeFollower.EnableSystemFollow(ThemeNames.Folio, ThemeNames.Drakul);
+            return;
+        }
+
+        _systemThemeFollower.DisableSystemFollow();
     }
 
     partial void OnSelectedAccentTintChanged(AccentTint value)
@@ -100,6 +126,11 @@ public sealed partial class MainViewModel : ObservableObject
         if (SelectedTheme?.Name != e.CurrentTheme)
         {
             SelectedTheme = Themes.FirstOrDefault(t => t.Name == e.CurrentTheme);
+        }
+
+        if (IsFollowingSystem != _systemThemeFollower.IsFollowingSystem)
+        {
+            IsFollowingSystem = _systemThemeFollower.IsFollowingSystem;
         }
     }
 }

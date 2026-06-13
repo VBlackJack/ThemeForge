@@ -49,7 +49,9 @@ public partial class App : Application
     {
         // ThemeService is bound to the live Application so it can mutate
         // Application.Resources.MergedDictionaries at runtime.
-        services.AddSingleton<IThemeService>(_ => new ThemeService(this));
+        services.AddSingleton<ThemeService>(_ => new ThemeService(this));
+        services.AddSingleton<IThemeService>(sp => sp.GetRequiredService<ThemeService>());
+        services.AddSingleton<ISystemThemeFollower>(sp => sp.GetRequiredService<ThemeService>());
 
         // Each section eagerly instantiates its UserControl. The cost is
         // negligible (7 controls, no heavy resources) and keeps the
@@ -57,8 +59,10 @@ public partial class App : Application
         services.AddSingleton<MainViewModel>(sp =>
         {
             IThemeService themeService = sp.GetRequiredService<IThemeService>();
+            ISystemThemeFollower systemThemeFollower = sp.GetRequiredService<ISystemThemeFollower>();
             return new MainViewModel(
                 themeService,
+                systemThemeFollower,
                 new[]
                 {
                     new GallerySectionViewModel("Palette",     new PaletteView()),

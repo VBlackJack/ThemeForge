@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Windows;
-using System.Windows.Media;
 
 namespace ThemeForge.Theme;
 
@@ -29,7 +28,7 @@ namespace ThemeForge.Theme;
 /// are appended because WPF resolves duplicate merged-dictionary keys from
 /// the last matching dictionary.
 /// </remarks>
-public sealed class ThemeService : IThemeService
+public sealed partial class ThemeService : IThemeService, ISystemThemeFollower, IDisposable
 {
     private const string ThemeMarkerKey = "ThemeForge.ActiveThemeMarker";
     private const string AccentTintMarkerKey = "ThemeForge.ActiveAccentTintMarker";
@@ -69,6 +68,11 @@ public sealed class ThemeService : IThemeService
         {
             throw new ArgumentException(
                 $"Theme '{name}' is not in AvailableThemes.", nameof(name));
+        }
+
+        if (IsFollowingSystem && !_applyingFromFollow)
+        {
+            DisableSystemFollow();
         }
 
         if (string.Equals(_currentTheme, name, StringComparison.Ordinal))
@@ -142,51 +146,6 @@ public sealed class ThemeService : IThemeService
 
         return dict;
     }
-
-    private ResourceDictionary CreateAccentTintDictionary(AccentTint tint)
-    {
-        string sourceBrushKey = GetSourceBrushKey(tint);
-        object? resource = _application.Resources[sourceBrushKey];
-        SolidColorBrush sourceBrush = resource as SolidColorBrush
-            ?? throw new InvalidOperationException(
-                $"Accent tint '{tint}' requires SolidColorBrush resource '{sourceBrushKey}'.");
-
-        Color sourceColor = sourceBrush.Color;
-        OklabConverter.Oklab seed = OklabConverter.FromColor(sourceColor);
-        Color hoverColor = OklabConverter.ToColor(OklabConverter.Lighten(seed, AccentTintLightDelta));
-        Color pressedColor = OklabConverter.ToColor(OklabConverter.Darken(seed, AccentTintLightDelta));
-
-        ResourceDictionary dict = new ResourceDictionary
-        {
-            [AccentTintMarkerKey] = tint.ToString(),
-            ["AccentBrush"] = CreateFrozenBrush(sourceColor),
-            ["AccentHoverBrush"] = CreateFrozenBrush(hoverColor),
-            ["AccentPressedBrush"] = CreateFrozenBrush(pressedColor),
-        };
-
-        return dict;
-    }
-
-    private static SolidColorBrush CreateFrozenBrush(Color color)
-    {
-        SolidColorBrush brush = new SolidColorBrush(color);
-        brush.Freeze();
-        return brush;
-    }
-
-    private static string GetSourceBrushKey(AccentTint tint)
-        => tint switch
-        {
-            AccentTint.Blue => "BlueBrush",
-            AccentTint.Cyan => "CyanBrush",
-            AccentTint.Green => "GreenBrush",
-            AccentTint.Orange => "OrangeBrush",
-            AccentTint.Pink => "PinkBrush",
-            AccentTint.Purple => "PurpleBrush",
-            AccentTint.Red => "RedBrush",
-            AccentTint.Yellow => "YellowBrush",
-            _ => throw new ArgumentOutOfRangeException(nameof(tint), tint, "Unsupported accent tint."),
-        };
 
     private static void RemoveMarkedDictionary(IList<ResourceDictionary> merged, string markerKey)
     {

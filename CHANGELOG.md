@@ -5,6 +5,19 @@ All notable changes to ThemeForge are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-06-13
+
+### Added
+- Windows light/dark auto-follow for WPF apps through the opt-in
+  `ISystemThemeFollower` capability. `IThemeService` remains unchanged for
+  SemVer compatibility; consumers map their own light and dark ThemeForge
+  variants.
+- `ISystemThemeProvider` and `RegistrySystemThemeProvider` to read
+  `AppsUseLightTheme` and react to Windows preference changes without changing
+  the project TFM or adding WinRT dependencies.
+- Studio toggle to follow the Windows app theme mode, using `Folio` for light
+  mode and `Drakul` for dark mode.
+
 ## [1.0.0] - 2026-06-13
 
 First stable release of the ThemeForge WPF theming framework (.NET 10).
@@ -30,4 +43,5 @@ First stable release of the ThemeForge WPF theming framework (.NET 10).
   `var` rejected at build time as `error IDE0008`.
 - CI on `windows-2025-vs2026`; 146 tests (39 Theme + 107 Controls).
 
+[1.1.0]: https://github.com/VBlackJack/ThemeForge/releases/tag/v1.1.0
 [1.0.0]: https://github.com/VBlackJack/ThemeForge/releases/tag/v1.0.0

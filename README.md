@@ -21,7 +21,7 @@ projet cible.
 
 | Projet | Rôle |
 |---|---|
-| `ThemeForge.Theme` | Moteur de theming (`IThemeService`, `ThemeRevision`), 16 `ResourceDictionary` de thèmes |
+| `ThemeForge.Theme` | Moteur de theming (`IThemeService`, `ThemeRevision`), suivi Windows opt-in (`ISystemThemeFollower`), 16 `ResourceDictionary` de thèmes |
 | `ThemeForge.Controls` | 23 contrôles WPF natifs stylés + 9 composites (`Card`, `IconButton`, `Badge`, `Chip`, `ToggleSwitch`, `Avatar`, `SearchBox`, `Toast`, `ToastHost`) |
 | `ThemeForge.Studio` | App WPF de démonstration et d'édition live des thèmes |
 
@@ -142,6 +142,27 @@ themeService.ThemeChanged += (_, e) =>
 themeService.ApplyTheme(ThemeNames.Drakul);
 ```
 
+### Suivre le thème Windows
+
+Le suivi Windows est opt-in et ne modifie pas le contrat `IThemeService`. Expose
+le même `ThemeService` sous `ISystemThemeFollower`, puis choisis toi-même le
+mapping clair/sombre adapté à ton app.
+
+```csharp
+services.AddSingleton<ThemeService>(_ => new ThemeService(this));
+services.AddSingleton<IThemeService>(sp => sp.GetRequiredService<ThemeService>());
+services.AddSingleton<ISystemThemeFollower>(sp => sp.GetRequiredService<ThemeService>());
+```
+
+```csharp
+ISystemThemeFollower follower = _services.GetRequiredService<ISystemThemeFollower>();
+follower.EnableSystemFollow(ThemeNames.Folio, ThemeNames.Dracula);
+```
+
+Un appel manuel à `ApplyTheme` désactive le suivi pour que le choix explicite de
+l'utilisateur reste prioritaire. Si Windows ne fournit pas d'état clair/sombre,
+ThemeForge conserve le thème courant.
+
 ## Lancer Studio
 
 Studio te permet de prévisualiser les 16 variantes, de tester les contrôles, et
@@ -170,7 +191,7 @@ natifs stylés et 9 composites. Le Studio a été audité côté UI Automation a
 correctifs, avec les sections, le picker de thèmes et l'éditeur de palette
 adressables.
 
-La suite locale compte 53 tests verts : 19 pour `ThemeForge.Theme` et 34 pour
+La suite locale compte 157 tests verts : 46 pour `ThemeForge.Theme` et 111 pour
 `ThemeForge.Controls`. La CI GitHub Actions est committée ; elle s'activera au
 premier push sur une remote GitHub.
 

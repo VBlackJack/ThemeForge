@@ -1,0 +1,33 @@
+# Changelog
+
+All notable changes to ThemeForge are documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.0.0] - 2026-06-13
+
+First stable release of the ThemeForge WPF theming framework (.NET 10).
+
+### Added
+- Theme engine (`ThemeForge.Theme`): `IThemeService` / `ThemeService` with runtime
+  `ResourceDictionary` swap, `ThemeRevision`, and `ThemeChanged`.
+- 16 themes (v6): canonical `Dracula` plus `Drakul` and 14 original Apache-2.0
+  palettes, WCAG AA verified (except documented historical Dracula slots).
+- AccentTint axis: 9 orthogonal tints with Oklab-derived hover/pressed, persisted
+  across theme switches.
+- Shared design tokens (`DesignTokens.xaml`): spacing, radius, font sizes.
+- 23 styled native WPF controls (`ThemeForge.Controls`).
+- Composite controls: Card, IconButton, Badge, Chip, ToggleSwitch, Avatar,
+  SearchBox, Toast/ToastHost, themed ToolTip, Dialog, NumericUpDown,
+  SegmentedControl, Breadcrumb -- with custom UI Automation peers.
+- Studio demo app: runtime theme/accent switching and a live palette editor.
+- NuGet packaging for both `ThemeForge.Theme` and `ThemeForge.Controls`, published
+  to GitHub Packages on tag push.
+
+### Build
+- Deterministic build: SDK pinned via `global.json` (10.0.103, `latestPatch`);
+  `var` rejected at build time as `error IDE0008`.
+- CI on `windows-2025-vs2026`; 146 tests (39 Theme + 107 Controls).
+
+[1.0.0]: https://github.com/VBlackJack/ThemeForge/releases/tag/v1.0.0

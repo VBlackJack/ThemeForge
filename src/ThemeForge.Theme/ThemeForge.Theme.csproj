@@ -7,7 +7,6 @@
     <AssemblyName>ThemeForge.Theme</AssemblyName>
     <IsPackable>true</IsPackable>
     <PackageId>ThemeForge.Theme</PackageId>
-    <Version>1.0.0-preview.1</Version>
     <Authors>Julien Bombled</Authors>
     <Company>Julien Bombled</Company>
     <Description>Reusable WPF theming engine with Dracula-inspired palettes and runtime theme switching.</Description>

@@ -6,6 +6,7 @@
     <RootNamespace>ThemeForge.Controls</RootNamespace>
     <AssemblyName>ThemeForge.Controls</AssemblyName>
     <PackageId>ThemeForge.Controls</PackageId>
+    <IsPackable>true</IsPackable>
     <Description>Themed WPF control styles and composite controls (Card, IconButton, ToggleSwitch...) wired to the ThemeForge.Theme engine.</Description>
     <PackageTags>wpf;controls;dracula;theme;styles</PackageTags>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>

@@ -7,16 +7,17 @@ Ce guide t'aide à brancher ThemeForge dans une application WPF tierce.
 Ce guide est écrit pour toi si :
 
 - tu développes une app WPF desktop ;
-- tu veux une base Dracula propre sans refaire les styles à la main ;
-- tu veux pouvoir changer de thème au runtime ;
+- tu veux un moteur de théming propre sans refaire les styles à la main ;
+- tu veux changer de thème au runtime, suivre Windows et mémoriser le choix ;
 - tu veux utiliser les styles natifs et les composites ThemeForge.
 
 À la fin, tu auras :
 
-- un thème par défaut chargé au démarrage ;
+- un thème posé au démarrage, restauré depuis le choix persisté de l'utilisateur ;
+- le suivi clair/sombre et accent de Windows, opt-in ;
+- la barre de titre alignée sur le thème ;
 - les styles WPF natifs appliqués automatiquement ;
-- un `IThemeService` injectable ;
-- une bascule runtime via `ApplyTheme`;
+- un `IThemeService` injectable et une bascule runtime via `ApplyTheme` ;
 - les tokens ThemeForge utilisables dans tes propres styles.
 
 Prérequis :
@@ -25,106 +26,76 @@ Prérequis :
 - une app WPF ciblant `net10.0-windows` ;
 - un `.csproj` SDK-style moderne.
 
-ThemeForge est publié sur GitHub Packages (compte VBlackJack).
+ThemeForge est publié sur **nuget.org** (restore anonyme, aucune authentification)
+et aussi sur GitHub Packages. L'intégration recommandée se fait par
+`PackageReference` depuis nuget.org.
 
-L'intégration recommandée se fait par `PackageReference`. La section 2 détaille le
-feed et l'authentification.
+## 2. La voie rapide : le template
 
-## 2. Référencer ThemeForge dans ton projet
+Le plus simple est de partir du template, qui génère une app déjà entièrement
+câblée (suivi Windows, persistance, barre de titre), prête à lancer.
 
-ThemeForge est distribué sur GitHub Packages. L'intégration se fait par
-`PackageReference`.
-
-### 2.1 Déclarer le feed
-
-Ajoute un `nuget.config` à côté de ta solution :
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<configuration>
-  <packageSources>
-    <add key="github" value="https://nuget.pkg.github.com/VBlackJack/index.json" />
-  </packageSources>
-</configuration>
+```pwsh
+dotnet new install ThemeForge.Templates
+dotnet new tf-wpf -n MonApp
 ```
 
-### 2.2 S'authentifier (obligatoire, même en lecture)
+Le projet généré est la référence runnable de tout ce qui suit : son `App.xaml.cs`
+montre le bootstrap complet, sa `MainWindow` montre le sélecteur de thème, le
+toggle "Suivre Windows" et la barre de titre thématisée.
 
-GitHub Packages n'autorise aucun restore anonyme : il faut un PAT GitHub avec le
-scope `read:packages`, même pour une simple consommation.
+Si tu intègres dans une app WPF existante, suis les sections ci-dessous.
 
-Fournis-le de l'une de ces deux façons :
-
-- par variable d'environnement, sans écrire le token sur disque (lance ensuite
-  `dotnet restore` dans le même shell) :
-
-  ```pwsh
-  $env:NuGetPackageSourceCredentials_github = "Username=<user>;Password=<PAT>"
-  ```
-
-- ou dans le `nuget.config`, via un bloc `packageSourceCredentials` (garde alors
-  le fichier hors du contrôle de version) :
-
-  ```xml
-  <packageSourceCredentials>
-    <github>
-      <add key="Username" value="<user>" />
-      <add key="ClearTextPassword" value="<PAT>" />
-    </github>
-  </packageSourceCredentials>
-  ```
-
-### 2.3 Référencer les packages
+## 3. Référencer ThemeForge
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="ThemeForge.Theme" Version="1.3.0" />
-  <PackageReference Include="ThemeForge.Controls" Version="1.3.0" />
+  <PackageReference Include="ThemeForge.Theme" Version="2.0.0" />
+  <PackageReference Include="ThemeForge.Controls" Version="2.0.0" />
+  <PackageReference Include="ThemeForge.Theme.DependencyInjection" Version="2.0.0" />
 </ItemGroup>
 ```
 
+Les packages se restaurent depuis nuget.org en accès anonyme, sans `nuget.config`
+ni authentification.
+
 `ThemeForge.Theme` contient le moteur :
 
-- `IThemeService` ;
-- `ThemeService` ;
-- `ThemeNames` ;
+- `IThemeService`, `ThemeService`, `ThemeNames` ;
+- les suivis Windows opt-in (`IWindowsThemeFollower`, `ISystemThemeFollower`,
+  `ISystemAccentFollower`) ;
+- la persistance (`IThemePreferenceStore`, `JsonThemePreferenceStore`) ;
+- le theming de barre de titre (`ApplyThemeForgeTitleBar`) ;
 - les 16 `ResourceDictionary` de thèmes.
 
-`ThemeForge.Controls` contient :
+Le package coeur reste sans dépendance NuGet.
 
-- les styles WPF natifs dans `src/ThemeForge.Controls/Styles/` ;
-- les composites dans `src/ThemeForge.Controls/Composites/` ;
-- l'index WPF des composites dans `Themes/Generic.xaml`.
+`ThemeForge.Controls` contient les styles WPF natifs, les composites et l'index
+WPF `Themes/Generic.xaml`.
 
-Pour brancher le moteur en une ligne dans un container DI, ajoute le package de
-wiring :
+`ThemeForge.Theme.DependencyInjection` apporte le wiring `AddThemeForge` et
+`UseThemeForge` (section 5), et tracte
+`Microsoft.Extensions.DependencyInjection.Abstractions`.
 
-```xml
-<PackageReference Include="ThemeForge.Theme.DependencyInjection" Version="1.3.0" />
-```
-
-Il apporte l'extension `AddThemeForge` (section 4) et tracte
-`Microsoft.Extensions.DependencyInjection.Abstractions`. Le package coeur
-`ThemeForge.Theme` reste sans dépendance.
-
-Si ton app n'a pas déjà de container DI, ajoute aussi l'implémentation du
-container :
+Si ton app n'a pas déjà de container DI, ajoute aussi l'implémentation :
 
 ```xml
 <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
 ```
 
-Le Studio utilise ce package avec un `ServiceCollection` brut.
+> Source secondaire (optionnelle). ThemeForge est aussi publié sur GitHub
+> Packages (compte VBlackJack). Cette source exige un PAT GitHub avec le scope
+> `read:packages`, même en lecture. nuget.org reste le chemin par défaut et ne
+> demande aucune authentification.
 
-## 3. Bootstrap App.xaml
+## 4. Bootstrap App.xaml : merger les styles, jamais un thème
 
-Dans `App.xaml`, merge UNIQUEMENT le dictionnaire de styles natifs. Le thème
-initial se pose au runtime via `ThemeService.ApplyTheme(...)` dans `OnStartup`
-(section 4).
+Dans `App.xaml`, merge UNIQUEMENT le dictionnaire de styles natifs. Le thème se
+pose au runtime, possédé de bout en bout par le bootstrap (section 5).
 
 ```xml
 <Application
-    x:Class="YourApp.App"
+    x:Class="MonApp.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Application.Resources>
@@ -137,119 +108,196 @@ initial se pose au runtime via `ThemeService.ApplyTheme(...)` dans `OnStartup`
 </Application>
 ```
 
-> **Avertissement.** Ne jamais merger un thème en statique dans `App.xaml` si tu
-> utilises `ApplyTheme`. Un thème mergé en statique n'est pas marqué par
-> `ThemeService`, donc jamais retiré, et il reste en dernière position du merge :
-> sur une clé dupliquée, WPF donne la priorité au dernier dictionnaire. Ses
-> brushes l'emportent alors sur le thème appliqué au runtime, et le switch de
-> thème change `CurrentTheme` sans aucun effet visible sur les couleurs. Le thème
-> initial se pose donc exclusivement via `ThemeService.ApplyTheme(...)`.
+> **Avertissement.** Ne merge jamais un thème en statique dans `App.xaml`. Un
+> thème statique n'est pas marqué par `ThemeService`, donc jamais retiré, et il
+> reste en dernière position du merge : sur une clé dupliquée, WPF donne la
+> priorité au dernier dictionnaire. Ses brushes l'emportent alors sur le thème
+> appliqué au runtime, et le switch de thème change `CurrentTheme` sans aucun
+> effet visible. Le thème est donc possédé exclusivement par le bootstrap.
 
-Le dictionnaire `Styles/Studio.xaml` agrège les styles natifs.
+Retire aussi `StartupUri` de `App.xaml` : la fenêtre principale est créée et
+affichée par le bootstrap (section 5).
 
-Les styles natifs sont implicites.
+Les styles natifs sont implicites. Tu écris un `<Button>`, un `<TextBox>` ou un
+`<DataGrid>` normal, et WPF applique le style ThemeForge dès que le dictionnaire
+est mergé.
 
-Tu écris un `<Button>`, un `<TextBox>` ou un `<DataGrid>` normal.
+## 5. Bootstrap App.xaml.cs : une ligne pour tout câbler
 
-WPF applique le style ThemeForge si le dictionnaire est mergé.
-
-## 4. Bootstrap App.xaml.cs (DI minimal)
-
-`ThemeService` reçoit l'instance WPF `Application`. L'extension `AddThemeForge`
-la capture pour toi et enregistre le moteur en une ligne.
-
-```csharp
-private ServiceProvider? _services;
-
-protected override void OnStartup(StartupEventArgs e)
-{
-    base.OnStartup(e);
-    ServiceCollection services = new ServiceCollection();
-    services.AddThemeForge(this);
-    _services = services.BuildServiceProvider();
-    IThemeService theme = _services.GetRequiredService<IThemeService>();
-    theme.ApplyTheme(ThemeNames.Drakul);
-}
-```
-
-Ajoute les `using` nécessaires :
+`AddThemeForge` enregistre le moteur ; `UseThemeForge` orchestre le démarrage :
+il restaure le choix persisté de l'utilisateur (ou applique le défaut), arme le
+suivi Windows, et sauvegarde automatiquement chaque changement.
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
 using ThemeForge.Theme;
 using ThemeForge.Theme.DependencyInjection;
+
+public partial class App : Application
+{
+    private ServiceProvider? _services;
+
+    protected override void OnStartup(StartupEventArgs e)
+    {
+        base.OnStartup(e);
+
+        ServiceCollection services = new ServiceCollection();
+        services.AddThemeForge(this, options =>
+        {
+            options.DefaultTheme = ThemeNames.Drakul;
+            options.WindowsFollow = new WindowsFollowOptions
+            {
+                LightTheme = ThemeNames.Folio,
+                DarkTheme = ThemeNames.Drakul,
+            };
+            options.FollowWindowsByDefault = true;
+            options.ApplicationName = "MonApp";
+        });
+        services.AddSingleton<MainViewModel>();
+        services.AddSingleton<MainWindow>();
+
+        _services = services.BuildServiceProvider();
+        _services.UseThemeForge();
+
+        _services.GetRequiredService<MainWindow>().Show();
+    }
+
+    protected override void OnExit(ExitEventArgs e)
+    {
+        _services?.Dispose();
+        base.OnExit(e);
+    }
+}
 ```
 
-`AddThemeForge` enregistre `ThemeService` comme singleton partagé et l'expose via
-`IThemeService`, `ISystemThemeFollower` et `ISystemAccentFollower`. Les trois
-interfaces résolvent la même instance, sans aucun cast (voir section 9).
-L'enregistrement utilise `TryAddSingleton` : si tu enregistres toi-même l'une de
-ces interfaces avant l'appel, ta version est conservée. Tu peux aussi passer ta
-propre liste de thèmes : `services.AddThemeForge(this, mesThemes)`.
+`ThemeForgeOptions` :
 
-Le singleton est important.
+- `DefaultTheme` : le thème appliqué quand il n'y a ni choix persisté ni suivi.
+- `WindowsFollow` : la paire clair/sombre (et `FollowAccent`, défaut `true`).
+  Nécessaire pour le 1er run en suivi ET pour restaurer le mode suivi.
+- `FollowWindowsByDefault` : au 1er run sans préférence, suit Windows si `true`.
+- `ApplicationName` : active la persistance (section 7). Sans lui, ni restore ni
+  auto-save.
+- `PreferenceStore`, `DefaultAccentTint`, `AvailableThemes`, `OnError` :
+  réglages avancés.
 
-`IThemeService` porte un état partagé :
+`AddThemeForge` enregistre `ThemeService` comme singleton partagé, exposé via
+`IThemeService`, `ISystemThemeFollower`, `ISystemAccentFollower` et
+`IWindowsThemeFollower`. Les quatre interfaces résolvent la même instance, sans
+aucun cast. `TryAddSingleton` est utilisé : si tu enregistres toi-même l'une de
+ces interfaces avant l'appel, ta version est conservée.
 
-- `CurrentTheme` ;
-- `ThemeRevision` ;
-- l'événement `ThemeChanged`.
+`UseThemeForge()` retourne un `IDisposable` ; il est idempotent (un second appel
+ne ré-abonne rien) et se nettoie quand le container est disposé.
 
-Si tu crées plusieurs instances, tes vues peuvent observer des états différents.
+La fenêtre principale est résolue via DI puis affichée. Son constructeur reçoit
+ses dépendances (section 8 pour la barre de titre).
 
-Garde donc une seule instance par application.
+## 6. Suivre le thème et l'accent Windows
 
-Tu peux choisir `ThemeNames.Dracula` si tu veux la palette canonique.
+Le suivi est armé par le bootstrap via `WindowsFollow` + `FollowWindowsByDefault`.
+Tu n'as rien d'autre à écrire pour le cas standard.
 
-Tu peux choisir `ThemeNames.Drakul` si tu veux le sibling AA-compliant.
+Pour le piloter à la main (par exemple un toggle "Suivre Windows"), injecte
+`IWindowsThemeFollower` et appelle le preset, qui arme clair/sombre ET accent en
+un seul appel :
 
-## 5. Utiliser les contrôles natifs stylés
+```csharp
+public sealed partial class ShellViewModel : ObservableObject
+{
+    private readonly IWindowsThemeFollower _follower;
 
-Les styles natifs vivent dans `src/ThemeForge.Controls/Styles/`.
+    public ShellViewModel(IWindowsThemeFollower follower) => _follower = follower;
 
-Le point d'entrée consommateur est :
-
-```text
-ThemeForge.Controls;component/Styles/Studio.xaml
+    [RelayCommand]
+    private void EnableFollow()
+        => _follower.FollowWindows(new WindowsFollowOptions
+        {
+            LightTheme = ThemeNames.Folio,
+            DarkTheme = ThemeNames.Drakul,
+        });
+}
 ```
 
-Le README annonce 23 contrôles WPF natifs stylés.
+Les capacités de suivi vivent sur des interfaces SÉPARÉES pour ne pas modifier
+`IThemeService` (gelé pour la stabilité SemVer).
 
-Cette liste couvre les contrôles utilisés directement le plus souvent :
+Interactions à connaître :
 
-- `Button`
-- `ToggleButton`
-- `RepeatButton`
-- `CheckBox`
-- `RadioButton`
-- `TextBox`
-- `PasswordBox`
-- `ComboBox`
-- `ComboBoxItem`
-- `ListBox`
-- `ListBoxItem`
-- `ListView`
-- `TreeView`
-- `TreeViewItem`
-- `DataGrid`
-- `TabControl`
-- `TabItem`
-- `GroupBox`
-- `Expander`
-- `Slider`
-- `ProgressBar`
-- `ScrollBar`
-- `StatusBar`
+- Un `ApplyTheme(...)` manuel désactive le suivi clair/sombre : le choix explicite
+  de l'utilisateur reprend la main. C'est aussi la façon d'arrêter le suivi.
+- Un `ApplyAccentTint(...)` manuel désactive le suivi d'accent.
+- Si Windows ne fournit pas d'état clair/sombre, ThemeForge conserve le thème
+  courant.
 
-Les templates couvrent aussi des éléments internes utiles :
+L'état s'observe via `IsFollowingSystem` (`ISystemThemeFollower`) et
+`IsFollowingSystemAccent` (`ISystemAccentFollower`).
 
-- headers et cellules de `DataGrid` ;
-- `GridViewColumnHeader` pour `ListView` ;
-- `StatusBarItem` et `Thumb`.
+> Sans DI, tu peux caster ton instance `ThemeService` vers `IWindowsThemeFollower`
+> ou les deux followers : ces interfaces sont additives et non-breaking.
 
-Tu n'as rien à référencer par clé.
+## 7. Persister le choix de l'utilisateur
 
-Écris du WPF normal :
+Quand `options.ApplicationName` est défini, `UseThemeForge` restaure au démarrage
+le dernier choix de l'utilisateur (thème explicite, accent, ou mode suivi) et le
+sauvegarde à chaque changement. Le store par défaut écrit un JSON sous
+`%AppData%/<ApplicationName>/preferences.json`, en écriture atomique.
+
+L'intention est persistée, pas le thème momentané : en mode suivi, une bascule
+clair/sombre de Windows ne fige pas le thème résolu.
+
+Pour un emplacement ou un backend custom (registre, cloud), fournis ta propre
+implémentation :
+
+```csharp
+options.PreferenceStore = new JsonThemePreferenceStore(monChemin, onError: Log);
+```
+
+ou implémente `IThemePreferenceStore` (deux membres, `Load()` / `Save(...)`).
+`Load()` ne lève jamais : un fichier absent, corrompu ou de version inconnue
+renvoie "aucune préférence". `JsonThemePreferenceStore.FilePath` te donne le
+chemin (utile pour un bouton "réinitialiser mes préférences").
+
+## 8. Thématiser la barre de titre
+
+Dans le code-behind de ta fenêtre, appelle l'extension après
+`InitializeComponent`. La caption suit le thème courant (mode clair/sombre déduit
+du fond, couleurs dérivées du thème) et se re-synchronise sur `ThemeChanged`.
+
+```csharp
+public partial class MainWindow : Window
+{
+    public MainWindow(MainViewModel viewModel, IThemeService themeService)
+    {
+        InitializeComponent();
+        DataContext = viewModel;
+        this.ApplyThemeForgeTitleBar(themeService);
+    }
+}
+```
+
+Le rendu est best-effort selon la version de Windows : les couleurs de caption
+demandent Windows 11, le mode sombre immersif Windows 10 2004+. Sur un OS plus
+ancien, la barre reste au défaut OS, sans erreur. `TitleBarOptions` permet de
+surcharger les couleurs (caption, texte, bordure) ; laissées nulles, elles
+dérivent du thème.
+
+## 9. Utiliser les contrôles natifs stylés
+
+Le point d'entrée consommateur est
+`ThemeForge.Controls;component/Styles/Studio.xaml`. Les styles sont implicites :
+tu n'as rien à référencer par clé.
+
+23 contrôles WPF natifs sont stylés, dont :
+
+- `Button`, `ToggleButton`, `RepeatButton`, `CheckBox`, `RadioButton` ;
+- `TextBox`, `PasswordBox`, `ComboBox`, `ComboBoxItem` ;
+- `ListBox`, `ListBoxItem`, `ListView`, `TreeView`, `TreeViewItem`, `DataGrid` ;
+- `TabControl`, `TabItem`, `GroupBox`, `Expander` ;
+- `Slider`, `ProgressBar`, `ScrollBar`, `StatusBar`.
+
+Les templates couvrent aussi des éléments internes (headers et cellules de
+`DataGrid`, `GridViewColumnHeader`, `StatusBarItem`, `Thumb`) et le `ToolTip`.
 
 ```xml
 <StackPanel>
@@ -259,21 +307,9 @@ Tu n'as rien à référencer par clé.
 </StackPanel>
 ```
 
-Note sur `ToolTip` : il est aussi thémé par ThemeForge.
+## 10. Utiliser les composites
 
-Le style implicite vit dans `Styles/ToolTip.xaml`.
-
-`Styles/Studio.xaml` le merge déjà avec les autres styles natifs.
-
-Chaque `ToolTip` attaché à un contrôle récupère donc le style automatiquement.
-
-Il reprend la surface, la bordure, le texte, la typo et le rayon du thème actif.
-
-## 6. Utiliser les composites
-
-Les composites vivent dans `src/ThemeForge.Controls/Composites/`.
-
-Tu ajoutes le namespace XAML :
+Ajoute le namespace XAML :
 
 ```xml
 xmlns:dfc="clr-namespace:ThemeForge.Controls.Composites;assembly=ThemeForge.Controls"
@@ -290,12 +326,10 @@ Les 13 composites livrés :
 - `SearchBox` : champ de recherche avec placeholder, clear et commande.
 - `Toast` : notification éphémère avec titre, message et sévérité.
 - `ToastHost` : pile verticale qui héberge et retire les toasts.
-- `Breadcrumb` : fil d'Ariane cliquable pour la navigation hiérarchique.
-- `Dialog` : surface de dialogue avec header, contenu, footer et accent sémantique.
+- `Breadcrumb` : fil d'Ariane cliquable.
+- `Dialog` : surface de dialogue avec header, contenu, footer et accent.
 - `NumericUpDown` : saisie numérique avec boutons d'incrémentation.
 - `SegmentedControl` : groupe de segments à sélection unique.
-
-Exemple minimal :
 
 ```xml
 <StackPanel xmlns:dfc="clr-namespace:ThemeForge.Controls.Composites;assembly=ThemeForge.Controls">
@@ -307,21 +341,10 @@ Exemple minimal :
 </StackPanel>
 ```
 
-Le dossier `Composites` contient désormais 14 `AutomationPeer` custom.
-
-Ces peers couvrent les contrôles composites qui ont une sémantique UIA dédiée.
-
-Ils couvrent aussi les conteneurs d'items `BreadcrumbItem` et `SegmentItem`.
-
-Cela aide les screen readers et les tests UIA.
-
-Si `Content` ou `Header` reçoit autre chose qu'une chaîne, le peer ne fabrique pas de nom accessible.
-
-Il ignore cet objet pour éviter d'annoncer un nom de type .NET.
-
-Une icône, une shape ou un élément WPF ne devient donc pas un nom accessible automatique.
-
-Dans ce cas, définis `AutomationProperties.Name` sur le composite.
+Accessibilité : 14 `AutomationPeer` custom couvrent les composites et les
+conteneurs d'items (`BreadcrumbItem`, `SegmentItem`). Si `Content` ou `Header`
+reçoit autre chose qu'une chaîne, le peer ne fabrique pas de nom accessible pour
+éviter d'annoncer un nom de type .NET ; définis alors `AutomationProperties.Name`.
 
 ```xml
 <dfc:Chip AutomationProperties.Name="Filtre actif">
@@ -329,182 +352,20 @@ Dans ce cas, définis `AutomationProperties.Name` sur le composite.
 </dfc:Chip>
 ```
 
-### Breadcrumb
+## 11. Utiliser les design tokens
 
-`Breadcrumb` hérite de `ItemsControl`.
+Les tokens non-couleur sont centralisés dans
+`src/ThemeForge.Theme/Themes/Shared/DesignTokens.xaml`, mergé par chaque variante.
 
-Il peut recevoir des `BreadcrumbItem` en XAML ou une collection via `ItemsSource`.
+- `SpacingNone` à `SpacingXxxl` (`Thickness`)
+- `RadiusNone` à `RadiusFull` (`CornerRadius`)
+- `FontSizeXs` à `FontSizeXl` (`Double`)
 
-`BreadcrumbItem` hérite de `ButtonBase`.
-
-Il expose donc `Click`, `Command` et `CommandParameter`.
-
-Propriété dédiée :
-
-- `IsCurrent` (`bool`) : marque le segment actif.
-
-Exemple minimal :
-
-```xml
-<dfc:Breadcrumb>
-    <dfc:BreadcrumbItem Content="Accueil" Command="{Binding GoHomeCommand}"/>
-    <dfc:BreadcrumbItem Content="Projet" Command="{Binding GoProjectCommand}"/>
-    <dfc:BreadcrumbItem Content="Détails" IsCurrent="True"/>
-</dfc:Breadcrumb>
-```
-
-### Dialog
-
-`Dialog` hérite de `HeaderedContentControl`.
-
-`Header` porte le titre.
-
-`Content` porte le corps principal.
-
-Propriétés dédiées :
-
-- `Footer` (`object?`) : affiche un contenu d'action ou d'état en bas.
-- `FooterTemplate` (`DataTemplate?`) : template le contenu de `Footer`.
-- `Severity` (`DialogSeverity`) : choisit l'accent sémantique.
-- `IconGeometry` (`Geometry?`) : affiche une icône avant le header.
-- `IsClosable` (`bool`) : affiche ou masque le bouton de fermeture.
-- `CloseCommand` (`ICommand?`) : commande exécutée par `Close()` quand elle peut s'exécuter.
-
-Événement dédié :
-
-- `Closed` (`EventHandler?`) : levé une seule fois quand le dialogue se ferme.
-
-Méthode utile :
-
-- `Close()` : ferme le dialogue, exécute `CloseCommand`, puis lève `Closed`.
-
-Exemple minimal :
-
-```xml
-<dfc:Dialog Header="Supprimer le projet"
-            Severity="Warning"
-            CloseCommand="{Binding CloseDialogCommand}">
-    <dfc:Dialog.Content>
-        <TextBlock Text="Cette action est irréversible."/>
-    </dfc:Dialog.Content>
-    <dfc:Dialog.Footer>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Annuler" Command="{Binding CloseDialogCommand}"/>
-            <Button Content="Supprimer" Command="{Binding DeleteProjectCommand}" Margin="8,0,0,0"/>
-        </StackPanel>
-    </dfc:Dialog.Footer>
-</dfc:Dialog>
-```
-
-### NumericUpDown
-
-`NumericUpDown` hérite de `RangeBase`.
-
-Il reprend `Value`, `Minimum`, `Maximum`, `SmallChange` et `LargeChange`.
-
-Propriétés dédiées :
-
-- `DecimalPlaces` (`int`) : définit le nombre de décimales affichées, de `0` à `15`.
-- `IsReadOnly` (`bool`) : empêche la modification par saisie, molette et boutons.
-
-Méthodes utiles :
-
-- `IncreaseValue()` : ajoute `SmallChange` à `Value`.
-- `DecreaseValue()` : retire `SmallChange` à `Value`.
-
-Exemple minimal :
-
-```xml
-<dfc:NumericUpDown Minimum="0"
-                   Maximum="100"
-                   Value="{Binding OpacityPercent, Mode=TwoWay}"
-                   SmallChange="1"
-                   LargeChange="10"
-                   DecimalPlaces="0"/>
-```
-
-### SegmentedControl
-
-`SegmentedControl` hérite de `ListBox`.
-
-Il force `SelectionMode` à `Single`.
-
-`SegmentItem` hérite de `ListBoxItem`.
-
-Propriétés utiles héritées :
-
-- `ItemsSource` (`IEnumerable`) : fournit les segments depuis une collection.
-- `SelectedItem` (`object?`) : porte l'élément sélectionné.
-- `SelectedIndex` (`int`) : porte l'index sélectionné.
-
-Exemple minimal :
-
-```xml
-<dfc:SegmentedControl SelectedIndex="{Binding SelectedViewIndex, Mode=TwoWay}">
-    <dfc:SegmentItem Content="Aperçu"/>
-    <dfc:SegmentItem Content="Détails"/>
-    <dfc:SegmentItem Content="Historique"/>
-</dfc:SegmentedControl>
-```
-
-## 7. Utiliser les design tokens dans tes propres styles
-
-Les tokens non-couleur communs sont centralisés dans :
-
-`src/ThemeForge.Theme/Themes/Shared/DesignTokens.xaml`.
-
-Chaque variante de thème merge ce fichier shared. Tu peux donc utiliser les
-mêmes tokens de spacing, radius et taille de police quel que soit le thème
-actif.
-
-Les tokens partagés :
-
-- `SpacingNone`, `SpacingXxs`, `SpacingXs`, `SpacingSm`, `SpacingMd`,
-  `SpacingLg`, `SpacingXl`, `SpacingXxl`, `SpacingXxxl` (`Thickness`)
-- `RadiusNone`, `RadiusXs`, `RadiusSm`, `RadiusMd`, `RadiusLg`, `RadiusXl`,
-  `RadiusFull` (`CornerRadius`)
-- `FontSizeXs`, `FontSizeSm`, `FontSizeMd`, `FontSizeLg`, `FontSizeXl`
-  (`Double`)
-
-Les couleurs restent déclarées dans chaque fichier de thème.
-
-Les brushes canoniques :
-
-- `BackgroundBrush`
-- `CurrentLineBrush`
-- `SelectionBrush`
-- `ForegroundBrush`
-- `CommentBrush`
-- `CyanBrush`
-- `GreenBrush`
-- `OrangeBrush`
-- `PinkBrush`
-- `PurpleBrush`
-- `RedBrush`
-- `YellowBrush`
-
-Les brushes sémantiques :
-
-- `SurfaceBrush`
-- `SurfaceAltBrush`
-- `AccentBrush`
-- `AccentHoverBrush`
-- `AccentPressedBrush`
-- `TextPrimaryBrush`
-- `TextSecondaryBrush`
-- `BorderBrush`
-- `SuccessBrush`
-- `WarningBrush`
-- `ErrorBrush`
-- `InfoBrush`
-
-Utilise `DynamicResource` dans tes vues et tes styles.
-
-`StaticResource` résout la valeur une fois.
-
-`DynamicResource` suit le remplacement du `ResourceDictionary` au runtime.
-
-Exemple de style local :
+Les brushes canoniques (`BackgroundBrush`, `ForegroundBrush`, `CommentBrush`,
+`CyanBrush`, etc.) et sémantiques (`SurfaceBrush`, `AccentBrush`,
+`TextPrimaryBrush`, `BorderBrush`, `SuccessBrush`, etc.) sont déclarés dans chaque
+fichier de thème. Utilise `DynamicResource` pour suivre le swap de thème au
+runtime.
 
 ```xml
 <Style x:Key="PanelTitle" TargetType="{x:Type TextBlock}">
@@ -515,19 +376,13 @@ Exemple de style local :
 </Style>
 ```
 
-Tu peux aussi consommer les couleurs avec le suffixe `Color`.
+Les couleurs sont aussi accessibles avec le suffixe `Color` (`AccentColor`,
+`SurfaceColor`, etc.).
 
-Exemples : `AccentColor`, `SurfaceColor`, `TextPrimaryColor`.
+## 12. Basculer de thème au runtime
 
-## 8. Basculer de thème au runtime
-
-L'API publique est courte.
-
-`IThemeService.ApplyTheme(string name)` applique un thème connu.
-
-`AvailableThemes` donne la liste stable des noms applicables.
-
-Exemple ViewModel avec `CommunityToolkit.Mvvm` :
+`IThemeService.ApplyTheme(string name)` applique un thème connu ;
+`AvailableThemes` donne la liste stable des noms. `ApplyTheme` est idempotent.
 
 ```csharp
 public sealed partial class ShellViewModel : ObservableObject
@@ -535,40 +390,28 @@ public sealed partial class ShellViewModel : ObservableObject
     private readonly IThemeService _themeService;
     public IReadOnlyList<string> Themes => _themeService.AvailableThemes;
 
-    public ShellViewModel(IThemeService themeService)
-        => _themeService = themeService;
+    public ShellViewModel(IThemeService themeService) => _themeService = themeService;
 
     [ObservableProperty]
     private string? _selectedTheme;
-}
-```
 
-Ajoute la réaction au changement :
-
-```csharp
-partial void OnSelectedThemeChanged(string? value)
-{
-    if (string.IsNullOrWhiteSpace(value))
+    partial void OnSelectedThemeChanged(string? value)
     {
-        return;
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            _themeService.ApplyTheme(value);
+        }
     }
-
-    _themeService.ApplyTheme(value);
 }
 ```
-
-Bind une `ComboBox` :
 
 ```xml
 <ComboBox ItemsSource="{Binding Themes}"
           SelectedItem="{Binding SelectedTheme, Mode=TwoWay}"/>
 ```
 
-`ApplyTheme` est idempotent.
-
-Si `value` est déjà le thème courant, le service ne refait rien.
-
-Pour observer les changements :
+`ThemeRevision` est incrémenté avant `ThemeChanged`, utile pour forcer des
+converters, multi-bindings ou caches visuels à se ré-évaluer.
 
 ```csharp
 _themeService.ThemeChanged += (_, e) =>
@@ -578,149 +421,43 @@ _themeService.ThemeChanged += (_, e) =>
 };
 ```
 
-`ThemeRevision` est incrémenté avant `ThemeChanged`.
+> Avec la persistance active (section 7), pense à refléter `IsFollowingSystem`
+> dans ton toggle "Suivre Windows" : choisir un thème manuellement coupe le suivi,
+> et l'auto-save persiste ce choix. La `MainWindow` du template montre ce câblage.
 
-C'est utile pour forcer des converters, multi-bindings ou caches visuels à se
-ré-évaluer.
+## 13. Créer ta propre variante
 
-Tu peux exposer `ThemeRevision` dans ton ViewModel si ta vue en dépend.
-
-## 9. Suivre le thème et l'accent Windows
-
-Depuis la v1.1.0 (suivi clair/sombre) et la v1.2.0 (suivi de l'accent),
-ThemeForge peut s'aligner automatiquement sur les réglages Windows.
-
-Ces capacités sont opt-in et vivent sur des interfaces SÉPARÉES,
-`ISystemThemeFollower` et `ISystemAccentFollower`, pour ne pas modifier
-`IThemeService` (gelé pour la stabilité SemVer). `ThemeService` les implémente
-toutes les deux ; tu y accèdes par injection directe avec le wiring DI (voir
-plus bas) ou, sans DI, par un cast de ton instance.
-
-### Suivre le mode clair/sombre de Windows
-
-```csharp
-((ISystemThemeFollower)themeService).EnableSystemFollow(ThemeNames.Folio, ThemeNames.Drakul);
-// ...
-((ISystemThemeFollower)themeService).DisableSystemFollow();
-```
-
-`EnableSystemFollow(lightTheme, darkTheme)` applique `lightTheme` quand Windows
-est en mode clair et `darkTheme` en mode sombre, puis suit les changements de
-mode. `IsFollowingSystem` expose l'état courant.
-
-### Suivre la couleur d'accent de Windows
-
-```csharp
-((ISystemAccentFollower)themeService).EnableSystemAccentFollow();
-// ...
-((ISystemAccentFollower)themeService).DisableSystemAccentFollow();
-```
-
-`IsFollowingSystemAccent` expose l'état courant.
-
-### Interactions à connaître
-
-- Le suivi d'accent et `ApplyAccentTint(...)` sont mutuellement exclusifs :
-  appeler `ApplyAccentTint` désactive automatiquement le suivi d'accent.
-- Un `ApplyTheme(...)` manuel désactive le suivi clair/sombre (tu reprends la
-  main sur le thème), mais conserve le suivi d'accent s'il est actif.
-
-### Injection directe via DI (sans cast)
-
-Avec le package `ThemeForge.Theme.DependencyInjection` et `AddThemeForge`
-(section 4), les trois interfaces résolvent le même singleton. Tu injectes donc
-directement la capacité voulue, sans cast :
-
-```csharp
-public sealed class StartupRoutine
-{
-    private readonly ISystemThemeFollower _follower;
-
-    public StartupRoutine(ISystemThemeFollower follower)
-        => _follower = follower;
-
-    public void Start()
-        => _follower.EnableSystemFollow(ThemeNames.Folio, ThemeNames.Drakul);
-}
-```
-
-> **Note.** Sans DI, le cast direct de ton instance `ThemeService` vers
-> `ISystemThemeFollower` / `ISystemAccentFollower` reste parfaitement valide :
-> ces interfaces sont additives et non-breaking.
-
-## 10. Aller plus loin
-
-Studio est le bac à sable du repo.
-
-Lance-le depuis la racine ThemeForge :
-
-```bash
-dotnet run --project src/ThemeForge.Studio
-```
-
-Tu peux y vérifier :
-
-- les 16 variantes ;
-- les styles natifs ;
-- les composites ;
-- l'éditeur live des 24 slots hex.
-
-Pour créer ta propre variante :
-
-- crée un fichier `src/ThemeForge.Theme/Themes/<Name>.xaml` ;
-- garde un nom PascalCase, ASCII, sans espace ;
-- ajoute le header d'attribution obligatoire ;
+- crée `src/ThemeForge.Theme/Themes/<Name>.xaml` (nom PascalCase, ASCII, sans
+  espace) ;
+- ajoute le header d'attribution obligatoire (`NOTICE` est la source canonique
+  d'attribution des palettes) ;
 - déclare les mêmes clés `Color` et `Brush` que les thèmes existants ;
-- ajoute le nom dans `ThemeNames.cs`.
+- ajoute le nom dans `ThemeNames.cs` et `ThemeNames.All`.
 
-Le header d'attribution est obligatoire.
-
-Voir le fichier NOTICE pour la règle d'attribution.
-
-`NOTICE` reste la source canonique pour l'attribution des palettes.
-
-Pour que ta variante apparaisse dans `AvailableThemes`, ajoute-la à
-`ThemeNames.All`.
-
-Autre option avancée : injecte ta propre liste au constructeur :
+Pour une liste de thèmes custom à l'enregistrement :
 
 ```csharp
-var names = ThemeNames.All.Append("MyTheme").ToArray();
-services.AddSingleton<IThemeService>(_ => new ThemeService(this, names));
+services.AddThemeForge(this, options =>
+{
+    options.AvailableThemes = ThemeNames.All.Append("MyTheme").ToArray();
+    options.DefaultTheme = "MyTheme";
+});
 ```
 
-Reviens ensuite au [README](../README.md) pour la vue d'ensemble.
+## 14. Limitations connues
 
-Consulte aussi [NOTICE](../NOTICE) pour les attributions.
+ThemeForge cible WPF desktop. Il ne cible pas WinForms, UWP, WinUI 3, Avalonia ni
+MAUI.
 
-## 11. Limitations connues
+Le designer Visual Studio ne prévisualise pas fidèlement la bascule runtime : il
+travaille en design-time, alors que `ThemeService` agit en runtime sur
+`Application.Resources.MergedDictionaries`. Si un style semble absent dans le
+designer, lance l'app et vérifie le rendu réel.
 
-ThemeForge cible WPF desktop.
-
-Il ne cible pas :
-
-- WinForms ;
-- UWP ;
-- WinUI 3 ;
-- Avalonia ;
-- MAUI.
-
-La consommation passe par GitHub Packages et exige une authentification, même en
-lecture seule (voir section 2).
-
-Le designer Visual Studio ne prévisualise pas fidèlement la bascule runtime.
-
-C'est une limite classique WPF.
-
-Le designer travaille en design-time ; `ThemeService` agit en runtime sur
-`Application.Resources.MergedDictionaries`.
-
-Si un style semble absent dans le designer, lance l'app.
-
-Vérifie le rendu réel au runtime.
+Le theming de barre de titre est best-effort selon la version de Windows
+(section 8).
 
 Liens utiles :
 
-- [racine du repo](../)
 - [README](../README.md)
 - [NOTICE](../NOTICE)

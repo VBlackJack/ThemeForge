@@ -16,6 +16,7 @@ using System.Windows;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using ThemeForge.Theme.DependencyInjection;
+using ThemeForge.Theme.Persistence;
 using Xunit;
 
 namespace ThemeForge.Theme.Tests;
@@ -97,5 +98,86 @@ public sealed class ServiceCollectionExtensionsTests
         Action act = () => services.AddThemeForge(null!);
 
         act.Should().Throw<ArgumentNullException>();
+    }
+
+    [StaFact]
+    public void AddThemeForge_Options_ResolvesAllInterfacesToTheSameInstance()
+    {
+        ServiceCollection services = new ServiceCollection();
+        services.AddThemeForge(TestApplication.Instance, options => options.DefaultTheme = ThemeNames.Dracula);
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+        IThemeService themeService = provider.GetRequiredService<IThemeService>();
+
+        ReferenceEquals(themeService, provider.GetRequiredService<ISystemThemeFollower>()).Should().BeTrue();
+        ReferenceEquals(themeService, provider.GetRequiredService<ISystemAccentFollower>()).Should().BeTrue();
+        ReferenceEquals(themeService, provider.GetRequiredService<IWindowsThemeFollower>()).Should().BeTrue();
+    }
+
+    [StaFact]
+    public void AddThemeForge_Options_RegistersStore_WhenApplicationNameProvided()
+    {
+        ServiceCollection services = new ServiceCollection();
+        services.AddThemeForge(TestApplication.Instance, options =>
+        {
+            options.DefaultTheme = ThemeNames.Dracula;
+            options.ApplicationName = "ThemeForgeSampleApp";
+        });
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        provider.GetService<IThemePreferenceStore>().Should().NotBeNull();
+    }
+
+    [StaFact]
+    public void AddThemeForge_Options_RegistersNoStore_WhenNeitherProvided()
+    {
+        ServiceCollection services = new ServiceCollection();
+        services.AddThemeForge(TestApplication.Instance, options => options.DefaultTheme = ThemeNames.Dracula);
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        provider.GetService<IThemePreferenceStore>().Should().BeNull();
+    }
+
+    [StaFact]
+    public void AddThemeForge_Options_PreferenceStoreWinsOverApplicationName()
+    {
+        IThemePreferenceStore explicitStore = new JsonThemePreferenceStore("custom.json");
+        ServiceCollection services = new ServiceCollection();
+        services.AddThemeForge(TestApplication.Instance, options =>
+        {
+            options.DefaultTheme = ThemeNames.Dracula;
+            options.PreferenceStore = explicitStore;
+            options.ApplicationName = "ThemeForgeSampleApp";
+        });
+
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        ReferenceEquals(provider.GetRequiredService<IThemePreferenceStore>(), explicitStore).Should().BeTrue();
+    }
+
+    [StaFact]
+    public void AddThemeForge_Options_WithoutDefaultOrFollow_Throws()
+    {
+        ServiceCollection services = new ServiceCollection();
+
+        Action act = () => services.AddThemeForge(TestApplication.Instance, _ => { });
+
+        act.Should().Throw<ArgumentException>();
+    }
+
+    [StaFact]
+    public void AddThemeForge_Options_WithDefaultThemeNotInAvailableThemes_Throws()
+    {
+        ServiceCollection services = new ServiceCollection();
+
+        Action act = () => services.AddThemeForge(TestApplication.Instance, options =>
+        {
+            options.AvailableThemes = new[] { ThemeNames.Folio, ThemeNames.Drakul };
+            options.DefaultTheme = ThemeNames.Carmilla;
+        });
+
+        act.Should().Throw<ArgumentException>();
     }
 }

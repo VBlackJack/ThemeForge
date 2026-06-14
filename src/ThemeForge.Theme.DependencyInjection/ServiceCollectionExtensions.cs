@@ -15,6 +15,7 @@
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ThemeForge.Theme.Persistence;
 
 namespace ThemeForge.Theme.DependencyInjection;
 
@@ -64,5 +65,99 @@ public static class ServiceCollectionExtensions
             static sp => (IWindowsThemeFollower)sp.GetRequiredService<IThemeService>());
 
         return services;
+    }
+
+    /// <summary>
+    /// Registers the theming engine and the bootstrap orchestrator from a
+    /// <see cref="ThemeForgeOptions"/> configuration. The four theming interfaces
+    /// resolve to one shared <see cref="ThemeService"/> singleton, as with the
+    /// list-based overload. Persistence is opt-in: a preference store is registered
+    /// only when <see cref="ThemeForgeOptions.PreferenceStore"/> or
+    /// <see cref="ThemeForgeOptions.ApplicationName"/> is supplied. Call
+    /// <see cref="ServiceProviderExtensions.UseThemeForge"/> from <c>OnStartup</c> to
+    /// run the bootstrap.
+    /// </summary>
+    /// <param name="services">The service collection to add the registrations to.</param>
+    /// <param name="application">The hosting WPF application.</param>
+    /// <param name="configure">Callback that populates the options.</param>
+    /// <returns>The same <paramref name="services"/> instance for chaining.</returns>
+    /// <exception cref="ArgumentNullException">Any argument is null.</exception>
+    /// <exception cref="ArgumentException">
+    /// The options provide neither a usable <see cref="ThemeForgeOptions.DefaultTheme"/>
+    /// nor a Follow Windows default, or the default theme is not in the available set.
+    /// </exception>
+    public static IServiceCollection AddThemeForge(
+        this IServiceCollection services,
+        Application application,
+        Action<ThemeForgeOptions> configure)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(application);
+        ArgumentNullException.ThrowIfNull(configure);
+
+        ThemeForgeOptions options = new ThemeForgeOptions();
+        configure(options);
+        ValidateOptions(options);
+
+        services.TryAddSingleton(options);
+        services.TryAddSingleton<IThemeService>(_ => new ThemeService(application, options.AvailableThemes));
+        services.TryAddSingleton<ISystemThemeFollower>(
+            static sp => (ISystemThemeFollower)sp.GetRequiredService<IThemeService>());
+        services.TryAddSingleton<ISystemAccentFollower>(
+            static sp => (ISystemAccentFollower)sp.GetRequiredService<IThemeService>());
+        services.TryAddSingleton<IWindowsThemeFollower>(
+            static sp => (IWindowsThemeFollower)sp.GetRequiredService<IThemeService>());
+
+        IThemePreferenceStore? store = ResolveStore(options);
+        if (store is not null)
+        {
+            services.TryAddSingleton(store);
+        }
+
+        services.TryAddSingleton(static sp => new ThemeForgeStartup(
+            sp.GetRequiredService<IThemeService>(),
+            sp.GetRequiredService<IWindowsThemeFollower>(),
+            sp.GetRequiredService<ISystemThemeFollower>(),
+            sp.GetRequiredService<ThemeForgeOptions>(),
+            sp.GetService<IThemePreferenceStore>()));
+
+        return services;
+    }
+
+    private static void ValidateOptions(ThemeForgeOptions options)
+    {
+        bool hasFollowDefault = options.FollowWindowsByDefault && options.WindowsFollow is not null;
+        bool hasThemeDefault = !string.IsNullOrWhiteSpace(options.DefaultTheme);
+        if (!hasThemeDefault && !hasFollowDefault)
+        {
+            throw new ArgumentException(
+                "ThemeForgeOptions requires a DefaultTheme, or FollowWindowsByDefault with a WindowsFollow mapping.",
+                nameof(options));
+        }
+
+        if (hasThemeDefault)
+        {
+            IReadOnlyList<string> available = options.AvailableThemes ?? ThemeNames.All;
+            if (!available.Contains(options.DefaultTheme!, StringComparer.Ordinal))
+            {
+                throw new ArgumentException(
+                    $"DefaultTheme '{options.DefaultTheme}' is not in AvailableThemes.", nameof(options));
+            }
+        }
+    }
+
+    private static IThemePreferenceStore? ResolveStore(ThemeForgeOptions options)
+    {
+        if (options.PreferenceStore is not null)
+        {
+            return options.PreferenceStore;
+        }
+
+        if (!string.IsNullOrWhiteSpace(options.ApplicationName))
+        {
+            return JsonThemePreferenceStore.ForApplicationData(options.ApplicationName, onError: options.OnError);
+        }
+
+        return null;
     }
 }

@@ -27,4 +27,8 @@
     <ProjectReference Include="..\ThemeForge.Theme\ThemeForge.Theme.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="ThemeForge.Theme.Tests" />
+  </ItemGroup>
+
 </Project>

@@ -1,9 +1,10 @@
 # ThemeForge
 
-Framework de thématisation Dracula pour applications **.NET 10 WPF**.
+Framework de théming pour applications **.NET 10 WPF**.
 
-> Pose un thème Dracula propre sur une nouvelle app WPF en 5 minutes,
-> pas en 2 jours.
+> Un nouveau projet WPF entièrement thémé en une commande et un appel : suivi
+> automatique de Windows, mémoire du choix utilisateur, barre de titre comprise.
+> Et tu n'y reviens plus.
 
 ## Pourquoi ?
 
@@ -12,29 +13,132 @@ Chaque nouveau projet WPF redémarre de zéro côté style : couleurs hardcodée
 mécanique de bascule de thème, et trois mois plus tard chaque app a son propre
 dialecte visuel.
 
-ThemeForge fournit un moteur de theming réutilisable, 16 variantes Dracula
-prêtes à l'emploi, des styles WPF prêts à merger, et une app **Studio** pour
-les prévisualiser et les ajuster en direct avant de les exporter dans ton
-projet cible.
+ThemeForge est un moteur de théming **réutilisable et agnostique de l'app** :
+swap de thème au runtime, suivi du clair/sombre et de l'accent Windows,
+persistance du choix, theming de la barre de titre, plus un catalogue de 16
+variantes prêtes à l'emploi et des styles WPF prêts à merger. Le moteur est le
+produit ; le catalogue est livré avec.
+
+## Démarrer en une commande
+
+La voie la plus rapide : le template. Il génère une app WPF déjà entièrement
+câblée (suivi Windows, persistance, barre de titre), prête à lancer.
+
+```pwsh
+dotnet new install ThemeForge.Templates
+dotnet new tf-wpf -n MonApp
+```
+
+Les packages se restaurent depuis nuget.org en accès anonyme, sans aucune
+authentification.
+
+## Intégrer dans une app existante
+
+### 1. Référencer les packages
+
+```xml
+<ItemGroup>
+  <PackageReference Include="ThemeForge.Theme" Version="2.0.0" />
+  <PackageReference Include="ThemeForge.Controls" Version="2.0.0" />
+  <PackageReference Include="ThemeForge.Theme.DependencyInjection" Version="2.0.0" />
+</ItemGroup>
+```
+
+### 2. Merger les styles, jamais un thème
+
+Dans `App.xaml`, merge **uniquement** le dictionnaire de styles. Le thème se
+pose au runtime, pas en statique.
+
+```xml
+<Application.Resources>
+  <ResourceDictionary>
+    <ResourceDictionary.MergedDictionaries>
+      <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Styles/Studio.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+  </ResourceDictionary>
+</Application.Resources>
+```
+
+> Important : ne merge jamais un thème en statique dans `App.xaml`. Un thème
+> statique n'est pas géré par le moteur, reste en dernière position du merge et
+> ses brushes l'emportent sur le thème appliqué au runtime. Le thème est possédé
+> de bout en bout par le bootstrap ci-dessous.
+
+### 3. Bootstrap en une ligne
+
+```csharp
+protected override void OnStartup(StartupEventArgs e)
+{
+    base.OnStartup(e);
+
+    ServiceCollection services = new ServiceCollection();
+    services.AddThemeForge(this, options =>
+    {
+        options.DefaultTheme = ThemeNames.Drakul;
+        options.WindowsFollow = new WindowsFollowOptions
+        {
+            LightTheme = ThemeNames.Folio,
+            DarkTheme = ThemeNames.Drakul,
+        };
+        options.FollowWindowsByDefault = true;
+        options.ApplicationName = "MonApp";
+    });
+
+    _services = services.BuildServiceProvider();
+    _services.UseThemeForge();
+}
+```
+
+`UseThemeForge()` restaure le choix persisté de l'utilisateur, ou applique le
+défaut, arme le suivi Windows, et sauvegarde automatiquement chaque changement.
+
+### 4. Thématiser la barre de titre
+
+Dans le code-behind de ta fenêtre :
+
+```csharp
+public MainWindow(IThemeService themeService)
+{
+    InitializeComponent();
+    this.ApplyThemeForgeTitleBar(themeService);
+}
+```
+
+Le détail complet est dans [`docs/integration-guide.md`](docs/integration-guide.md).
+
+## Ce que tu obtiens
+
+- **Moteur runtime** : `IThemeService.ApplyTheme(...)` swap le thème actif, avec
+  un compteur `ThemeRevision` incrémenté avant l'événement `ThemeChanged`.
+- **Suivi Windows opt-in** : `IWindowsThemeFollower.FollowWindows(...)` aligne le
+  thème clair/sombre et l'accent sur les réglages Windows en un seul appel.
+- **Persistance** : `IThemePreferenceStore` mémorise le choix de l'utilisateur
+  (thème, accent, suivi) et le restaure au démarrage.
+- **Barre de titre thématisée** : zone non-cliente alignée sur le thème courant,
+  best-effort selon la version de Windows.
+- **Accent orthogonal** : `AccentTint` recolore l'accent indépendamment du thème.
+- **Catalogue** : 16 variantes, 23 contrôles WPF natifs stylés, 13 composites.
 
 ## Composants
 
-| Projet | Rôle |
+| Package | Rôle |
 |---|---|
-| `ThemeForge.Theme` | Moteur de theming (`IThemeService`, `ThemeRevision`), suivis Windows opt-in (`ISystemThemeFollower`, `ISystemAccentFollower`), 16 `ResourceDictionary` de thèmes |
-| `ThemeForge.Controls` | 23 contrôles WPF natifs stylés + 9 composites (`Card`, `IconButton`, `Badge`, `Chip`, `ToggleSwitch`, `Avatar`, `SearchBox`, `Toast`, `ToastHost`) |
-| `ThemeForge.Studio` | App WPF de démonstration et d'édition live des thèmes |
+| `ThemeForge.Theme` | Moteur : `IThemeService`, `IWindowsThemeFollower`, `IThemePreferenceStore`, theming barre de titre, 16 thèmes. Zéro dépendance NuGet. |
+| `ThemeForge.Controls` | 23 contrôles WPF natifs stylés + 13 composites (`Card`, `IconButton`, `Badge`, `Chip`, `ToggleSwitch`, `Avatar`, `SearchBox`, `Toast`, `ToastHost`, `Breadcrumb`, `Dialog`, `NumericUpDown`, `SegmentedControl`) |
+| `ThemeForge.Theme.DependencyInjection` | Wiring DI : `AddThemeForge(...)` et `UseThemeForge()` |
+| `ThemeForge.Templates` | Template `dotnet new tf-wpf` |
 
 Les styles natifs sont agrégés par
 `ThemeForge.Controls;component/Styles/Studio.xaml`. Les composites suivent la
 convention WPF `Themes/Generic.xaml`.
 
-## Variantes incluses
+## Le catalogue de thèmes
 
-**16 variantes** — `Dracula` MIT canonique, `Drakul` sibling AA-compliant
-Apache 2.0, puis 14 palettes originales Apache 2.0 de Julien Bombled. Le set
-v6 a été audité en cross-review à trois voix indépendantes sur la palette et
-sur les noms.
+Le moteur est agnostique ; le catalogue livré est d'esthétique Dracula, dont
+Dracula est l'héritage historique et la variante de référence.
+
+**16 variantes** : `Dracula` MIT canonique, `Drakul` sibling AA-compliant Apache
+2.0, puis 14 palettes originales Apache 2.0 de Julien Bombled.
 
 - **Root** (2) : Dracula, Drakul
 - **Dark** (10) : Striga, Cinder, Bracken, Tarn, Mortis, Slate, Voivode,
@@ -44,139 +148,50 @@ sur les noms.
 
 ### La paire Dracula / Drakul
 
-Deux variantes Root sont livrées intentionnellement :
+- **Dracula** : palette MIT canonique de Zeno Rocha, préservée à l'identique pour
+  fidélité historique. Le Comment `#6272A4` ne clear pas WCAG AA
+  (Comment/CurrentLine = 1.94:1) : c'est un défaut accessibilité du design
+  d'origine.
+- **Drakul** : sibling Apache 2.0, AA-compliant par un lift du Comment vers
+  `#B3BBD6` (Comment/CurrentLine = 4.79:1). Tout le reste est byte-identique. Le
+  nom honore Vlad II Dracul, de l'Ordre du Dragon.
 
-- **Dracula** : palette MIT canonique de Zeno Rocha, préservée à l'identique
-  pour fidélité historique. Le Comment `#6272A4` ne clear pas WCAG AA
-  (Comment/CurrentLine = 1.94:1). C'est un défaut accessibilité du design
-  original.
-- **Drakul** : sibling Apache 2.0 du Dracula canonique, AA-compliant par un
-  lift du Comment vers `#B3BBD6` (Comment/CurrentLine = 4.79:1). Tout le reste
-  est byte-identique. Le nom honore Vlad II Dracul, membre de l'Ordre du
-  Dragon et père historique de Vlad III.
-
-Tu choisis Dracula si tu veux la palette canonique. Tu choisis Drakul si tu as
-besoin d'accessibilité AA stricte sans perdre l'ADN Dracula.
+Choisis Dracula pour la palette canonique, Drakul pour l'accessibilité AA stricte
+sans perdre l'ADN visuel.
 
 ### Geometric Color Palette
 
-Les 14 palettes originales sont **ingénierées**, pas intuitives. Les valeurs
-hex sont calculées depuis des cibles déclarées, puis auditées. L'objectif :
-garder une identité Dracula pastel/néon, tout en rendant les variantes
-prévisibles.
+Les 14 palettes originales sont ingénierées, pas intuitives : les valeurs hex
+sont calculées depuis des cibles déclarées en Oklab, puis auditées.
 
-- **Bande Dark uniforme** : les 10 variantes Dark partagent les mêmes 7
-  accents. Seul le hue du background change entre variantes.
+- **Bande Dark uniforme** : les 10 variantes Dark partagent les mêmes 7 accents,
+  seul le hue du background change.
 - **Bande Light uniforme** : les 2 variantes Light partagent un jeu d'accents
-  plus sombre, lisible sur des surfaces claires.
-- **Alt** : les 2 variantes Alt héritent de la bande Dark et brisent exactement
-  un accent pour créer leur signature.
+  plus sombre, lisible sur surfaces claires.
+- **Alt** : héritent de la bande Dark et brisent exactement un accent pour leur
+  signature.
 - **WCAG 2.1 AA** : les couples Foreground/Background, Comment/Background et
-  Comment/CurrentLine sont vérifiés. Dracula reste la racine historique ; Drakul
-  est la réponse AA.
+  Comment/CurrentLine sont vérifiés par des gates runtime. Dracula reste
+  l'exception historique ; le reste du catalogue est AA.
 
 ### Attribution des palettes
 
-**`Dracula`** : palette MIT canonique de **Zeno Rocha** (Dracula Theme,
-https://draculatheme.com). Elle sert de racine historique au projet.
+- **`Dracula`** : palette MIT canonique de **Zeno Rocha** (Dracula Theme,
+  https://draculatheme.com), racine historique du catalogue.
+- **`Drakul`** : variante Apache 2.0 de **Julien Bombled**, dérivée de Dracula
+  avec le seul slot Comment ajusté pour clear WCAG AA.
+- **Les 14 originales** : `Striga`, `Cinder`, `Bracken`, `Tarn`, `Mortis`,
+  `Slate`, `Voivode`, `Carmilla`, `Whitby`, `Vesper`, `Parchment`, `Folio`,
+  `Wormwood`, `Sconce`, par **Julien Bombled** sous Apache 2.0.
 
-**`Drakul`** : variante Apache 2.0 de **Julien Bombled**, dérivée de Dracula
-avec le seul slot Comment ajusté pour clear WCAG AA.
+Aucun nom ni aucune valeur RGB d'un scheme commercial Dracula n'est repris.
+ThemeForge reprend l'ADN visuel, pas un produit payant. Voir `NOTICE` pour la
+table d'attribution complète.
 
-**Les 14 originales** : `Striga`, `Cinder`, `Bracken`, `Tarn`, `Mortis`,
-`Slate`, `Voivode`, `Carmilla`, `Whitby`, `Vesper`, `Parchment`, `Folio`,
-`Wormwood`, `Sconce`. Elles sont créées par **Julien Bombled** sous Apache 2.0.
+## Studio
 
-Important : aucun nom ni aucune valeur RGB d'un scheme commercial Dracula n'est
-repris. ThemeForge reprend l'ADN visuel Dracula, pas un produit payant.
-
-## Utilisation rapide
-
-### Référencer les projets
-
-Aucun package NuGet ThemeForge n'est publié pour l'instant. Référence les deux
-projets depuis ton app WPF consommatrice.
-
-```xml
-<ItemGroup>
-  <ProjectReference Include="..\ThemeForge\src\ThemeForge.Theme\ThemeForge.Theme.csproj" />
-  <ProjectReference Include="..\ThemeForge\src\ThemeForge.Controls\ThemeForge.Controls.csproj" />
-</ItemGroup>
-```
-
-### Charger un thème au démarrage
-
-Merge les styles de contrôles, puis un thème par défaut. `ThemeService` pourra
-ensuite remplacer le thème actif au runtime.
-
-```xml
-<ResourceDictionary.MergedDictionaries>
-  <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Styles/Studio.xaml"/>
-  <ResourceDictionary Source="pack://application:,,,/ThemeForge.Theme;component/Themes/Dracula.xaml"/>
-</ResourceDictionary.MergedDictionaries>
-```
-
-Dans `App.xaml.cs`, enregistre le service avec `Microsoft.Extensions.DependencyInjection`.
-
-```csharp
-private ServiceProvider? _services;
-
-protected override void OnStartup(StartupEventArgs e)
-{
-    base.OnStartup(e);
-    var services = new ServiceCollection();
-    services.AddSingleton<IThemeService>(_ => new ThemeService(this));
-    _services = services.BuildServiceProvider();
-    _services.GetRequiredService<IThemeService>().ApplyTheme(ThemeNames.Dracula);
-}
-```
-
-### Basculer de thème au runtime
-
-`ApplyTheme` est idempotent. Appliquer le thème déjà actif ne déclenche rien.
-
-```csharp
-themeService.ThemeChanged += (_, e) =>
-    Debug.WriteLine($"{e.CurrentTheme} rev {e.Revision}");
-
-themeService.ApplyTheme(ThemeNames.Drakul);
-```
-
-### Suivre Windows
-
-Les suivis Windows sont opt-in et ne modifient pas le contrat `IThemeService`.
-Expose le même `ThemeService` sous les interfaces nécessaires, puis choisis
-toi-même le mapping clair/sombre adapté à ton app.
-
-```csharp
-services.AddSingleton<ThemeService>(_ => new ThemeService(this));
-services.AddSingleton<IThemeService>(sp => sp.GetRequiredService<ThemeService>());
-services.AddSingleton<ISystemThemeFollower>(sp => sp.GetRequiredService<ThemeService>());
-services.AddSingleton<ISystemAccentFollower>(sp => sp.GetRequiredService<ThemeService>());
-```
-
-```csharp
-ISystemThemeFollower follower = _services.GetRequiredService<ISystemThemeFollower>();
-follower.EnableSystemFollow(ThemeNames.Folio, ThemeNames.Dracula);
-
-ISystemAccentFollower accentFollower =
-    _services.GetRequiredService<ISystemAccentFollower>();
-accentFollower.EnableSystemAccentFollow();
-```
-
-Un appel manuel à `ApplyTheme` désactive le suivi pour que le choix explicite de
-l'utilisateur reste prioritaire. Si Windows ne fournit pas d'état clair/sombre,
-ThemeForge conserve le thème courant.
-
-Le suivi de l'accent Windows est séparé de `AccentTint` : la couleur Windows est
-arbitraire, alors que `AccentTint` reste une palette discrète ThemeForge. Quand
-le suivi d'accent est actif, un appel manuel à `ApplyAccentTint` reprend la
-main et désactive ce suivi.
-
-## Lancer Studio
-
-Studio te permet de prévisualiser les 16 variantes, de tester les contrôles, et
-d'éditer 24 slots hex : 12 canoniques + 12 sémantiques.
+Studio prévisualise les 16 variantes, teste les contrôles et édite les slots hex
+en direct.
 
 ```pwsh
 dotnet run --project src/ThemeForge.Studio
@@ -184,28 +199,21 @@ dotnet run --project src/ThemeForge.Studio
 
 ## Architecture
 
-Inspirée du moteur de theming de [Heimdall.Next](https://github.com/jbombled/Heimdall.Next),
-mais construite de zéro pour rester **agnostique de toute app spécifique** :
-pas de brushes applicatifs, juste les slots Dracula canoniques + tokens
-sémantiques (Background, Surface, Accent, TextPrimary, etc.).
-
-Le swap de `ResourceDictionary` passe par un point unique
-(`IThemeService.ApplyTheme`) qui incrémente un compteur `ThemeRevision` **avant**
-de lever l'événement `ThemeChanged` — pattern utilisé par les converters et
-liaisons one-way pour se ré-évaluer.
+Inspirée du moteur de théming de Heimdall.Next, mais construite de zéro pour
+rester **agnostique de toute app** : pas de brushes applicatifs, juste les slots
+canoniques et les tokens sémantiques (Background, Surface, Accent, TextPrimary,
+etc.). `IThemeService` est gelé pour la stabilité SemVer ; chaque capacité
+(suivi Windows, persistance, barre de titre) vit sur une interface opt-in
+séparée. Le swap de `ResourceDictionary` passe par un point unique qui incrémente
+`ThemeRevision` avant de lever `ThemeChanged`.
 
 ## État
 
-Moteur stable v6. ThemeForge shippe aujourd'hui 16 variantes, 23 contrôles WPF
-natifs stylés et 9 composites. Le Studio a été audité côté UI Automation après
-correctifs, avec les sections, le picker de thèmes et l'éditeur de palette
-adressables.
-
-La suite locale compte 164 tests verts : 53 pour `ThemeForge.Theme` et 111 pour
-`ThemeForge.Controls`. La CI GitHub Actions est committée ; elle s'activera au
-premier push sur une remote GitHub.
-
-Pas encore de package NuGet publié.
+**v2.0.0 "Drop-in"** publiée sur nuget.org et GitHub Packages. Quatre packages :
+`ThemeForge.Theme`, `ThemeForge.Controls`, `ThemeForge.Theme.DependencyInjection`,
+`ThemeForge.Templates`. Suite de tests : 219 verts (108 pour `ThemeForge.Theme`,
+111 pour `ThemeForge.Controls`). CI GitHub Actions verte, publication par Trusted
+Publishing OIDC.
 
 ## Licence
 
@@ -214,10 +222,10 @@ Pas encore de package NuGet publié.
 - Palette Drakul : Apache 2.0 — Julien Bombled
 - Palette Dracula : MIT — Zeno Rocha (racine historique)
 
-Voir `NOTICE` pour le détail complet de la philosophie Geometric Color Palette
-et la table d'attribution.
+Voir `NOTICE` pour le détail de la philosophie Geometric Color Palette et la table
+d'attribution.
 
 ## Pour aller plus loin
 
-- `docs/integration-guide.md` : guide d'intégration WPF tiers à venir, voir
-  issue à suivre.
+- [`docs/integration-guide.md`](docs/integration-guide.md) : guide d'intégration WPF complet.
+- [`NOTICE`](NOTICE) : attributions des palettes.

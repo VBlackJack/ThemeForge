@@ -21,8 +21,8 @@ namespace ThemeForge.Theme;
 /// The set ships 16 variants : the historical Dracula MIT palette by Zeno
 /// Rocha (kept as the framework's root), Drakul (Dracula sibling AA-compliant),
 /// plus 14 original Apache 2.0 palettes by Julien Bombled. The final v6 palette
-/// was validated after five independent cross-review passes by an independent reviewer, an independent reviewer,
-/// and an independent reviewer. It carries the v5 uniform-Oklab-L* accent model, then adds
+/// was validated after five independent cross-review passes. It carries the v5
+/// uniform-Oklab-L* accent model, then adds
 /// the Bracken rename and Drakul sibling :
 /// <list type="bullet">
 ///   <item>All 10 Dark variants share a 7-accent band at Oklab L*

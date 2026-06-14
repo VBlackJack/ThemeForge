@@ -15,9 +15,8 @@ Dracula by Julien Bombled. The other 14 palettes are original works by Julien
 Bombled, released under Apache 2.0.
 
 The final v6 palette set was validated on 2026-05-18 after five independent
-cross-review passes by independent reviewers. v6 carries the v5
-uniform-Oklab-L* accent model, then adds the Bracken rename and the Drakul
-AA-compliant root sibling.
+cross-review passes. v6 carries the v5 uniform-Oklab-L* accent model, then adds
+the Bracken rename and the Drakul AA-compliant root sibling.
 
 --------------------------------------------------------------------------------
 1. Dracula Theme — MIT (Zeno Rocha)
@@ -99,23 +98,17 @@ commercial Dracula PRO scheme name (Pro, Alucard, Blade, Buffy, Lincoln,
 Morbius, Van Helsing) appears in this set.
 
 ================================================================================
-Cross-review history
+Palette review history
 ================================================================================
 
 The v6 palette set is the result of five independent review passes performed on
-2026-05-18 by independent reviewers :
+2026-05-18 :
 
   - Pass 1 / v2 : uniform-HSL-L initial set; HSL claims and AA failures found.
   - Pass 2 / v3 : exact HSL regeneration; Yellow and Comment failures found.
   - Pass 3 / v4 : uniform-WCAG-L pass; trademark and perception issues found.
   - Pass 4 / v5 : uniform-Oklab-L* accent bands; Sage and Dracula blockers found.
   - Pass 5 / v6 : Bracken rename plus Drakul sibling; final SHIP verdict.
-
-Primary sources :
-  - v2/v3 arbitration : NOTICE
-  - v4 arbitration    : NOTICE
-  - v5 arbitration    : NOTICE
-  - v6 final verdict  : NOTICE
 
 ================================================================================
 Architectural inspiration

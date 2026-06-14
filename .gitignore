@@ -36,7 +36,7 @@ Dist/
 # Local visual review artifacts
 docs/screenshots/
 
-# Local AI cross-review reports & design scratch (never shipped)
+# Local review reports & design scratch (never shipped)
 /docs/audit/
 /audit_colors*
 /check_*.py

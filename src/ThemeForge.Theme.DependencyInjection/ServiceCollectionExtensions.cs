@@ -26,10 +26,11 @@ public static class ServiceCollectionExtensions
 {
     /// <summary>
     /// Registers <see cref="ThemeService"/> as the backing singleton and exposes
-    /// it through the <see cref="IThemeService"/>, <see cref="ISystemThemeFollower"/>
-    /// and <see cref="ISystemAccentFollower"/> interfaces, all resolving to the same
-    /// instance. Consumers never cast to the concrete type to reach the follow
-    /// capabilities, and the concrete type is not registered as a resolvable service.
+    /// it through the <see cref="IThemeService"/>, <see cref="ISystemThemeFollower"/>,
+    /// <see cref="ISystemAccentFollower"/> and <see cref="IWindowsThemeFollower"/>
+    /// interfaces, all resolving to the same instance. Consumers never cast to the
+    /// concrete type to reach the follow capabilities, and the concrete type is not
+    /// registered as a resolvable service.
     /// </summary>
     /// <remarks>
     /// Registrations use <c>TryAddSingleton</c> so a consumer's own prior
@@ -59,6 +60,8 @@ public static class ServiceCollectionExtensions
             static sp => (ISystemThemeFollower)sp.GetRequiredService<IThemeService>());
         services.TryAddSingleton<ISystemAccentFollower>(
             static sp => (ISystemAccentFollower)sp.GetRequiredService<IThemeService>());
+        services.TryAddSingleton<IWindowsThemeFollower>(
+            static sp => (IWindowsThemeFollower)sp.GetRequiredService<IThemeService>());
 
         return services;
     }

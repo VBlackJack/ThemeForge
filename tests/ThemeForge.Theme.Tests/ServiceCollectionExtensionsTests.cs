@@ -22,13 +22,13 @@ namespace ThemeForge.Theme.Tests;
 
 /// <summary>
 /// Verifies that <see cref="ServiceCollectionExtensions.AddThemeForge"/> exposes
-/// the three theming capabilities through a single shared singleton without
-/// leaking the concrete <see cref="ThemeService"/> type.
+/// the theming capabilities through a single shared singleton without leaking the
+/// concrete <see cref="ThemeService"/> type.
 /// </summary>
 public sealed class ServiceCollectionExtensionsTests
 {
     [StaFact]
-    public void AddThemeForge_ResolvesAllThreeInterfacesToTheSameInstance()
+    public void AddThemeForge_ResolvesAllInterfacesToTheSameInstance()
     {
         ServiceCollection services = new ServiceCollection();
         services.AddThemeForge(TestApplication.Instance);
@@ -37,9 +37,11 @@ public sealed class ServiceCollectionExtensionsTests
         IThemeService themeService = provider.GetRequiredService<IThemeService>();
         ISystemThemeFollower themeFollower = provider.GetRequiredService<ISystemThemeFollower>();
         ISystemAccentFollower accentFollower = provider.GetRequiredService<ISystemAccentFollower>();
+        IWindowsThemeFollower windowsFollower = provider.GetRequiredService<IWindowsThemeFollower>();
 
         ReferenceEquals(themeService, themeFollower).Should().BeTrue();
         ReferenceEquals(themeService, accentFollower).Should().BeTrue();
+        ReferenceEquals(themeService, windowsFollower).Should().BeTrue();
     }
 
     [StaFact]

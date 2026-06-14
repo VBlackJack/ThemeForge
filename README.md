@@ -217,10 +217,10 @@ Publishing OIDC.
 
 ## Licence
 
-- Code, styles, framework : Apache 2.0 — Julien Bombled
-- 14 palettes originales : Apache 2.0 — Julien Bombled
-- Palette Drakul : Apache 2.0 — Julien Bombled
-- Palette Dracula : MIT — Zeno Rocha (racine historique)
+- Code, styles, framework : Apache 2.0 - Julien Bombled
+- 14 palettes originales : Apache 2.0 - Julien Bombled
+- Palette Drakul : Apache 2.0 - Julien Bombled
+- Palette Dracula : MIT - Zeno Rocha (racine historique)
 
 Voir `NOTICE` pour le détail de la philosophie Geometric Color Palette et la table
 d'attribution.

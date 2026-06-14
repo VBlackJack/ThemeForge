@@ -78,8 +78,8 @@ Fournis-le de l'une de ces deux façons :
 
 ```xml
 <ItemGroup>
-  <PackageReference Include="ThemeForge.Theme" Version="1.2.0" />
-  <PackageReference Include="ThemeForge.Controls" Version="1.2.0" />
+  <PackageReference Include="ThemeForge.Theme" Version="1.3.0" />
+  <PackageReference Include="ThemeForge.Controls" Version="1.3.0" />
 </ItemGroup>
 ```
 
@@ -96,7 +96,19 @@ Fournis-le de l'une de ces deux façons :
 - les composites dans `src/ThemeForge.Controls/Composites/` ;
 - l'index WPF des composites dans `Themes/Generic.xaml`.
 
-Si ton app n'a pas déjà de container DI, ajoute aussi :
+Pour brancher le moteur en une ligne dans un container DI, ajoute le package de
+wiring :
+
+```xml
+<PackageReference Include="ThemeForge.Theme.DependencyInjection" Version="1.3.0" />
+```
+
+Il apporte l'extension `AddThemeForge` (section 4) et tracte
+`Microsoft.Extensions.DependencyInjection.Abstractions`. Le package coeur
+`ThemeForge.Theme` reste sans dépendance.
+
+Si ton app n'a pas déjà de container DI, ajoute aussi l'implémentation du
+container :
 
 ```xml
 <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
@@ -143,9 +155,8 @@ WPF applique le style ThemeForge si le dictionnaire est mergé.
 
 ## 4. Bootstrap App.xaml.cs (DI minimal)
 
-`ThemeService` reçoit l'instance WPF `Application`.
-
-Le pattern du Studio utilise donc une factory DI.
+`ThemeService` reçoit l'instance WPF `Application`. L'extension `AddThemeForge`
+la capture pour toi et enregistre le moteur en une ligne.
 
 ```csharp
 private ServiceProvider? _services;
@@ -153,10 +164,10 @@ private ServiceProvider? _services;
 protected override void OnStartup(StartupEventArgs e)
 {
     base.OnStartup(e);
-    var services = new ServiceCollection();
-    services.AddSingleton<IThemeService>(_ => new ThemeService(this));
+    ServiceCollection services = new ServiceCollection();
+    services.AddThemeForge(this);
     _services = services.BuildServiceProvider();
-    var theme = _services.GetRequiredService<IThemeService>();
+    IThemeService theme = _services.GetRequiredService<IThemeService>();
     theme.ApplyTheme(ThemeNames.Drakul);
 }
 ```
@@ -166,7 +177,15 @@ Ajoute les `using` nécessaires :
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
 using ThemeForge.Theme;
+using ThemeForge.Theme.DependencyInjection;
 ```
+
+`AddThemeForge` enregistre `ThemeService` comme singleton partagé et l'expose via
+`IThemeService`, `ISystemThemeFollower` et `ISystemAccentFollower`. Les trois
+interfaces résolvent la même instance, sans aucun cast (voir section 9).
+L'enregistrement utilise `TryAddSingleton` : si tu enregistres toi-même l'une de
+ces interfaces avant l'appel, ta version est conservée. Tu peux aussi passer ta
+propre liste de thèmes : `services.AddThemeForge(this, mesThemes)`.
 
 Le singleton est important.
 
@@ -574,7 +593,8 @@ ThemeForge peut s'aligner automatiquement sur les réglages Windows.
 Ces capacités sont opt-in et vivent sur des interfaces SÉPARÉES,
 `ISystemThemeFollower` et `ISystemAccentFollower`, pour ne pas modifier
 `IThemeService` (gelé pour la stabilité SemVer). `ThemeService` les implémente
-toutes les deux ; tu y accèdes par un cast de ton instance.
+toutes les deux ; tu y accèdes par injection directe avec le wiring DI (voir
+plus bas) ou, sans DI, par un cast de ton instance.
 
 ### Suivre le mode clair/sombre de Windows
 
@@ -605,10 +625,28 @@ mode. `IsFollowingSystem` expose l'état courant.
 - Un `ApplyTheme(...)` manuel désactive le suivi clair/sombre (tu reprends la
   main sur le thème), mais conserve le suivi d'accent s'il est actif.
 
-> **Note ergonomie.** Le cast vers `ISystemThemeFollower` /
-> `ISystemAccentFollower` est volontaire : ces interfaces sont additives et
-> non-breaking. Une façade ou une extension DI exposant les trois interfaces sur
-> le même singleton est envisagée pour une version ultérieure.
+### Injection directe via DI (sans cast)
+
+Avec le package `ThemeForge.Theme.DependencyInjection` et `AddThemeForge`
+(section 4), les trois interfaces résolvent le même singleton. Tu injectes donc
+directement la capacité voulue, sans cast :
+
+```csharp
+public sealed class StartupRoutine
+{
+    private readonly ISystemThemeFollower _follower;
+
+    public StartupRoutine(ISystemThemeFollower follower)
+        => _follower = follower;
+
+    public void Start()
+        => _follower.EnableSystemFollow(ThemeNames.Folio, ThemeNames.Drakul);
+}
+```
+
+> **Note.** Sans DI, le cast direct de ton instance `ThemeService` vers
+> `ISystemThemeFollower` / `ISystemAccentFollower` reste parfaitement valide :
+> ces interfaces sont additives et non-breaking.
 
 ## 10. Aller plus loin
 

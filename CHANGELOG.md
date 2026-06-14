@@ -5,6 +5,23 @@ All notable changes to ThemeForge are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-06-14
+
+### Added
+- `ThemeForge.Theme.DependencyInjection` package with a single
+  `AddThemeForge(IServiceCollection, Application, IReadOnlyList<string>?)`
+  extension. It registers `ThemeService` as one shared singleton and exposes it
+  through `IThemeService`, `ISystemThemeFollower` and `ISystemAccentFollower`,
+  all resolving to the same instance. Consumers no longer cast `IThemeService` to
+  the concrete type to reach the system-follow capabilities. The core
+  `ThemeForge.Theme` package stays dependency-free; only the new package carries
+  `Microsoft.Extensions.DependencyInjection.Abstractions`.
+
+### Notes
+- Registrations use `TryAddSingleton`, so a consumer's own prior registration of
+  any of these services is respected. The `Application` is captured in the
+  singleton factory: no `Application.Current` global lookup.
+
 ## [1.2.0] - 2026-06-14
 
 ### Added
@@ -56,6 +73,7 @@ First stable release of the ThemeForge WPF theming framework (.NET 10).
   `var` rejected at build time as `error IDE0008`.
 - CI on `windows-2025-vs2026`; 146 tests (39 Theme + 107 Controls).
 
+[1.3.0]: https://github.com/VBlackJack/ThemeForge/releases/tag/v1.3.0
 [1.2.0]: https://github.com/VBlackJack/ThemeForge/releases/tag/v1.2.0
 [1.1.0]: https://github.com/VBlackJack/ThemeForge/releases/tag/v1.1.0
 [1.0.0]: https://github.com/VBlackJack/ThemeForge/releases/tag/v1.0.0

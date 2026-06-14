@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/ThemeForge.Theme/ThemeForge.Theme.csproj" />
+    <Project Path="src/ThemeForge.Theme.DependencyInjection/ThemeForge.Theme.DependencyInjection.csproj" />
     <Project Path="src/ThemeForge.Controls/ThemeForge.Controls.csproj" />
     <Project Path="src/ThemeForge.Studio/ThemeForge.Studio.csproj" />
   </Folder>

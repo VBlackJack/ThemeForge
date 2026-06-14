@@ -26,17 +26,21 @@ public sealed partial class MainViewModel : ObservableObject
 {
     private readonly IThemeService _themeService;
     private readonly ISystemThemeFollower _systemThemeFollower;
+    private readonly ISystemAccentFollower _systemAccentFollower;
 
     public MainViewModel(
         IThemeService themeService,
         ISystemThemeFollower systemThemeFollower,
+        ISystemAccentFollower systemAccentFollower,
         IEnumerable<GallerySectionViewModel> sections)
     {
         ArgumentNullException.ThrowIfNull(themeService);
         ArgumentNullException.ThrowIfNull(systemThemeFollower);
+        ArgumentNullException.ThrowIfNull(systemAccentFollower);
         ArgumentNullException.ThrowIfNull(sections);
         _themeService = themeService;
         _systemThemeFollower = systemThemeFollower;
+        _systemAccentFollower = systemAccentFollower;
 
         Themes = new ObservableCollection<ThemeEntry>(
             themeService.AvailableThemes.Select(n =>
@@ -53,6 +57,7 @@ public sealed partial class MainViewModel : ObservableObject
             }));
         _selectedTheme = Themes.FirstOrDefault(t => t.Name == themeService.CurrentTheme);
         _isFollowingSystem = systemThemeFollower.IsFollowingSystem;
+        _isFollowingSystemAccent = systemAccentFollower.IsFollowingSystemAccent;
         AvailableAccentTints = themeService.AvailableAccentTints;
         _selectedAccentTint = themeService.CurrentAccentTint;
 
@@ -78,10 +83,15 @@ public sealed partial class MainViewModel : ObservableObject
     private bool _isFollowingSystem;
 
     [ObservableProperty]
+    private bool _isFollowingSystemAccent;
+
+    [ObservableProperty]
     private AccentTint _selectedAccentTint;
 
     [ObservableProperty]
     private GallerySectionViewModel? _selectedSection;
+
+    public bool IsAccentTintPickerEnabled => !IsFollowingSystemAccent;
 
     partial void OnSelectedThemeChanged(ThemeEntry? value)
     {
@@ -109,6 +119,23 @@ public sealed partial class MainViewModel : ObservableObject
         _systemThemeFollower.DisableSystemFollow();
     }
 
+    partial void OnIsFollowingSystemAccentChanged(bool value)
+    {
+        OnPropertyChanged(nameof(IsAccentTintPickerEnabled));
+        if (value == _systemAccentFollower.IsFollowingSystemAccent)
+        {
+            return;
+        }
+
+        if (value)
+        {
+            _systemAccentFollower.EnableSystemAccentFollow();
+            return;
+        }
+
+        _systemAccentFollower.DisableSystemAccentFollow();
+    }
+
     partial void OnSelectedAccentTintChanged(AccentTint value)
     {
         if (value == _themeService.CurrentAccentTint)
@@ -131,6 +158,16 @@ public sealed partial class MainViewModel : ObservableObject
         if (IsFollowingSystem != _systemThemeFollower.IsFollowingSystem)
         {
             IsFollowingSystem = _systemThemeFollower.IsFollowingSystem;
+        }
+
+        if (IsFollowingSystemAccent != _systemAccentFollower.IsFollowingSystemAccent)
+        {
+            IsFollowingSystemAccent = _systemAccentFollower.IsFollowingSystemAccent;
+        }
+
+        if (SelectedAccentTint != _themeService.CurrentAccentTint)
+        {
+            SelectedAccentTint = _themeService.CurrentAccentTint;
         }
     }
 }

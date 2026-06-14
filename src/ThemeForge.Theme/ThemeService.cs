@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Windows;
+using System.Windows.Media;
 
 namespace ThemeForge.Theme;
 
@@ -28,7 +29,11 @@ namespace ThemeForge.Theme;
 /// are appended because WPF resolves duplicate merged-dictionary keys from
 /// the last matching dictionary.
 /// </remarks>
-public sealed partial class ThemeService : IThemeService, ISystemThemeFollower, IDisposable
+public sealed partial class ThemeService :
+    IThemeService,
+    ISystemThemeFollower,
+    ISystemAccentFollower,
+    IDisposable
 {
     private const string ThemeMarkerKey = "ThemeForge.ActiveThemeMarker";
     private const string AccentTintMarkerKey = "ThemeForge.ActiveAccentTintMarker";
@@ -84,6 +89,7 @@ public sealed partial class ThemeService : IThemeService, ISystemThemeFollower, 
         IList<ResourceDictionary> merged = _application.Resources.MergedDictionaries;
 
         RemoveMarkedDictionary(merged, AccentTintMarkerKey);
+        RemoveMarkedDictionary(merged, SystemAccentMarkerKey);
         RemoveMarkedDictionary(merged, ThemeMarkerKey);
 
         // Keep the active base theme at the front; tint overrides are appended
@@ -95,6 +101,15 @@ public sealed partial class ThemeService : IThemeService, ISystemThemeFollower, 
             // WPF lets later merged dictionaries override earlier duplicate keys.
             merged.Add(tintDictionary);
         }
+        else if (IsFollowingSystemAccent && _systemAccentProvider is not null)
+        {
+            Color? accent = _systemAccentProvider.GetCurrentAccent();
+            if (accent is Color color)
+            {
+                ResourceDictionary accentDictionary = CreateSystemAccentDictionary(color);
+                merged.Add(accentDictionary);
+            }
+        }
 
         string previous = _currentTheme;
         _currentTheme = name;
@@ -105,6 +120,11 @@ public sealed partial class ThemeService : IThemeService, ISystemThemeFollower, 
 
     public void ApplyAccentTint(AccentTint tint)
     {
+        if (IsFollowingSystemAccent && !_applyingFromSystemAccent)
+        {
+            DisableSystemAccentFollow();
+        }
+
         if (tint == _currentAccentTint)
         {
             return;
@@ -147,14 +167,18 @@ public sealed partial class ThemeService : IThemeService, ISystemThemeFollower, 
         return dict;
     }
 
-    private static void RemoveMarkedDictionary(IList<ResourceDictionary> merged, string markerKey)
+    private static bool RemoveMarkedDictionary(IList<ResourceDictionary> merged, string markerKey)
     {
+        bool removed = false;
         for (int i = merged.Count - 1; i >= 0; i--)
         {
             if (merged[i].Contains(markerKey))
             {
                 merged.RemoveAt(i);
+                removed = true;
             }
         }
+
+        return removed;
     }
 }

@@ -27,14 +27,24 @@ public sealed partial class ThemeService
             ?? throw new InvalidOperationException(
                 $"Accent tint '{tint}' requires SolidColorBrush resource '{sourceBrushKey}'.");
 
-        Color sourceColor = sourceBrush.Color;
+        return CreateAccentOverrideDictionary(
+            sourceBrush.Color,
+            AccentTintMarkerKey,
+            tint.ToString());
+    }
+
+    private static ResourceDictionary CreateAccentOverrideDictionary(
+        Color sourceColor,
+        string markerKey,
+        string markerValue)
+    {
         OklabConverter.Oklab seed = OklabConverter.FromColor(sourceColor);
         Color hoverColor = OklabConverter.ToColor(OklabConverter.Lighten(seed, AccentTintLightDelta));
         Color pressedColor = OklabConverter.ToColor(OklabConverter.Darken(seed, AccentTintLightDelta));
 
         ResourceDictionary dict = new ResourceDictionary
         {
-            [AccentTintMarkerKey] = tint.ToString(),
+            [markerKey] = markerValue,
             ["AccentBrush"] = CreateFrozenBrush(sourceColor),
             ["AccentHoverBrush"] = CreateFrozenBrush(hoverColor),
             ["AccentPressedBrush"] = CreateFrozenBrush(pressedColor),

@@ -5,6 +5,19 @@ All notable changes to ThemeForge are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-06-14
+
+### Added
+- Windows accent-color auto-follow for WPF apps through the opt-in
+  `ISystemAccentFollower` capability. `IThemeService` remains unchanged for
+  SemVer compatibility; the arbitrary Windows accent color stays separate from
+  the discrete `AccentTint` palette.
+- `ISystemAccentProvider` and `RegistrySystemAccentProvider` to read the DWM
+  `AccentColor` registry value and react to Windows color preference changes
+  without changing the project TFM or adding WinRT dependencies.
+- Studio toggle to follow the Windows accent color while disabling the discrete
+  accent tint picker until the user takes manual control again.
+
 ## [1.1.0] - 2026-06-13
 
 ### Added
@@ -43,5 +56,6 @@ First stable release of the ThemeForge WPF theming framework (.NET 10).
   `var` rejected at build time as `error IDE0008`.
 - CI on `windows-2025-vs2026`; 146 tests (39 Theme + 107 Controls).
 
+[1.2.0]: https://github.com/VBlackJack/ThemeForge/releases/tag/v1.2.0
 [1.1.0]: https://github.com/VBlackJack/ThemeForge/releases/tag/v1.1.0
 [1.0.0]: https://github.com/VBlackJack/ThemeForge/releases/tag/v1.0.0

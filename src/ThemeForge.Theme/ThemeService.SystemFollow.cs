@@ -69,7 +69,9 @@ public sealed partial class ThemeService
     public void Dispose()
     {
         DisableSystemFollow();
+        DisableSystemAccentFollow();
         (_systemThemeProvider as IDisposable)?.Dispose();
+        (_systemAccentProvider as IDisposable)?.Dispose();
     }
 
     private void OnSystemThemeChanged(object? sender, EventArgs e)

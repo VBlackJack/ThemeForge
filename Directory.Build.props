@@ -10,7 +10,7 @@
     <Copyright>Copyright 2026 Julien Bombled</Copyright>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <RepositoryUrl>https://github.com/VBlackJack/ThemeForge</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <IsPackable>false</IsPackable>

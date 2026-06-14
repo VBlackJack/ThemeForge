@@ -63,6 +63,12 @@
                               Margin="0,0,20,0"
                               AutomationProperties.Name="Suivi du thème Windows"
                               AutomationProperties.HelpText="Suit le mode clair ou sombre de Windows"/>
+                    <CheckBox Content="Accent Windows"
+                              IsChecked="{Binding IsFollowingSystemAccent, Mode=TwoWay}"
+                              VerticalAlignment="Center"
+                              Margin="0,0,20,0"
+                              AutomationProperties.Name="Suivi de l'accent Windows"
+                              AutomationProperties.HelpText="Suit la couleur d'accent de Windows"/>
                     <TextBlock Text="Thème :"
                                VerticalAlignment="Center"
                                Margin="0,0,12,0"
@@ -98,6 +104,7 @@
                                Foreground="{DynamicResource TextPrimaryBrush}"/>
                     <ComboBox ItemsSource="{Binding AvailableAccentTints}"
                               SelectedItem="{Binding SelectedAccentTint, Mode=TwoWay}"
+                              IsEnabled="{Binding IsAccentTintPickerEnabled}"
                               Width="140"
                               AutomationProperties.Name="Accent tint picker"
                               AutomationProperties.HelpText="Select an accent tint"/>

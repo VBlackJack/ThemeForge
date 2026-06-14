@@ -26,6 +26,7 @@ public sealed class WcagContrastTests : IDisposable
 {
     private const string ThemeMarkerKey = "ThemeForge.ActiveThemeMarker";
     private const string AccentTintMarkerKey = "ThemeForge.ActiveAccentTintMarker";
+    private const string SystemAccentMarkerKey = "ThemeForge.ActiveSystemAccentMarker";
     private const double AaNormalTextMinimum = 4.5;
 
     public WcagContrastTests()
@@ -153,7 +154,9 @@ public sealed class WcagContrastTests : IDisposable
         IList<ResourceDictionary> merged = app.Resources.MergedDictionaries;
         for (int i = merged.Count - 1; i >= 0; i--)
         {
-            if (merged[i].Contains(ThemeMarkerKey) || merged[i].Contains(AccentTintMarkerKey))
+            if (merged[i].Contains(ThemeMarkerKey) ||
+                merged[i].Contains(AccentTintMarkerKey) ||
+                merged[i].Contains(SystemAccentMarkerKey))
             {
                 merged.RemoveAt(i);
             }

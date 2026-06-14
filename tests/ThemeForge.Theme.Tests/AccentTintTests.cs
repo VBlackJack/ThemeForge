@@ -23,16 +23,11 @@ public sealed class AccentTintTests : IDisposable
 {
     private const string ThemeMarkerKey = "ThemeForge.ActiveThemeMarker";
     private const string AccentTintMarkerKey = "ThemeForge.ActiveAccentTintMarker";
+    private const string SystemAccentMarkerKey = "ThemeForge.ActiveSystemAccentMarker";
 
-    public AccentTintTests()
-    {
-        ClearTaggedDictionaries();
-    }
+    public AccentTintTests() => ClearTaggedDictionaries();
 
-    public void Dispose()
-    {
-        ClearTaggedDictionaries();
-    }
+    public void Dispose() => ClearTaggedDictionaries();
 
     [StaFact]
     public void ApplyAccentTint_DefaultOnFreshService_IsNoOp()
@@ -191,7 +186,9 @@ public sealed class AccentTintTests : IDisposable
         IList<ResourceDictionary> merged = app.Resources.MergedDictionaries;
         for (int i = merged.Count - 1; i >= 0; i--)
         {
-            if (merged[i].Contains(ThemeMarkerKey) || merged[i].Contains(AccentTintMarkerKey))
+            if (merged[i].Contains(ThemeMarkerKey) ||
+                merged[i].Contains(AccentTintMarkerKey) ||
+                merged[i].Contains(SystemAccentMarkerKey))
             {
                 merged.RemoveAt(i);
             }

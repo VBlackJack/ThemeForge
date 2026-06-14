@@ -52,6 +52,7 @@ public partial class App : Application
         services.AddSingleton<ThemeService>(_ => new ThemeService(this));
         services.AddSingleton<IThemeService>(sp => sp.GetRequiredService<ThemeService>());
         services.AddSingleton<ISystemThemeFollower>(sp => sp.GetRequiredService<ThemeService>());
+        services.AddSingleton<ISystemAccentFollower>(sp => sp.GetRequiredService<ThemeService>());
 
         // Each section eagerly instantiates its UserControl. The cost is
         // negligible (7 controls, no heavy resources) and keeps the
@@ -60,9 +61,12 @@ public partial class App : Application
         {
             IThemeService themeService = sp.GetRequiredService<IThemeService>();
             ISystemThemeFollower systemThemeFollower = sp.GetRequiredService<ISystemThemeFollower>();
+            ISystemAccentFollower systemAccentFollower =
+                sp.GetRequiredService<ISystemAccentFollower>();
             return new MainViewModel(
                 themeService,
                 systemThemeFollower,
+                systemAccentFollower,
                 new[]
                 {
                     new GallerySectionViewModel("Palette",     new PaletteView()),

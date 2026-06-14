@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <!-- Required by the LibraryImport source generator (P/Invoke marshalling stubs). -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <RootNamespace>ThemeForge.Theme</RootNamespace>
     <AssemblyName>ThemeForge.Theme</AssemblyName>
     <IsPackable>true</IsPackable>

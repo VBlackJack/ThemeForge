@@ -1,0 +1,33 @@
+<!--
+  Copyright 2026 Julien Bombled
+  Licensed under the Apache License, Version 2.0
+
+  NuGet template package. Ships the tf-wpf template content; it compiles nothing.
+  Deliberately kept out of ThemeForge.slnx so the solution build never touches it.
+-->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>ThemeForge.Templates</PackageId>
+    <PackageType>Template</PackageType>
+    <Title>ThemeForge WPF templates</Title>
+    <Description>dotnet new templates for ThemeForge: scaffold a WPF app wired for the full set-and-forget theming stack (Follow Windows, preference persistence, themed title bar).</Description>
+    <PackageTags>dotnet-new;templates;wpf;theming;dracula</PackageTags>
+    <IsPackable>true</IsPackable>
+
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+    <EnableDefaultItems>false</EnableDefaultItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**" />
+    <Compile Remove="**\*" />
+  </ItemGroup>
+
+</Project>

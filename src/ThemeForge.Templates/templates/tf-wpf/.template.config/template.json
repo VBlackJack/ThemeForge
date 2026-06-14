@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Julien Bombled",
+  "classifications": [ "WPF", "Desktop", "Theming" ],
+  "identity": "ThemeForge.Wpf",
+  "name": "ThemeForge WPF App",
+  "description": "A WPF app pre-wired for the ThemeForge set-and-forget stack: Follow Windows, preference persistence, themed title bar, and a runtime theme switcher.",
+  "shortName": "tf-wpf",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "ThemeForge.WpfApp",
+  "preferNameDirectory": true
+}

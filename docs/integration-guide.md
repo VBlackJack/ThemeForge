@@ -25,20 +25,61 @@ Prérequis :
 - une app WPF ciblant `net10.0-windows` ;
 - un `.csproj` SDK-style moderne.
 
-ThemeForge ne publie pas encore de package NuGet.
+ThemeForge est publié sur GitHub Packages (compte VBlackJack).
 
-Pour l'instant, l'intégration se fait par `ProjectReference`.
+L'intégration recommandée se fait par `PackageReference`. La section 2 détaille le
+feed et l'authentification.
 
 ## 2. Référencer ThemeForge dans ton projet
 
-Ajoute les deux projets à ton `.csproj` consommateur.
+ThemeForge est distribué sur GitHub Packages. L'intégration se fait par
+`PackageReference`.
 
-Adapte le chemin relatif à ta structure.
+### 2.1 Déclarer le feed
+
+Ajoute un `nuget.config` à côté de ta solution :
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <add key="github" value="https://nuget.pkg.github.com/VBlackJack/index.json" />
+  </packageSources>
+</configuration>
+```
+
+### 2.2 S'authentifier (obligatoire, même en lecture)
+
+GitHub Packages n'autorise aucun restore anonyme : il faut un PAT GitHub avec le
+scope `read:packages`, même pour une simple consommation.
+
+Fournis-le de l'une de ces deux façons :
+
+- par variable d'environnement, sans écrire le token sur disque (lance ensuite
+  `dotnet restore` dans le même shell) :
+
+  ```pwsh
+  $env:NuGetPackageSourceCredentials_github = "Username=<user>;Password=<PAT>"
+  ```
+
+- ou dans le `nuget.config`, via un bloc `packageSourceCredentials` (garde alors
+  le fichier hors du contrôle de version) :
+
+  ```xml
+  <packageSourceCredentials>
+    <github>
+      <add key="Username" value="<user>" />
+      <add key="ClearTextPassword" value="<PAT>" />
+    </github>
+  </packageSourceCredentials>
+  ```
+
+### 2.3 Référencer les packages
 
 ```xml
 <ItemGroup>
-  <ProjectReference Include="..\ThemeForge\src\ThemeForge.Theme\ThemeForge.Theme.csproj" />
-  <ProjectReference Include="..\ThemeForge\src\ThemeForge.Controls\ThemeForge.Controls.csproj" />
+  <PackageReference Include="ThemeForge.Theme" Version="1.2.0" />
+  <PackageReference Include="ThemeForge.Controls" Version="1.2.0" />
 </ItemGroup>
 ```
 
@@ -65,11 +106,9 @@ Le Studio utilise ce package avec un `ServiceCollection` brut.
 
 ## 3. Bootstrap App.xaml
 
-Dans `App.xaml`, merge le dictionnaire de styles natifs.
-
-Tu peux aussi merger un thème par défaut.
-
-`ThemeService.ApplyTheme(...)` remplacera ensuite le thème actif au runtime.
+Dans `App.xaml`, merge UNIQUEMENT le dictionnaire de styles natifs. Le thème
+initial se pose au runtime via `ThemeService.ApplyTheme(...)` dans `OnStartup`
+(section 4).
 
 ```xml
 <Application
@@ -80,12 +119,19 @@ Tu peux aussi merger un thème par défaut.
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Styles/Studio.xaml"/>
-                <ResourceDictionary Source="pack://application:,,,/ThemeForge.Theme;component/Themes/Drakul.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
 ```
+
+> **Avertissement.** Ne jamais merger un thème en statique dans `App.xaml` si tu
+> utilises `ApplyTheme`. Un thème mergé en statique n'est pas marqué par
+> `ThemeService`, donc jamais retiré, et il reste en dernière position du merge :
+> sur une clé dupliquée, WPF donne la priorité au dernier dictionnaire. Ses
+> brushes l'emportent alors sur le thème appliqué au runtime, et le switch de
+> thème change `CurrentTheme` sans aucun effet visible sur les couleurs. Le thème
+> initial se pose donc exclusivement via `ThemeService.ApplyTheme(...)`.
 
 Le dictionnaire `Styles/Studio.xaml` agrège les styles natifs.
 
@@ -520,7 +566,51 @@ ré-évaluer.
 
 Tu peux exposer `ThemeRevision` dans ton ViewModel si ta vue en dépend.
 
-## 9. Aller plus loin
+## 9. Suivre le thème et l'accent Windows
+
+Depuis la v1.1.0 (suivi clair/sombre) et la v1.2.0 (suivi de l'accent),
+ThemeForge peut s'aligner automatiquement sur les réglages Windows.
+
+Ces capacités sont opt-in et vivent sur des interfaces SÉPARÉES,
+`ISystemThemeFollower` et `ISystemAccentFollower`, pour ne pas modifier
+`IThemeService` (gelé pour la stabilité SemVer). `ThemeService` les implémente
+toutes les deux ; tu y accèdes par un cast de ton instance.
+
+### Suivre le mode clair/sombre de Windows
+
+```csharp
+((ISystemThemeFollower)themeService).EnableSystemFollow(ThemeNames.Folio, ThemeNames.Drakul);
+// ...
+((ISystemThemeFollower)themeService).DisableSystemFollow();
+```
+
+`EnableSystemFollow(lightTheme, darkTheme)` applique `lightTheme` quand Windows
+est en mode clair et `darkTheme` en mode sombre, puis suit les changements de
+mode. `IsFollowingSystem` expose l'état courant.
+
+### Suivre la couleur d'accent de Windows
+
+```csharp
+((ISystemAccentFollower)themeService).EnableSystemAccentFollow();
+// ...
+((ISystemAccentFollower)themeService).DisableSystemAccentFollow();
+```
+
+`IsFollowingSystemAccent` expose l'état courant.
+
+### Interactions à connaître
+
+- Le suivi d'accent et `ApplyAccentTint(...)` sont mutuellement exclusifs :
+  appeler `ApplyAccentTint` désactive automatiquement le suivi d'accent.
+- Un `ApplyTheme(...)` manuel désactive le suivi clair/sombre (tu reprends la
+  main sur le thème), mais conserve le suivi d'accent s'il est actif.
+
+> **Note ergonomie.** Le cast vers `ISystemThemeFollower` /
+> `ISystemAccentFollower` est volontaire : ces interfaces sont additives et
+> non-breaking. Une façade ou une extension DI exposant les trois interfaces sur
+> le même singleton est envisagée pour une version ultérieure.
+
+## 10. Aller plus loin
 
 Studio est le bac à sable du repo.
 
@@ -565,7 +655,7 @@ Reviens ensuite au [README](../README.md) pour la vue d'ensemble.
 
 Consulte aussi [NOTICE](../NOTICE) pour les attributions.
 
-## 10. Limitations connues
+## 11. Limitations connues
 
 ThemeForge cible WPF desktop.
 
@@ -577,7 +667,8 @@ Il ne cible pas :
 - Avalonia ;
 - MAUI.
 
-Il n'y a pas encore de package NuGet publié : utilise `ProjectReference`.
+La consommation passe par GitHub Packages et exige une authentification, même en
+lecture seule (voir section 2).
 
 Le designer Visual Studio ne prévisualise pas fidèlement la bascule runtime.
 

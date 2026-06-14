@@ -29,10 +29,15 @@ jobs:
       - name: Pack solution
         run: dotnet pack ThemeForge.slnx --configuration Release --output artifacts
 
+      - name: Pack template package
+        # The template package is outside the solution, so the solution pack does
+        # not produce it. Pack it explicitly into the same artifacts directory.
+        run: dotnet pack src/ThemeForge.Templates/ThemeForge.Templates.csproj --configuration Release --output artifacts
+
       - name: Add GitHub Packages source
         run: dotnet nuget add source https://nuget.pkg.github.com/VBlackJack/index.json --name github --username VBlackJack --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text
 
-      - name: Push packages
+      - name: Push packages to GitHub Packages
         shell: pwsh
         run: |
           $packages = Get-ChildItem -Path artifacts -Filter *.nupkg
@@ -41,4 +46,15 @@ jobs:
           }
           foreach ($package in $packages) {
               dotnet nuget push $package.FullName --source github --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+          }
+
+      - name: Push packages to nuget.org
+        shell: pwsh
+        run: |
+          $packages = Get-ChildItem -Path artifacts -Filter *.nupkg
+          if ($packages.Count -eq 0) {
+              throw "No NuGet package found in artifacts."
+          }
+          foreach ($package in $packages) {
+              dotnet nuget push $package.FullName --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
           }

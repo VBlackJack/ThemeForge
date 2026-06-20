@@ -54,4 +54,8 @@ jobs:
         run: dotnet build ThemeForge.slnx --configuration Release --no-restore
 
       - name: Test (Release)
-        run: dotnet test ThemeForge.slnx --configuration Release --no-build --verbosity normal
+        # -m:1 forces MSBuild to run the per-project VSTest invocations
+        # sequentially. Both test assemblies are net10.0-windows (WPF); running
+        # their testhosts in parallel deadlocks on shared STA / Application /
+        # Dispatcher state and hangs the run indefinitely. Do not remove -m:1.
+        run: dotnet test ThemeForge.slnx -m:1 --configuration Release --no-build --verbosity normal

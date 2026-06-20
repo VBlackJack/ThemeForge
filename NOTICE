@@ -8,11 +8,13 @@ under the Apache License, Version 2.0 (see LICENSE).
 Color palettes / theme variants - attribution (v6 final)
 ================================================================================
 
-The framework ships 16 theme variants. Dracula reproduces the canonical
+The framework ships 17 theme variants. Dracula reproduces the canonical
 Dracula Theme palette by Zeno Rocha (MIT) and is kept unchanged as the
 historical root. Drakul is an AA-compliant Apache 2.0 sibling derived from
-Dracula by Julien Bombled. The other 14 palettes are original works by Julien
-Bombled, released under Apache 2.0.
+Dracula by Julien Bombled. 14 palettes are original works by Julien
+Bombled, released under Apache 2.0. Magellan is a brand-derived Dark variant
+whose Background hue and Accent are adapted from the Magellan corporate
+identity (see section 3).
 
 The final v6 palette set was validated on 2026-05-18 after five independent
 cross-review passes. v6 carries the v5 uniform-Oklab-L* accent model, then adds
@@ -96,6 +98,27 @@ references (Wormwood = Revelation 8:11 + Lewis's Screwtape Letters).
 The "Dracula" name and Dracula PRO product are trademarks of Zeno Rocha. No
 commercial Dracula PRO scheme name (Pro, Alucard, Blade, Buffy, Lincoln,
 Morbius, Van Helsing) appears in this set.
+
+--------------------------------------------------------------------------------
+3. Brand-derived palette - Apache 2.0 engineering (Julien Bombled)
+--------------------------------------------------------------------------------
+
+  - Magellan        Dark family   H 234 deg   Magellan corporate indigo
+
+  Magellan adapts the Background hue (deep navy) and the signature Accent
+  (bright indigo, #8C9CFF, lifted from the brand primary #525DDC to clear
+  WCAG AA on the dark surface) from the Magellan corporate brand identity
+  (Magellan, ex Magellan Partners; https://www.magellangroup.eu). The seven
+  functional accents (Cyan, Green, Orange, Pink, Purple, Red, Yellow) and the
+  extended Blue slot are byte-identical to the shipped Dark band, so accent
+  tinting keeps its uniform Oklab-L* behaviour. Every gated pair (Accent /
+  Success / Warning / Error / Info vs Background, and each accent-tint source
+  vs Background) clears WCAG 2.1 AA 4.5:1 with margin.
+
+  "Magellan" and the Magellan brand colors are trademarks of their respective
+  owner and are used here solely to theme the owner's own tooling. Only the
+  XAML authoring and the AA engineering are licensed under Apache 2.0 by
+  Julien Bombled; no claim is made over the Magellan trademark or brand.
 
 ================================================================================
 Palette review history

@@ -18,14 +18,16 @@ namespace ThemeForge.Theme;
 /// Canonical names for every shipped v6 theme variant.
 /// </summary>
 /// <remarks>
-/// The set ships 16 variants : the historical Dracula MIT palette by Zeno
+/// The set ships 17 variants : the historical Dracula MIT palette by Zeno
 /// Rocha (kept as the framework's root), Drakul (Dracula sibling AA-compliant),
-/// plus 14 original Apache 2.0 palettes by Julien Bombled. The final v6 palette
+/// 14 original Apache 2.0 palettes by Julien Bombled, plus Magellan, a
+/// brand-derived Dark variant (Background hue + Accent adapted from the
+/// Magellan corporate identity; see NOTICE). The final v6 palette
 /// was validated after five independent cross-review passes. It carries the v5
 /// uniform-Oklab-L* accent model, then adds
 /// the Bracken rename and Drakul sibling :
 /// <list type="bullet">
-///   <item>All 10 Dark variants share a 7-accent band at Oklab L*
+///   <item>All 11 Dark variants share a 7-accent band at Oklab L*
 ///         0.7185-0.7209.</item>
 ///   <item>The 2 Light variants share a darker accent band at Oklab L*
 ///         0.4995-0.5012.</item>
@@ -34,7 +36,7 @@ namespace ThemeForge.Theme;
 ///   <item>Comments on Julien-authored variants target uniform WCAG relative
 ///         luminance around 0.38 and clear AA against Background and
 ///         CurrentLine.</item>
-///   <item>15 of 16 palettes clear the contracted AA text pairs. Dracula keeps
+///   <item>16 of 17 palettes clear the contracted AA text pairs. Dracula keeps
 ///         the canonical MIT Comment color unchanged; Drakul provides the
 ///         AA-compliant sibling.</item>
 /// </list>
@@ -54,6 +56,7 @@ public static class ThemeNames
     public const string Tarn = "Tarn";    // H 170° — highland tarn, petrol-teal
     public const string Mortis = "Mortis";   // H 200° — slate-cyan morgue
     public const string Slate = "Slate";    // H 225° — cold monastery stone
+    public const string Magellan = "Magellan"; // H 234° — Magellan corporate indigo (brand-derived)
     public const string Voivode = "Voivode";  // H 255° — Wallachian throne, deep indigo
     public const string Carmilla = "Carmilla"; // H 290° — Le Fanu velvet violet
     public const string Whitby = "Whitby";   // H 320° — North Sea slate-mauve
@@ -77,7 +80,7 @@ public static class ThemeNames
         Dracula,
         Drakul,
         // Dark — Bg hue 0° → 360°
-        Striga, Cinder, Bracken, Tarn, Mortis, Slate, Voivode, Carmilla, Whitby, Vesper,
+        Striga, Cinder, Bracken, Tarn, Mortis, Slate, Magellan, Voivode, Carmilla, Whitby, Vesper,
         // Light
         Parchment, Folio,
         // Alt

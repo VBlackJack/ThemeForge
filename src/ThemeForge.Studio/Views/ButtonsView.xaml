@@ -8,7 +8,7 @@
 
         <TextBlock Text="Boutons" FontSize="18" FontWeight="SemiBold"
                    Foreground="{DynamicResource TextPrimaryBrush}"/>
-        <TextBlock Text="Contrôles WPF natifs — pas encore stylés par ThemeForge.Controls."
+        <TextBlock Text="Contrôles WPF natifs - pas encore stylés par ThemeForge.Controls."
                    Foreground="{DynamicResource TextSecondaryBrush}"
                    Margin="0,4,0,16"/>
 

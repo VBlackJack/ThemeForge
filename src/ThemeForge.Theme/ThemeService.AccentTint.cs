@@ -19,10 +19,10 @@ namespace ThemeForge.Theme;
 
 public sealed partial class ThemeService
 {
-    private ResourceDictionary CreateAccentTintDictionary(AccentTint tint)
+    private static ResourceDictionary CreateAccentTintDictionary(AccentTint tint, ResourceDictionary resources)
     {
         string sourceBrushKey = GetSourceBrushKey(tint);
-        object? resource = _application.Resources[sourceBrushKey];
+        object? resource = resources[sourceBrushKey];
         SolidColorBrush sourceBrush = resource as SolidColorBrush
             ?? throw new InvalidOperationException(
                 $"Accent tint '{tint}' requires SolidColorBrush resource '{sourceBrushKey}'.");

@@ -12,111 +12,43 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Globalization;
-using System.Windows;
 using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ThemeForge.Theme.Palettes;
 
 namespace ThemeForge.Studio.ViewModels;
 
-/// <summary>
-/// One editable palette slot: pairs a display name + the application
-/// resource key that exposes the brush, lets the user edit the hex value,
-/// and patches Application.Resources on every change so the live UI updates
-/// through DynamicResource.
-/// </summary>
+/// <summary>A palette colour with immediate validation and an original swatch.</summary>
 public sealed partial class SlotViewModel : ObservableObject
 {
     private readonly string _resourceKey;
-    private readonly Color _originalColor;
-    private bool _suppressHexEcho;
-
-    public SlotViewModel(string name, string resourceKey, Color initial)
+    private readonly Action<string, Color?> _applyOverride;
+    private readonly Action? _validationChanged;
+    /// <summary>Creates an editable opaque colour row.</summary>
+    public SlotViewModel(string name, string resourceKey, Color initial, Action<string, Color?> applyOverride, Action? validationChanged = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         ArgumentException.ThrowIfNullOrWhiteSpace(resourceKey);
-        Name = name;
-        _resourceKey = resourceKey;
-        _originalColor = initial;
-        _color = initial;
-        _hex = ColorToHex(initial);
+        ArgumentNullException.ThrowIfNull(applyOverride);
+        Name = name; _resourceKey = resourceKey; OriginalColor = initial;
+        _color = initial; _hex = PaletteValidation.ToHex(initial);
+        _applyOverride = applyOverride; _validationChanged = validationChanged;
     }
-
-    /// <summary>Display label shown in the editor (e.g. "Background").</summary>
+    /// <summary>Slot identifier and accessible name.</summary>
     public string Name { get; }
-
-    /// <summary>Current color shown in the swatch.</summary>
-    [ObservableProperty]
-    private Color _color;
-
-    /// <summary>Hex value bound to a TextBox; parsing happens in OnHexChanged.</summary>
-    [ObservableProperty]
-    private string _hex;
+    /// <summary>Colour at the start of the document.</summary>
+    public Color OriginalColor { get; }
+    [ObservableProperty] private Color _color;
+    [ObservableProperty] private string _hex;
+    [ObservableProperty] private bool _isValid = true;
 
     partial void OnHexChanged(string value)
     {
-        if (_suppressHexEcho)
-        {
-            return;
-        }
-
-        if (TryParseHex(value, out Color parsed))
-        {
-            Color = parsed;
-            Application.Current.Resources[_resourceKey] = new SolidColorBrush(parsed);
-        }
+        IsValid = PaletteValidation.TryParseColor(value, out Color parsed);
+        if (IsValid) { Color = parsed; _applyOverride(_resourceKey, parsed); }
+        _validationChanged?.Invoke();
     }
-
     [RelayCommand]
-    private void Reset()
-    {
-        _suppressHexEcho = true;
-        try
-        {
-            Color = _originalColor;
-            Hex = ColorToHex(_originalColor);
-        }
-        finally
-        {
-            _suppressHexEcho = false;
-        }
-        Application.Current.Resources[_resourceKey] = new SolidColorBrush(_originalColor);
-    }
-
-    private static string ColorToHex(Color c) =>
-        $"#{c.R:X2}{c.G:X2}{c.B:X2}";
-
-    private static bool TryParseHex(string? raw, out Color color)
-    {
-        color = Colors.Transparent;
-        if (string.IsNullOrWhiteSpace(raw))
-        {
-            return false;
-        }
-
-        string s = raw.Trim().TrimStart('#');
-        if (s.Length != 6 && s.Length != 8)
-        {
-            return false;
-        }
-
-        try
-        {
-            if (s.Length == 6)
-            {
-                s = "FF" + s;
-            }
-            byte a = byte.Parse(s.AsSpan(0, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-            byte r = byte.Parse(s.AsSpan(2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-            byte g = byte.Parse(s.AsSpan(4, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-            byte b = byte.Parse(s.AsSpan(6, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-            color = Color.FromArgb(a, r, g, b);
-            return true;
-        }
-        catch (FormatException)
-        {
-            return false;
-        }
-    }
+    private void Reset() => Hex = PaletteValidation.ToHex(OriginalColor);
 }

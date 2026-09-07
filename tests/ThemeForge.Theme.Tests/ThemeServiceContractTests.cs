@@ -20,7 +20,7 @@ namespace ThemeForge.Theme.Tests;
 /// <summary>
 /// Phase A: contract-level tests that exercise validation and initial state.
 /// These do not perform any ResourceDictionary swap and therefore do not need
-/// to resolve the theme pack URI — only an Application reference is required.
+/// to resolve the theme pack URI - only an Application reference is required.
 /// </summary>
 public sealed class ThemeServiceContractTests
 {

@@ -14,6 +14,8 @@
 
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using ThemeForge.Studio.Services;
 using ThemeForge.Studio.ViewModels;
 using ThemeForge.Studio.Views;
 using ThemeForge.Theme;
@@ -42,6 +44,9 @@ public partial class App : Application
         themeService.ApplyTheme(ThemeNames.Dracula);
 
         MainWindow mainWindow = _services.GetRequiredService<MainWindow>();
+        _services.GetRequiredService<MainViewModel>().ConfirmThemeChange =
+            _services.GetRequiredService<PaletteEditorViewModel>().PrepareThemeChange;
+        mainWindow.Closing += OnWindowClosing;
         mainWindow.Show();
     }
 
@@ -49,6 +54,12 @@ public partial class App : Application
     {
         // ThemeService is bound to the live Application so it can mutate
         // Application.Resources.MergedDictionaries at runtime.
+        _fileLogger = new StudioFileLoggerProvider(new StudioLogOptions());
+        services.AddLogging(builder => builder.AddDebug().AddProvider(_fileLogger));
+        services.AddSingleton<IPaletteFileDialogs, PaletteFileDialogs>();
+        services.AddSingleton<PaletteEditorViewModel>(sp => new PaletteEditorViewModel(
+            sp.GetRequiredService<IThemeService>(), Resources, sp.GetRequiredService<IPaletteFileDialogs>(),
+            sp.GetRequiredService<ILogger<PaletteEditorViewModel>>()));
         services.AddSingleton<ThemeService>(_ => new ThemeService(this));
         services.AddSingleton<IThemeService>(sp => sp.GetRequiredService<ThemeService>());
         services.AddSingleton<ISystemThemeFollower>(sp => sp.GetRequiredService<ThemeService>());
@@ -76,7 +87,7 @@ public partial class App : Application
                     new GallerySectionViewModel("Feedback",    new FeedbackView()),
                     new GallerySectionViewModel("Containers",  new ContainersView()),
                     new GallerySectionViewModel("Composites",  new CompositesView()),
-                    new GallerySectionViewModel("Edit",        new PaletteEditorView(new PaletteEditorViewModel(themeService))),
+                    new GallerySectionViewModel("Edit",        new PaletteEditorView(sp.GetRequiredService<PaletteEditorViewModel>())),
                 });
         });
 

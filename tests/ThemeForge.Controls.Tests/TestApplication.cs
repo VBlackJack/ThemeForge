@@ -23,7 +23,7 @@ namespace ThemeForge.Controls.Tests;
 /// one Application per AppDomain.
 /// </summary>
 /// <remarks>
-/// Access only from <c>[StaFact]</c> tests — Application construction requires
+/// Access only from <c>[StaFact]</c> tests - Application construction requires
 /// the STA threading model.
 /// </remarks>
 internal static class TestApplication

@@ -70,6 +70,10 @@ internal sealed class ThemeForgeStartup : IDisposable
         if (_store is not null)
         {
             _themeService.ThemeChanged += OnThemeChanged;
+            if (_themeService is IThemeIntentNotifier notifier)
+            {
+                notifier.ThemeIntentChanged += OnThemeIntentChanged;
+            }
         }
     }
 
@@ -82,6 +86,10 @@ internal sealed class ThemeForgeStartup : IDisposable
 
         _disposed = true;
         _themeService.ThemeChanged -= OnThemeChanged;
+        if (_themeService is IThemeIntentNotifier notifier)
+        {
+            notifier.ThemeIntentChanged -= OnThemeIntentChanged;
+        }
     }
 
     private void Restore()
@@ -97,6 +105,11 @@ internal sealed class ThemeForgeStartup : IDisposable
 
     private bool TryApplyPreference(ThemePreference preference)
     {
+        if (preference.Version != ThemePreference.SchemaVersion || !Enum.IsDefined(preference.AccentTint))
+        {
+            return false;
+        }
+
         if (preference.FollowWindows && _options.WindowsFollow is not null)
         {
             _windowsFollower.FollowWindows(_options.WindowsFollow);
@@ -130,7 +143,11 @@ internal sealed class ThemeForgeStartup : IDisposable
         _themeService.ApplyAccentTint(_options.DefaultAccentTint);
     }
 
-    private void OnThemeChanged(object? sender, ThemeChangedEventArgs e)
+    private void OnThemeChanged(object? sender, ThemeChangedEventArgs e) => SaveIntent();
+
+    private void OnThemeIntentChanged(object? sender, EventArgs e) => SaveIntent();
+
+    private void SaveIntent()
     {
         // Persist the intent, never the resolved theme: while following Windows the
         // momentary theme must not be pinned, or the next boot would stop following.

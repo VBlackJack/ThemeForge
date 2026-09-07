@@ -24,6 +24,9 @@ namespace ThemeForge.Studio.ViewModels;
 /// </summary>
 public sealed partial class MainViewModel : ObservableObject
 {
+    /// <summary>Optional guard supplied by the shell for unsaved editor changes.</summary>
+    public Func<bool>? ConfirmThemeChange { get; set; }
+
     private readonly IThemeService _themeService;
     private readonly ISystemThemeFollower _systemThemeFollower;
     private readonly ISystemAccentFollower _systemAccentFollower;
@@ -100,6 +103,8 @@ public sealed partial class MainViewModel : ObservableObject
             return;
         }
 
+        if (ConfirmThemeChange?.Invoke() == false)
+        { SelectedTheme = Themes.FirstOrDefault(theme => theme.Name == _themeService.CurrentTheme); return; }
         _themeService.ApplyTheme(value.Name);
     }
 
@@ -143,6 +148,7 @@ public sealed partial class MainViewModel : ObservableObject
             return;
         }
 
+        if (ConfirmThemeChange?.Invoke() == false) { SelectedAccentTint = _themeService.CurrentAccentTint; return; }
         _themeService.ApplyAccentTint(value);
     }
 

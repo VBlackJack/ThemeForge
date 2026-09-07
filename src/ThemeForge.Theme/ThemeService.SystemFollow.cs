@@ -49,14 +49,23 @@ public sealed partial class ThemeService
         _darkTheme = darkTheme;
         _systemThemeProvider ??= new RegistrySystemThemeProvider();
 
+        bool intentChanged = !IsFollowingSystem;
         IsFollowingSystem = true;
         _systemThemeProvider.Changed -= OnSystemThemeChanged;
         _systemThemeProvider.Changed += OnSystemThemeChanged;
         ApplyForMode(_systemThemeProvider.GetCurrentMode());
+        if (intentChanged) { ThemeIntentChanged?.Invoke(this, EventArgs.Empty); }
     }
 
     /// <inheritdoc/>
     public void DisableSystemFollow()
+    {
+        bool changed = IsFollowingSystem;
+        StopSystemFollow();
+        if (changed && !_disposed) { ThemeIntentChanged?.Invoke(this, EventArgs.Empty); }
+    }
+
+    private void StopSystemFollow()
     {
         IsFollowingSystem = false;
         if (_systemThemeProvider is not null)
@@ -68,6 +77,8 @@ public sealed partial class ThemeService
     /// <inheritdoc/>
     public void Dispose()
     {
+        if (_disposed) { return; }
+        _disposed = true;
         DisableSystemFollow();
         DisableSystemAccentFollow();
         (_systemThemeProvider as IDisposable)?.Dispose();

@@ -33,6 +33,7 @@ public sealed partial class ThemeService :
     IThemeService,
     ISystemThemeFollower,
     ISystemAccentFollower,
+    IThemeIntentNotifier,
     IDisposable
 {
     private const string ThemeMarkerKey = "ThemeForge.ActiveThemeMarker";
@@ -45,6 +46,7 @@ public sealed partial class ThemeService :
     private string _currentTheme = string.Empty;
     private AccentTint _currentAccentTint = AccentTint.Default;
     private int _themeRevision;
+    private bool _disposed;
 
     public ThemeService(Application application, IReadOnlyList<string>? availableThemes = null)
     {
@@ -57,13 +59,16 @@ public sealed partial class ThemeService :
 
     public int ThemeRevision => _themeRevision;
 
-    public IReadOnlyList<string> AvailableThemes { get; }
+    public IReadOnlyList<string> AvailableThemes { get; private set; }
 
     public IReadOnlyList<AccentTint> AvailableAccentTints => AccentTints.All;
 
     public AccentTint CurrentAccentTint => _currentAccentTint;
 
     public event EventHandler<ThemeChangedEventArgs>? ThemeChanged;
+
+    /// <inheritdoc/>
+    public event EventHandler? ThemeIntentChanged;
 
     public void ApplyTheme(string name)
     {
@@ -75,81 +80,38 @@ public sealed partial class ThemeService :
                 $"Theme '{name}' is not in AvailableThemes.", nameof(name));
         }
 
-        if (IsFollowingSystem && !_applyingFromFollow)
-        {
-            DisableSystemFollow();
-        }
-
+        bool stopFollowing = IsFollowingSystem && !_applyingFromFollow;
         if (string.Equals(_currentTheme, name, StringComparison.Ordinal))
         {
-            return; // idempotent on no-op
+            if (stopFollowing) { DisableSystemFollow(); }
+            return;
         }
 
-        ResourceDictionary newDictionary = LoadThemeDictionary(name);
-        IList<ResourceDictionary> merged = _application.Resources.MergedDictionaries;
+        // Prepare everything before changing the active palette or user intent.
+        ResourceDictionary newDictionary = LoadExternalOrBuiltIn(name);
+        ResourceDictionary? accentDictionary = null;
+        if (_currentAccentTint != AccentTint.Default)
+        {
+            accentDictionary = CreateAccentTintDictionary(_currentAccentTint, newDictionary);
+        }
+        else if (IsFollowingSystemAccent && _systemAccentProvider?.GetCurrentAccent() is Color color)
+        {
+            accentDictionary = CreateSystemAccentDictionary(color);
+        }
 
+        if (stopFollowing) { StopSystemFollow(); }
+        IList<ResourceDictionary> merged = _application.Resources.MergedDictionaries;
         RemoveMarkedDictionary(merged, AccentTintMarkerKey);
         RemoveMarkedDictionary(merged, SystemAccentMarkerKey);
         RemoveMarkedDictionary(merged, ThemeMarkerKey);
-
-        // Keep the active base theme at the front; tint overrides are appended
-        // when present because WPF gives later duplicate keys precedence.
         merged.Insert(0, newDictionary);
-        if (_currentAccentTint != AccentTint.Default)
-        {
-            ResourceDictionary tintDictionary = CreateAccentTintDictionary(_currentAccentTint);
-            // WPF lets later merged dictionaries override earlier duplicate keys.
-            merged.Add(tintDictionary);
-        }
-        else if (IsFollowingSystemAccent && _systemAccentProvider is not null)
-        {
-            Color? accent = _systemAccentProvider.GetCurrentAccent();
-            if (accent is Color color)
-            {
-                ResourceDictionary accentDictionary = CreateSystemAccentDictionary(color);
-                merged.Add(accentDictionary);
-            }
-        }
+        if (accentDictionary is not null) { merged.Add(accentDictionary); }
 
         string previous = _currentTheme;
         _currentTheme = name;
         _themeRevision++;
 
         ThemeChanged?.Invoke(this, new ThemeChangedEventArgs(previous, name, _themeRevision));
-    }
-
-    public void ApplyAccentTint(AccentTint tint)
-    {
-        if (IsFollowingSystemAccent && !_applyingFromSystemAccent)
-        {
-            DisableSystemAccentFollow();
-        }
-
-        if (tint == _currentAccentTint)
-        {
-            return;
-        }
-
-        if (string.IsNullOrWhiteSpace(_currentTheme))
-        {
-            throw new InvalidOperationException("Apply a theme before applying an accent tint.");
-        }
-
-        IList<ResourceDictionary> merged = _application.Resources.MergedDictionaries;
-        RemoveMarkedDictionary(merged, AccentTintMarkerKey);
-
-        _currentAccentTint = tint;
-        if (tint != AccentTint.Default)
-        {
-            ResourceDictionary tintDictionary = CreateAccentTintDictionary(tint);
-            // WPF lets later merged dictionaries override earlier duplicate keys.
-            merged.Add(tintDictionary);
-        }
-
-        _themeRevision++;
-        ThemeChanged?.Invoke(
-            this,
-            new ThemeChangedEventArgs(_currentTheme, _currentTheme, _themeRevision));
     }
 
     private static ResourceDictionary LoadThemeDictionary(string name)

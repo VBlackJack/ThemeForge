@@ -44,7 +44,7 @@ public partial class CompositesView : UserControl
         => Push(ToastSeverity.Success, "Success", "Action completed.");
 
     private void OnShowWarning(object sender, RoutedEventArgs e)
-        => Push(ToastSeverity.Warning, "Warning", "Heads up — check this.");
+        => Push(ToastSeverity.Warning, "Warning", "Heads up - check this.");
 
     private void OnShowError(object sender, RoutedEventArgs e)
         => Push(ToastSeverity.Error, "Error", "Something went wrong.");

@@ -42,10 +42,10 @@ public sealed class ToastAutomationPeer : FrameworkElementAutomationPeer
         }
         if (Owner is Toast toast)
         {
-            // Compose "Title — Message" for richer screen reader narration.
+            // Compose "Title - Message" for richer screen reader narration.
             if (!string.IsNullOrEmpty(toast.Title) && !string.IsNullOrEmpty(toast.Message))
             {
-                return $"{toast.Title} — {toast.Message}";
+                return $"{toast.Title} - {toast.Message}";
             }
             if (!string.IsNullOrEmpty(toast.Title))
             {

@@ -18,7 +18,7 @@
 
         <TextBlock Text="Composites custom" FontSize="18" FontWeight="SemiBold"
                    Foreground="{DynamicResource TextPrimaryBrush}"/>
-        <TextBlock Text="Card et IconButton — composites livrés par ThemeForge.Controls qui n'existent pas dans WPF natif."
+        <TextBlock Text="Card et IconButton - composites livrés par ThemeForge.Controls qui n'existent pas dans WPF natif."
                    Foreground="{DynamicResource TextSecondaryBrush}"
                    Margin="0,4,0,16"
                    TextWrapping="Wrap"/>
@@ -49,7 +49,7 @@
             </dfc:Card>
 
             <dfc:Card Grid.Column="2" Header="Header seul">
-                <TextBlock Text="Card sans Footer — divider du bas masqué automatiquement."
+                <TextBlock Text="Card sans Footer - divider du bas masqué automatiquement."
                            TextWrapping="Wrap"/>
             </dfc:Card>
         </Grid>
@@ -62,7 +62,7 @@
             </Grid.ColumnDefinitions>
 
             <dfc:Card Grid.Column="0">
-                <TextBlock Text="Card body seul — pas de Header, pas de Footer. Les deux dividers sont masqués."
+                <TextBlock Text="Card body seul - pas de Header, pas de Footer. Les deux dividers sont masqués."
                            TextWrapping="Wrap"/>
             </dfc:Card>
 

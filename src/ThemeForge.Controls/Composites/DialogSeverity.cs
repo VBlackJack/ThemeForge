@@ -21,12 +21,12 @@ public enum DialogSeverity
 {
     /// <summary>Neutral dialog with no semantic accent.</summary>
     Default,
-    /// <summary>Informational signal — maps to InfoBrush.</summary>
+    /// <summary>Informational signal - maps to InfoBrush.</summary>
     Info,
-    /// <summary>Positive / completed signal — maps to SuccessBrush.</summary>
+    /// <summary>Positive / completed signal - maps to SuccessBrush.</summary>
     Success,
-    /// <summary>Caution signal — maps to WarningBrush.</summary>
+    /// <summary>Caution signal - maps to WarningBrush.</summary>
     Warning,
-    /// <summary>Failure / destructive signal — maps to ErrorBrush.</summary>
+    /// <summary>Failure / destructive signal - maps to ErrorBrush.</summary>
     Error,
 }

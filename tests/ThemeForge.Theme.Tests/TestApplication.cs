@@ -22,7 +22,7 @@ namespace ThemeForge.Theme.Tests;
 /// AppDomain, so all tests share the same instance.
 /// </summary>
 /// <remarks>
-/// Access only from <c>[StaFact]</c> tests — Application construction requires
+/// Access only from <c>[StaFact]</c> tests - Application construction requires
 /// the STA threading model.
 /// </remarks>
 internal static class TestApplication

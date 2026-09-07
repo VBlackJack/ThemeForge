@@ -4,7 +4,7 @@
 
   Palette attribution: this ResourceDictionary reproduces the canonical
   Dracula Theme palette by Zeno Rocha (https://draculatheme.com), licensed
-  under the MIT License — see NOTICE for full attribution.
+  under the MIT License - see NOTICE for full attribution.
 -->
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -45,7 +45,7 @@
     <Color x:Key="ErrorColor">#FFFF5555</Color>
     <Color x:Key="InfoColor">#FF8BE9FD</Color>
 
-    <!-- Extended accent slot — original (Julien Bombled, Apache 2.0), not part of any canonical palette -->
+    <!-- Extended accent slot - original (Julien Bombled, Apache 2.0), not part of any canonical palette -->
     <Color x:Key="BlueColor">#FF70AEFF</Color>
 
     <!-- Brushes (one per color, named with the Brush suffix) -->

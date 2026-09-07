@@ -83,7 +83,7 @@ public sealed class JsonThemePreferenceStore : IThemePreferenceStore
             string json = File.ReadAllText(_filePath);
             ThemePreference? preference =
                 JsonSerializer.Deserialize(json, ThemePreferenceJsonContext.Default.ThemePreference);
-            if (preference is null || preference.Version != ThemePreference.SchemaVersion)
+            if (preference is null || preference.Version != ThemePreference.SchemaVersion || !Enum.IsDefined(preference.AccentTint))
             {
                 return null; // Empty payload or a schema this build cannot interpret.
             }

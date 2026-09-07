@@ -16,93 +16,121 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
+using ThemeForge.Studio.Resources;
+using ThemeForge.Studio.Services;
 using ThemeForge.Theme;
+using ThemeForge.Theme.Palettes;
 
 namespace ThemeForge.Studio.ViewModels;
 
-/// <summary>
-/// View model of the "Edit" section. Snapshots the current theme's slot
-/// colors into editable rows, exposes a global reset command, and reloads
-/// itself when the theme changes so the editor stays in sync with the
-/// active ResourceDictionary.
-/// </summary>
-public sealed partial class PaletteEditorViewModel : ObservableObject
+/// <summary>Owns a portable palette document, its preview overlay and editing history.</summary>
+public sealed partial class PaletteEditorViewModel : ObservableObject, IDisposable
 {
-    private static readonly string[] CanonicalSlotNames =
-    {
-        "Background", "CurrentLine", "Selection", "Foreground", "Comment",
-        "Cyan", "Green", "Orange", "Pink", "Purple", "Red", "Yellow",
-    };
+    private readonly IThemeService _themeService;
+    private readonly ResourceDictionary _resources;
+    private readonly ResourceDictionary _overrides = new ResourceDictionary();
+    private readonly IPaletteFileDialogs? _dialogs;
+    private readonly ILogger<PaletteEditorViewModel>? _logger;
+    private ThemePalette _current = new ThemePalette();
+    private ThemePalette _original = new ThemePalette();
+    private ThemePalette _saved = new ThemePalette();
+    private bool _updating;
+    private bool _discardOnThemeChange;
+    private bool _disposed;
+    private string? _filePath;
 
-    private static readonly string[] SemanticSlotNames =
+    /// <summary>Dialogs and logging are supplied by the host; tests can exercise the editor without either.</summary>
+    public PaletteEditorViewModel(IThemeService themeService, ResourceDictionary resources,
+        IPaletteFileDialogs? dialogs = null, ILogger<PaletteEditorViewModel>? logger = null)
     {
-        "Surface", "SurfaceAlt", "Border",
-        "Accent", "AccentHover", "AccentPressed",
-        "TextPrimary", "TextSecondary",
-        "Success", "Warning", "Error", "Info",
-    };
-
-    private static readonly string[] ExtendedSlotNames =
-    {
-        "Blue",
-    };
-
-    public PaletteEditorViewModel(IThemeService themeService)
-    {
-        ArgumentNullException.ThrowIfNull(themeService);
-        CanonicalSlots = new ObservableCollection<SlotViewModel>();
-        SemanticSlots = new ObservableCollection<SlotViewModel>();
-        ExtendedSlots = new ObservableCollection<SlotViewModel>();
+        _themeService = themeService ?? throw new ArgumentNullException(nameof(themeService));
+        _resources = resources ?? throw new ArgumentNullException(nameof(resources));
+        _dialogs = dialogs; _logger = logger;
         ReloadFromTheme();
-        themeService.ThemeChanged += (_, _) => ReloadFromTheme();
+        themeService.ThemeChanged += OnThemeChanged;
     }
+    /// <summary>Canonical colour rows.</summary>
+    public ObservableCollection<SlotViewModel> CanonicalSlots { get; } = new ObservableCollection<SlotViewModel>();
+    /// <summary>Semantic colour rows.</summary>
+    public ObservableCollection<SlotViewModel> SemanticSlots { get; } = new ObservableCollection<SlotViewModel>();
+    /// <summary>Extended colour rows.</summary>
+    public ObservableCollection<SlotViewModel> ExtendedSlots { get; } = new ObservableCollection<SlotViewModel>();
+    private IEnumerable<SlotViewModel> AllSlots => CanonicalSlots.Concat(SemanticSlots).Concat(ExtendedSlots);
+    [ObservableProperty] private string _paletteName = string.Empty;
+    [ObservableProperty] private bool _isDirty;
+    [ObservableProperty] private bool _isBusy;
+    [ObservableProperty] private bool _showOriginal;
+    [ObservableProperty] private string _status = string.Empty;
+    /// <summary>Original provenance retained in every exported document.</summary>
+    public string Attribution => _current.Attribution;
+    /// <summary>Localized dirty state.</summary>
+    public string DocumentState => IsDirty ? EditorText.Modified : EditorText.Clean;
+    /// <summary>Editing is disabled during file operations.</summary>
+    public bool CanEdit => !IsBusy;
 
-    /// <summary>The 12 canonical palette slots (Background/Cyan/Purple...).</summary>
-    public ObservableCollection<SlotViewModel> CanonicalSlots { get; }
-
-    /// <summary>The 12 semantic tokens (Surface/Accent/TextPrimary/Success...).</summary>
-    public ObservableCollection<SlotViewModel> SemanticSlots { get; }
-
-    /// <summary>The extended accent slots (Blue).</summary>
-    public ObservableCollection<SlotViewModel> ExtendedSlots { get; }
-
-    [RelayCommand]
-    private void ResetAll()
+    private void OnThemeChanged(object? sender, ThemeChangedEventArgs args)
     {
-        foreach (SlotViewModel slot in CanonicalSlots)
-        {
-            slot.ResetCommand.Execute(null);
-        }
-        foreach (SlotViewModel slot in SemanticSlots)
-        {
-            slot.ResetCommand.Execute(null);
-        }
-        foreach (SlotViewModel slot in ExtendedSlots)
-        {
-            slot.ResetCommand.Execute(null);
-        }
+        if ((IsDirty || IsBusy) && _dialogs is not null && !_discardOnThemeChange)
+        { ApplyPreview(); Status = EditorText.Kept; return; }
+        _discardOnThemeChange = false;
+        ReloadFromTheme();
     }
-
     private void ReloadFromTheme()
     {
-        CanonicalSlots.Clear();
-        SemanticSlots.Clear();
-        ExtendedSlots.Clear();
-        Populate(CanonicalSlots, CanonicalSlotNames);
-        Populate(SemanticSlots, SemanticSlotNames);
-        Populate(ExtendedSlots, ExtendedSlotNames);
+        _resources.MergedDictionaries.Remove(_overrides);
+        string name = "Custom" + _themeService.CurrentTheme;
+        string attribution = _resources["ThemeAttribution"] as string ?? BuiltInPaletteAttribution.Describe(_themeService.CurrentTheme);
+        LoadDocument(PaletteResources.Capture(_resources, name, attribution), null);
     }
-
-    private static void Populate(ObservableCollection<SlotViewModel> target, string[] names)
+    private void PopulateRows()
     {
+        _updating = true;
+        try
+        {
+            PaletteName = _current.Name;
+            Populate(CanonicalSlots, PaletteSlots.Canonical);
+            Populate(SemanticSlots, PaletteSlots.Semantic);
+            Populate(ExtendedSlots, PaletteSlots.Extended);
+        }
+        finally { _updating = false; }
+        OnPropertyChanged(nameof(Attribution));
+        ApplyPreview(); RefreshState();
+    }
+    private void Populate(ObservableCollection<SlotViewModel> rows, IReadOnlyList<string> names)
+    {
+        rows.Clear();
         foreach (string name in names)
         {
-            string resourceKey = name + "Brush";
-            if (Application.Current.Resources[resourceKey] is SolidColorBrush brush)
-            {
-                target.Add(new SlotViewModel(name, resourceKey, brush.Color));
-            }
+            PaletteValidation.TryParseColor(_original.Colors[name], out Color original);
+            SlotViewModel slot = new SlotViewModel(name, name + "Brush", original, ApplyOverride, RefreshState);
+            slot.Hex = _current.Colors[name];
+            rows.Add(slot);
         }
+    }
+    private void ApplyPreview()
+    {
+        _resources.MergedDictionaries.Remove(_overrides);
+        _overrides.Clear();
+        ThemePalette preview = ShowOriginal ? _original : _current;
+        foreach (KeyValuePair<string, string> entry in preview.Colors)
+        {
+            PaletteValidation.TryParseColor(entry.Value, out Color color);
+            SolidColorBrush brush = new SolidColorBrush(color); brush.Freeze();
+            _overrides[entry.Key + "Brush"] = brush;
+            _overrides[entry.Key + "Color"] = color;
+        }
+        _resources.MergedDictionaries.Add(_overrides);
+        RefreshDiagnostics();
+    }
+    partial void OnShowOriginalChanged(bool value) => ApplyPreview();
+    partial void OnIsBusyChanged(bool value) { OnPropertyChanged(nameof(CanEdit)); RefreshState(); }
+    /// <summary>Releases the event subscription and only the editor-owned resources.</summary>
+    public void Dispose()
+    {
+        if (_disposed) { return; }
+        _disposed = true;
+        _themeService.ThemeChanged -= OnThemeChanged;
+        _resources.MergedDictionaries.Remove(_overrides);
     }
 }

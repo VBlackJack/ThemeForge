@@ -16,6 +16,7 @@ using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ThemeForge.Theme.Persistence;
+using ThemeForge.Theme.Palettes;
 
 namespace ThemeForge.Theme.DependencyInjection;
 
@@ -23,7 +24,7 @@ namespace ThemeForge.Theme.DependencyInjection;
 /// Dependency injection helpers that register the ThemeForge theming engine in a
 /// <see cref="IServiceCollection"/>.
 /// </summary>
-public static class ServiceCollectionExtensions
+public static partial class ServiceCollectionExtensions
 {
     /// <summary>
     /// Registers <see cref="ThemeService"/> as the backing singleton and exposes
@@ -57,6 +58,8 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(application);
 
         services.TryAddSingleton<IThemeService>(_ => new ThemeService(application, availableThemes));
+        services.TryAddSingleton<IExternalThemeCatalog>(
+            static sp => (IExternalThemeCatalog)sp.GetRequiredService<IThemeService>());
         services.TryAddSingleton<ISystemThemeFollower>(
             static sp => (ISystemThemeFollower)sp.GetRequiredService<IThemeService>());
         services.TryAddSingleton<ISystemAccentFollower>(
@@ -97,10 +100,13 @@ public static class ServiceCollectionExtensions
 
         ThemeForgeOptions options = new ThemeForgeOptions();
         configure(options);
+        ValidateExternalPalettes(options);
         ValidateOptions(options);
 
         services.TryAddSingleton(options);
-        services.TryAddSingleton<IThemeService>(_ => new ThemeService(application, options.AvailableThemes));
+        services.TryAddSingleton<IThemeService>(_ => CreateThemeService(application, options));
+        services.TryAddSingleton<IExternalThemeCatalog>(
+            static sp => (IExternalThemeCatalog)sp.GetRequiredService<IThemeService>());
         services.TryAddSingleton<ISystemThemeFollower>(
             static sp => (ISystemThemeFollower)sp.GetRequiredService<IThemeService>());
         services.TryAddSingleton<ISystemAccentFollower>(
@@ -126,6 +132,11 @@ public static class ServiceCollectionExtensions
 
     private static void ValidateOptions(ThemeForgeOptions options)
     {
+        if (!Enum.IsDefined(options.DefaultAccentTint))
+        {
+            throw new ArgumentOutOfRangeException(nameof(options), "DefaultAccentTint is not supported.");
+        }
+
         bool hasFollowDefault = options.FollowWindowsByDefault && options.WindowsFollow is not null;
         bool hasThemeDefault = !string.IsNullOrWhiteSpace(options.DefaultTheme);
         if (!hasThemeDefault && !hasFollowDefault)

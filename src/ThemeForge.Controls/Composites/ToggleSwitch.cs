@@ -33,7 +33,7 @@ namespace ThemeForge.Controls.Composites;
 /// &lt;dfc:ToggleSwitch Content="Notifications" IsChecked="{Binding NotifyEnabled, Mode=TwoWay}"/&gt;
 /// &lt;dfc:ToggleSwitch/&gt; &lt;!-- no label --&gt;
 /// </code>
-/// State lives on the inherited <see cref="ToggleButton.IsChecked"/> DP —
+/// State lives on the inherited <see cref="ToggleButton.IsChecked"/> DP -
 /// no <c>IsOn</c> alias is introduced. The class name already conveys
 /// semantics; a redundant DP would only confuse consumers reading the API.
 /// Clicking anywhere on the control (track, thumb, or label) toggles the
@@ -50,7 +50,7 @@ public sealed class ToggleSwitch : ToggleButton
 
     /// <summary>
     /// Exposes a UIA peer that keeps the inherited Toggle pattern (correct
-    /// for an on/off control — there is no <c>ControlType.ToggleSwitch</c>
+    /// for an on/off control - there is no <c>ControlType.ToggleSwitch</c>
     /// in UIA) while surfacing <see cref="System.Windows.Controls.ContentControl.Content"/>
     /// as the accessible Name and reporting <c>ToggleSwitch</c> as the
     /// className.

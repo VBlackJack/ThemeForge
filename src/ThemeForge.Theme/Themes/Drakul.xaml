@@ -3,7 +3,7 @@
   Licensed under the Apache License, Version 2.0 (framework code + palette).
 
   Variant: Drakul  |  Family: Dark
-  Tagline: Drakul — Vlad II of the Order of the Dragon (1408), AA-compliant
+  Tagline: Drakul - Vlad II of the Order of the Dragon (1408), AA-compliant
            sibling of the canonical Dracula MIT palette.
 
   Palette attribution: derived from the canonical Dracula Theme palette
@@ -16,7 +16,7 @@
   the canonical attribution record.
 
   This variant exists because the canonical Dracula Comment (#6272A4) ratios
-  to 3.03 vs Background and 1.94 vs CurrentLine — a known historical
+  to 3.03 vs Background and 1.94 vs CurrentLine - a known historical
   accessibility shortcoming of the original 2013 design. We preserve the
   Dracula variant unchanged for canonical fidelity, and ship Drakul as the
   accessible sibling.
@@ -60,7 +60,7 @@
     <Color x:Key="ErrorColor">#FFFF5555</Color>
     <Color x:Key="InfoColor">#FF8BE9FD</Color>
 
-    <!-- Extended accent slot — original (Julien Bombled, Apache 2.0), not part of any canonical palette -->
+    <!-- Extended accent slot - original (Julien Bombled, Apache 2.0), not part of any canonical palette -->
     <Color x:Key="BlueColor">#FF70AEFF</Color>
 
     <SolidColorBrush x:Key="BackgroundBrush"      Color="{StaticResource BackgroundColor}"/>

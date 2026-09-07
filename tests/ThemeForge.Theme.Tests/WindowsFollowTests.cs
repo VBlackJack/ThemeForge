@@ -20,7 +20,7 @@ using Xunit;
 namespace ThemeForge.Theme.Tests;
 
 [Collection("ThemeService resource dictionary tests")]
-public sealed class WindowsFollowTests : IDisposable
+public sealed partial class WindowsFollowTests : IDisposable
 {
     private const string ThemeMarkerKey = "ThemeForge.ActiveThemeMarker";
     private const string AccentTintMarkerKey = "ThemeForge.ActiveAccentTintMarker";
@@ -174,120 +174,4 @@ public sealed class WindowsFollowTests : IDisposable
         themeProvider.SubscriberCount.Should().Be(0);
     }
 
-    [StaFact]
-    public void FollowWindows_WithNullOptions_Throws()
-    {
-        FakeSystemThemeProvider themeProvider = new FakeSystemThemeProvider(SystemThemeMode.Dark);
-        FakeSystemAccentProvider accentProvider = new FakeSystemAccentProvider(Color.FromRgb(17, 34, 51));
-        using ThemeService service = new ThemeService(
-            TestApplication.Instance, themeProvider, accentProvider);
-
-        Action act = () => service.FollowWindows(null!);
-
-        act.Should().Throw<ArgumentNullException>();
-    }
-
-    [StaFact]
-    public void FollowWindows_WithUnknownTheme_Throws()
-    {
-        FakeSystemThemeProvider themeProvider = new FakeSystemThemeProvider(SystemThemeMode.Dark);
-        FakeSystemAccentProvider accentProvider = new FakeSystemAccentProvider(Color.FromRgb(17, 34, 51));
-        using ThemeService service = new ThemeService(
-            TestApplication.Instance, themeProvider, accentProvider);
-
-        Action act = () => service.FollowWindows(new WindowsFollowOptions
-        {
-            LightTheme = "NotARealTheme",
-            DarkTheme = ThemeNames.Drakul,
-        });
-
-        act.Should().Throw<ArgumentException>();
-    }
-
-    private static Color ReadBrushColor(string key) =>
-        (TestApplication.Instance.Resources[key] as SolidColorBrush
-            ?? throw new InvalidOperationException($"Resource '{key}' must resolve to a SolidColorBrush.")).Color;
-
-    private static int CountMarked(string markerKey) =>
-        TestApplication.Instance.Resources.MergedDictionaries.Count(dict => dict.Contains(markerKey));
-
-    private static void ClearTaggedDictionaries()
-    {
-        Application? app = Application.Current;
-        if (app is null)
-        {
-            return;
-        }
-
-        IList<ResourceDictionary> merged = app.Resources.MergedDictionaries;
-        for (int i = merged.Count - 1; i >= 0; i--)
-        {
-            if (merged[i].Contains(ThemeMarkerKey) ||
-                merged[i].Contains(AccentTintMarkerKey) ||
-                merged[i].Contains(SystemAccentMarkerKey))
-            {
-                merged.RemoveAt(i);
-            }
-        }
-    }
-
-    private sealed class FakeSystemThemeProvider : ISystemThemeProvider, IDisposable
-    {
-        private EventHandler? _changed;
-
-        public FakeSystemThemeProvider(SystemThemeMode mode)
-        {
-            Mode = mode;
-        }
-
-        public SystemThemeMode Mode { get; private set; }
-        public bool IsDisposed { get; private set; }
-        public int SubscriberCount => _changed?.GetInvocationList().Length ?? 0;
-
-        public event EventHandler? Changed
-        {
-            add => _changed += value;
-            remove => _changed -= value;
-        }
-
-        public SystemThemeMode GetCurrentMode() => Mode;
-
-        public void Raise(SystemThemeMode mode)
-        {
-            Mode = mode;
-            _changed?.Invoke(this, EventArgs.Empty);
-        }
-
-        public void Dispose() => IsDisposed = true;
-    }
-
-    private sealed class FakeSystemAccentProvider : ISystemAccentProvider, IDisposable
-    {
-        private EventHandler? _changed;
-
-        public FakeSystemAccentProvider(Color? accent)
-        {
-            Accent = accent;
-        }
-
-        public Color? Accent { get; private set; }
-        public bool IsDisposed { get; private set; }
-        public int SubscriberCount => _changed?.GetInvocationList().Length ?? 0;
-
-        public event EventHandler? Changed
-        {
-            add => _changed += value;
-            remove => _changed -= value;
-        }
-
-        public Color? GetCurrentAccent() => Accent;
-
-        public void Raise(Color? accent)
-        {
-            Accent = accent;
-            _changed?.Invoke(this, EventArgs.Empty);
-        }
-
-        public void Dispose() => IsDisposed = true;
-    }
 }

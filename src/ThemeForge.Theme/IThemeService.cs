@@ -33,7 +33,7 @@ public interface IThemeService
 
     /// <summary>
     /// The list of theme names the service can apply. Stable, sorted,
-    /// case-sensitive — see <see cref="ThemeNames"/> for canonical constants.
+    /// case-sensitive - see <see cref="ThemeNames"/> for canonical constants.
     /// </summary>
     IReadOnlyList<string> AvailableThemes { get; }
 
@@ -53,7 +53,7 @@ public interface IThemeService
     event EventHandler<ThemeChangedEventArgs>? ThemeChanged;
 
     /// <summary>
-    /// Apply the named theme. Idempotent — applying the current theme is a
+    /// Apply the named theme. Idempotent - applying the current theme is a
     /// no-op. Unknown theme names throw <see cref="ArgumentException"/>.
     /// </summary>
     /// <param name="name">A theme name from <see cref="AvailableThemes"/>.</param>

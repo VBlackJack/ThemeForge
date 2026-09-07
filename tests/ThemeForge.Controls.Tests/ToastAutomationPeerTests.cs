@@ -105,7 +105,7 @@ public sealed class ToastAutomationPeerTests
         Toast toast = new Toast { Title = "Saved", Message = "Profile updated." };
         ToastAutomationPeer peer = new ToastAutomationPeer(toast);
 
-        peer.GetName().Should().Be("Saved — Profile updated.");
+        peer.GetName().Should().Be("Saved - Profile updated.");
     }
 
     [StaFact]

@@ -25,15 +25,15 @@ namespace ThemeForge.Controls.Composites;
 /// </summary>
 public enum BadgeSeverity
 {
-    /// <summary>Neutral outline badge — no semantic signal.</summary>
+    /// <summary>Neutral outline badge - no semantic signal.</summary>
     Default,
-    /// <summary>Positive / completed signal — maps to SuccessBrush.</summary>
+    /// <summary>Positive / completed signal - maps to SuccessBrush.</summary>
     Success,
-    /// <summary>Caution signal — maps to WarningBrush.</summary>
+    /// <summary>Caution signal - maps to WarningBrush.</summary>
     Warning,
-    /// <summary>Failure / blocking signal — maps to ErrorBrush.</summary>
+    /// <summary>Failure / blocking signal - maps to ErrorBrush.</summary>
     Error,
-    /// <summary>Informational signal — maps to InfoBrush.</summary>
+    /// <summary>Informational signal - maps to InfoBrush.</summary>
     Info,
 }
 

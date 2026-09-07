@@ -1,7 +1,8 @@
 <Application
     x:Class="ThemeForge.Studio.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -12,6 +13,7 @@
                 -->
                 <ResourceDictionary Source="pack://application:,,,/ThemeForge.Controls;component/Styles/Studio.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <sys:String x:Key="ToastCloseButtonName">Fermer la notification</sys:String>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

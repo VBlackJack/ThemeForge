@@ -2,13 +2,18 @@
   Copyright 2026 Julien Bombled
   Licensed under the Apache License, Version 2.0
 
-  Implicit Button style — applied to every Button in any consumer that merges
+  Implicit Button style - applied to every Button in any consumer that merges
   Styles/Studio.xaml. All color references go through DynamicResource so the
   swap reacts to IThemeService.ApplyTheme at runtime.
 -->
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:theming="clr-namespace:ThemeForge.Controls.Theming">
+
+    <theming:ContrastForegroundConverter x:Key="ButtonContrastConverter"/>
+    <SolidColorBrush x:Key="ButtonContrastDarkBrush" Color="#000000"/>
+    <SolidColorBrush x:Key="ButtonContrastLightBrush" Color="#FFFFFF"/>
 
     <Style TargetType="{x:Type Button}">
         <Setter Property="Background"    Value="{DynamicResource SurfaceAltBrush}"/>
@@ -33,8 +38,16 @@
                         <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           Margin="{TemplateBinding Padding}"
-                                          RecognizesAccessKey="True"
-                                          TextElement.Foreground="{TemplateBinding Foreground}"/>
+                                          RecognizesAccessKey="True">
+                            <TextElement.Foreground>
+                                <MultiBinding Converter="{StaticResource ButtonContrastConverter}">
+                                    <Binding Path="Foreground" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                    <Binding Path="Background" ElementName="border"/>
+                                    <Binding Source="{StaticResource ButtonContrastDarkBrush}"/>
+                                    <Binding Source="{StaticResource ButtonContrastLightBrush}"/>
+                                </MultiBinding>
+                            </TextElement.Foreground>
+                        </ContentPresenter>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsDefault" Value="True">

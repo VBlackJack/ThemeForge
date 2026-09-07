@@ -36,7 +36,7 @@ public sealed class Avatar : Control
 
     public Avatar()
     {
-        // Sync Width/Height with the default Size at construction — the
+        // Sync Width/Height with the default Size at construction - the
         // PropertyChangedCallback does not fire for the DP's default value.
         Width = Size;
         Height = Size;

@@ -49,7 +49,7 @@ public sealed class CardAutomationPeer : FrameworkElementAutomationPeer
             return headerText;
         }
 
-        // 3. No name available — let consumers know via empty string (default).
+        // 3. No name available - let consumers know via empty string (default).
         return string.Empty;
     }
 }

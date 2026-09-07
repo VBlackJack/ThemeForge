@@ -105,7 +105,7 @@ public sealed partial class ThemeService
             changed = true;
         }
 
-        if (changed && !string.IsNullOrWhiteSpace(_currentTheme))
+        if (changed && !_disposed && !string.IsNullOrWhiteSpace(_currentTheme))
         {
             RaiseCurrentThemeChanged();
         }

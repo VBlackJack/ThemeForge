@@ -162,7 +162,7 @@ public sealed class ThemeServiceBehavioralTests : IDisposable
     private static void ClearTaggedDictionaries()
     {
         // Application.Current may be null if no [StaFact] has touched
-        // TestApplication.Instance yet — nothing to clean in that case.
+        // TestApplication.Instance yet - nothing to clean in that case.
         Application? app = Application.Current;
         if (app is null)
         {

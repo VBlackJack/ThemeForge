@@ -50,5 +50,9 @@ public sealed partial class ThemeService : IWindowsThemeFollower
         {
             EnableSystemAccentFollow();
         }
+        else
+        {
+            DisableSystemAccentFollow();
+        }
     }
 }

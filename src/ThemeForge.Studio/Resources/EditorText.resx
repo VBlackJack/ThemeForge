@@ -1,0 +1,113 @@
+<root>
+  <data name="Title" xml:space="preserve">
+    <value>Éditeur de palette</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Créez une palette, comparez vos couleurs et réutilisez le fichier dans vos applications.</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Ouvrir…</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Exporter…</value>
+  </data>
+  <data name="Undo" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Redo" xml:space="preserve">
+    <value>Rétablir</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Réinitialiser</value>
+  </data>
+  <data name="ResetAll" xml:space="preserve">
+    <value>Tout réinitialiser</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>Nouvelle palette</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Identifiant de la palette</value>
+  </data>
+  <data name="NameHint" xml:space="preserve">
+    <value>Une majuscule puis des lettres ou chiffres sans espaces.</value>
+  </data>
+  <data name="Modified" xml:space="preserve">
+    <value>Modifications non enregistrées</value>
+  </data>
+  <data name="Clean" xml:space="preserve">
+    <value>Palette enregistrée ou inchangée</value>
+  </data>
+  <data name="Before" xml:space="preserve">
+    <value>Avant</value>
+  </data>
+  <data name="After" xml:space="preserve">
+    <value>Après</value>
+  </data>
+  <data name="Original" xml:space="preserve">
+    <value>Afficher l’original</value>
+  </data>
+  <data name="Canonical" xml:space="preserve">
+    <value>Couleurs canoniques</value>
+  </data>
+  <data name="Semantic" xml:space="preserve">
+    <value>Couleurs sémantiques</value>
+  </data>
+  <data name="Extended" xml:space="preserve">
+    <value>Accents supplémentaires</value>
+  </data>
+  <data name="Attribution" xml:space="preserve">
+    <value>Attribution conservée</value>
+  </data>
+  <data name="Diagnostics" xml:space="preserve">
+    <value>Contrastes du texte (objectif : 4,5:1)</value>
+  </data>
+  <data name="InvalidColor" xml:space="preserve">
+    <value>Saisissez une couleur opaque #RRGGBB.</value>
+  </data>
+  <data name="InvalidDocument" xml:space="preserve">
+    <value>Vérifiez l’identifiant et les couleurs avant d’enregistrer.</value>
+  </data>
+  <data name="Saved" xml:space="preserve">
+    <value>Palette enregistrée.</value>
+  </data>
+  <data name="Opened" xml:space="preserve">
+    <value>Palette ouverte.</value>
+  </data>
+  <data name="Failed" xml:space="preserve">
+    <value>Impossible de lire ou d’enregistrer la palette. Le document courant est conservé.</value>
+  </data>
+  <data name="Discard" xml:space="preserve">
+    <value>Des modifications ne sont pas enregistrées. Voulez-vous les abandonner ?</value>
+  </data>
+  <data name="DialogTitle" xml:space="preserve">
+    <value>Palette ThemeForge</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Palette ThemeForge (*.json)|*.json</value>
+  </data>
+  <data name="Kept" xml:space="preserve">
+    <value>Le thème a changé ; votre brouillon reste affiché et peut être enregistré.</value>
+  </data>
+  <data name="HexHelp" xml:space="preserve">
+    <value>Couleur hexadécimale opaque à six chiffres.</value>
+  </data>
+  <data name="Sample" xml:space="preserve">
+    <value>Exemple de texte long pour vérifier la lisibilité de votre palette.</value>
+  </data>
+  <data name="DefaultAttribution" xml:space="preserve">
+    <value>Palette dérivée de ThemeForge. Consultez l’attribution conservée dans le fichier exporté.</value>
+  </data>
+  <data name="Busy" xml:space="preserve">
+    <value>Enregistrement ou ouverture en cours.</value>
+  </data>
+  <data name="ContrastPass" xml:space="preserve">
+    <value>Conforme</value>
+  </data>
+  <data name="ContrastFail" xml:space="preserve">
+    <value>À améliorer</value>
+  </data>
+</root>

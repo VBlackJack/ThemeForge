@@ -5,9 +5,9 @@
   see NOTICE for the canonical attribution record.
 
   Variant: Tarn  |  Family: Dark  |  Bg Hue: 170°
-  Tagline: Highland tarn — petrol-teal dark, the still water that does not reflect.
+  Tagline: Highland tarn - petrol-teal dark, the still water that does not reflect.
 
-  Engineered with uniform-Oklab-L* bands (v6 final) — perceptually uniform
+  Engineered with uniform-Oklab-L* bands (v6 final) - perceptually uniform
   accent luminance so Yellow stays yellow, Purple stays purple, all
   accents clear WCAG AA on their Bg / CurrentLine. Comments stay on
   uniform-WCAG-L (target 0.38) to clear AA on all 10 Darks.
@@ -50,7 +50,7 @@
     <Color x:Key="ErrorColor">#FFE58585</Color>
     <Color x:Key="InfoColor">#FF2AB9C8</Color>
 
-    <!-- Extended accent slot — original (Julien Bombled, Apache 2.0), not part of any canonical palette -->
+    <!-- Extended accent slot - original (Julien Bombled, Apache 2.0), not part of any canonical palette -->
     <Color x:Key="BlueColor">#FF63A6FF</Color>
 
     <SolidColorBrush x:Key="BackgroundBrush"          Color="{StaticResource BackgroundColor}"/>

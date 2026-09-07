@@ -24,25 +24,8 @@ namespace ThemeForge.Theme.Tests;
 /// Pure orchestration tests for the bootstrap. No WPF Application and no STA: the
 /// validation of Model A is that the orchestrator runs entirely against fakes.
 /// </summary>
-public sealed class ThemeForgeStartupTests
+public sealed partial class ThemeForgeStartupTests
 {
-    [Fact]
-    public void Run_NoStore_AppliesDefaultThemeAndAccent()
-    {
-        FakeThemeService service = new FakeThemeService();
-        ThemeForgeOptions options = new ThemeForgeOptions
-        {
-            DefaultTheme = ThemeNames.Carmilla,
-            DefaultAccentTint = AccentTint.Cyan,
-        };
-        ThemeForgeStartup startup = Create(service, options, store: null);
-
-        startup.Run();
-
-        service.CurrentTheme.Should().Be(ThemeNames.Carmilla);
-        service.CurrentAccentTint.Should().Be(AccentTint.Cyan);
-    }
-
     [Fact]
     public void Run_NoStore_FollowDefault_ArmsFollow()
     {
@@ -200,112 +183,4 @@ public sealed class ThemeForgeStartupTests
         store.SaveCount.Should().Be(0);
     }
 
-    private static ThemeForgeStartup Create(
-        FakeThemeService service, ThemeForgeOptions options, IThemePreferenceStore? store) =>
-        new ThemeForgeStartup(service, service, service, options, store);
-
-    private static WindowsFollowOptions Mapping() =>
-        new WindowsFollowOptions { LightTheme = ThemeNames.Folio, DarkTheme = ThemeNames.Drakul };
-
-    private sealed class FakeThemeService :
-        IThemeService, ISystemThemeFollower, ISystemAccentFollower, IWindowsThemeFollower
-    {
-        private EventHandler<ThemeChangedEventArgs>? _themeChanged;
-        private int _revision;
-
-        public FakeThemeService(IReadOnlyList<string>? availableThemes = null)
-        {
-            AvailableThemes = availableThemes ?? ThemeNames.All;
-        }
-
-        public string CurrentTheme { get; private set; } = string.Empty;
-        public int ThemeRevision => _revision;
-        public IReadOnlyList<string> AvailableThemes { get; }
-        public IReadOnlyList<AccentTint> AvailableAccentTints { get; } = AccentTints.All;
-        public AccentTint CurrentAccentTint { get; private set; } = AccentTint.Default;
-        public bool IsFollowingSystem { get; private set; }
-        public bool IsFollowingSystemAccent { get; private set; }
-        public int ThemeChangedSubscriberCount => _themeChanged?.GetInvocationList().Length ?? 0;
-
-        public event EventHandler<ThemeChangedEventArgs>? ThemeChanged
-        {
-            add => _themeChanged += value;
-            remove => _themeChanged -= value;
-        }
-
-        public void ApplyTheme(string name)
-        {
-            IsFollowingSystem = false;
-            IsFollowingSystemAccent = false;
-            CurrentTheme = name;
-            Raise();
-        }
-
-        public void ApplyAccentTint(AccentTint tint)
-        {
-            IsFollowingSystemAccent = false;
-            CurrentAccentTint = tint;
-            Raise();
-        }
-
-        public void EnableSystemFollow(string lightTheme, string darkTheme)
-        {
-            IsFollowingSystem = true;
-            CurrentTheme = darkTheme;
-            Raise();
-        }
-
-        public void DisableSystemFollow() => IsFollowingSystem = false;
-
-        public void EnableSystemAccentFollow() => IsFollowingSystemAccent = true;
-
-        public void DisableSystemAccentFollow() => IsFollowingSystemAccent = false;
-
-        public void FollowWindows(WindowsFollowOptions options)
-        {
-            IsFollowingSystem = true;
-            IsFollowingSystemAccent = options.FollowAccent;
-            CurrentTheme = options.DarkTheme;
-            Raise();
-        }
-
-        public void SimulateSystemThemeChange(string resolvedTheme)
-        {
-            CurrentTheme = resolvedTheme;
-            Raise();
-        }
-
-        private void Raise()
-        {
-            _revision++;
-            _themeChanged?.Invoke(this, new ThemeChangedEventArgs(CurrentTheme, CurrentTheme, _revision));
-        }
-    }
-
-    private sealed class RecordingPreferenceStore : IThemePreferenceStore
-    {
-        private readonly ThemePreference? _initial;
-
-        public RecordingPreferenceStore(ThemePreference? initial = null)
-        {
-            _initial = initial;
-        }
-
-        public int SaveCount { get; private set; }
-        public ThemePreference? Saved { get; private set; }
-        public bool ThrowOnSave { get; set; }
-
-        public ThemePreference? Load() => _initial;
-
-        public void Save(ThemePreference preference)
-        {
-            if (ThrowOnSave)
-            {
-                throw new IOException("Simulated write failure.");
-            }
-
-            SaveCount++;
-            Saved = preference;
-        }
-    }
 }

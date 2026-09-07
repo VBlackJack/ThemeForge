@@ -40,7 +40,7 @@ namespace ThemeForge.Controls.Composites;
 /// <see cref="IsSelected"/> is intentionally passive: clicking the chip body
 /// raises <c>Click</c> and invokes <c>Command</c>, but never toggles
 /// IsSelected on its own. The consumer drives selection (toggle handler or
-/// binding) — same contract as Material Design filter chips.
+/// binding) - same contract as Material Design filter chips.
 /// </remarks>
 public sealed class Chip : ButtonBase
 {

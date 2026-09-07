@@ -43,28 +43,28 @@ namespace ThemeForge.Theme;
 /// </remarks>
 public static class ThemeNames
 {
-    // Dracula original — MIT, Zeno Rocha
+    // Dracula original - MIT, Zeno Rocha
     public const string Dracula = "Dracula";
 
     // 10 Dark family (Background hue rotation, ≥ 20° spacing)
-    public const string Striga = "Striga";   // H  12° — Romanian night-witch
-    public const string Cinder = "Cinder";  // H  50° — mourning hearth, warm amber
-    public const string Bracken = "Bracken"; // H 110° — bracken fern, necropolis sentinel
+    public const string Striga = "Striga";   // H  12° - Romanian night-witch
+    public const string Cinder = "Cinder";  // H  50° - mourning hearth, warm amber
+    public const string Bracken = "Bracken"; // H 110° - bracken fern, necropolis sentinel
 
-    // 16th variant — Dracula sibling, AA-compliant
+    // 16th variant - Dracula sibling, AA-compliant
     public const string Drakul = "Drakul"; // Canonical Dracula MIT + Comment lifted to clear WCAG AA
-    public const string Tarn = "Tarn";    // H 170° — highland tarn, petrol-teal
-    public const string Mortis = "Mortis";   // H 200° — slate-cyan morgue
-    public const string Slate = "Slate";    // H 225° — cold monastery stone
-    public const string Magellan = "Magellan"; // H 234° — Magellan corporate indigo (brand-derived)
-    public const string Voivode = "Voivode";  // H 255° — Wallachian throne, deep indigo
-    public const string Carmilla = "Carmilla"; // H 290° — Le Fanu velvet violet
-    public const string Whitby = "Whitby";   // H 320° — North Sea slate-mauve
-    public const string Vesper = "Vesper";   // H 345° — chapel ruin rose
+    public const string Tarn = "Tarn";    // H 170° - highland tarn, petrol-teal
+    public const string Mortis = "Mortis";   // H 200° - slate-cyan morgue
+    public const string Slate = "Slate";    // H 225° - cold monastery stone
+    public const string Magellan = "Magellan"; // H 234° - Magellan corporate indigo (brand-derived)
+    public const string Voivode = "Voivode";  // H 255° - Wallachian throne, deep indigo
+    public const string Carmilla = "Carmilla"; // H 290° - Le Fanu velvet violet
+    public const string Whitby = "Whitby";   // H 320° - North Sea slate-mauve
+    public const string Vesper = "Vesper";   // H 345° - chapel ruin rose
 
     // 2 Light family
-    public const string Parchment = "Parchment"; // H  40° — warm vellum cream
-    public const string Folio = "Folio";    // H 220° — cool ivory
+    public const string Parchment = "Parchment"; // H  40° - warm vellum cream
+    public const string Folio = "Folio";    // H 220° - cool ivory
 
     // 2 Alt family (signature accent broken)
     public const string Wormwood = "Wormwood";  // viridian Green broken
@@ -79,7 +79,7 @@ public static class ThemeNames
     {
         Dracula,
         Drakul,
-        // Dark — Bg hue 0° → 360°
+        // Dark - Bg hue 0° → 360°
         Striga, Cinder, Bracken, Tarn, Mortis, Slate, Magellan, Voivode, Carmilla, Whitby, Vesper,
         // Light
         Parchment, Folio,

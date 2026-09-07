@@ -25,7 +25,7 @@ namespace ThemeForge.Controls.Composites;
 /// <remarks>
 /// Add toasts via <c>host.Items.Add(new Toast { ... })</c>. The host does not
 /// currently support <see cref="ItemsControl.ItemsSource"/> binding for the
-/// MVP — items are managed directly.
+/// MVP - items are managed directly.
 /// </remarks>
 public sealed class ToastHost : ItemsControl
 {
@@ -38,7 +38,7 @@ public sealed class ToastHost : ItemsControl
 
     /// <summary>
     /// Tells the ItemsControl framework that a <see cref="Toast"/> is already
-    /// its own container — no <see cref="System.Windows.Controls.ContentPresenter"/>
+    /// its own container - no <see cref="System.Windows.Controls.ContentPresenter"/>
     /// wrapper is needed. Without this override the wrapped Toast never enters
     /// the visual tree directly, its Loaded event never fires, and the
     /// fade-in storyboard never runs (Opacity stays at 0).

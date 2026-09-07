@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using ThemeForge.Theme.Persistence;
+using ThemeForge.Theme.Palettes;
 
 namespace ThemeForge.Theme.DependencyInjection;
 
@@ -39,6 +40,9 @@ public sealed class ThemeForgeOptions
     /// set is used. Absorbs the parameter of the legacy registration overload.
     /// </summary>
     public IReadOnlyList<string>? AvailableThemes { get; set; }
+
+    /// <summary>Validated data-only palettes, loaded asynchronously before registration.</summary>
+    public IReadOnlyList<ThemePalette> Palettes { get; set; } = Array.Empty<ThemePalette>();
 
     /// <summary>
     /// The light/dark theme pair (and accent-follow choice) used both when Follow

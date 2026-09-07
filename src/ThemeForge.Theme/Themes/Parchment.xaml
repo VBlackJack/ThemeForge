@@ -5,9 +5,9 @@
   see NOTICE for the canonical attribution record.
 
   Variant: Parchment  |  Family: Light  |  Bg Hue: 40°
-  Tagline: Aged vellum — warm cream paper, ink-dark accents, scholarly hush.
+  Tagline: Aged vellum - warm cream paper, ink-dark accents, scholarly hush.
 
-  Engineered with uniform-Oklab-L* bands (v6 final) — perceptually uniform
+  Engineered with uniform-Oklab-L* bands (v6 final) - perceptually uniform
   accent luminance so Yellow stays yellow, Purple stays purple, all
   accents clear WCAG AA on their Bg / CurrentLine. Comments stay on
   uniform-WCAG-L (target 0.38) to clear AA on all 10 Darks.
@@ -50,7 +50,7 @@
     <Color x:Key="ErrorColor">#FFB81717</Color>
     <Color x:Key="InfoColor">#FF0F707B</Color>
 
-    <!-- Extended accent slot — original (Julien Bombled, Apache 2.0), not part of any canonical palette -->
+    <!-- Extended accent slot - original (Julien Bombled, Apache 2.0), not part of any canonical palette -->
     <Color x:Key="BlueColor">#FF005FC2</Color>
 
     <SolidColorBrush x:Key="BackgroundBrush"          Color="{StaticResource BackgroundColor}"/>

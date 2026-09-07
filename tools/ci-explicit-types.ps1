@@ -19,7 +19,7 @@ function Write-Section {
 
     $script:StepCount++
     Write-Host ''
-    Write-Host "[$script:StepCount/6] $Name"
+    Write-Host "[$script:StepCount/7] $Name"
 }
 
 function Invoke-Native {
@@ -105,11 +105,22 @@ function Assert-ExplicitTypes {
     Write-Host 'No var declarations found in src/ or tests/.'
 }
 
+function Assert-SourceFileLength {
+    Write-Section 'Verify source files stay within 200 lines'
+    $files = Get-ChildItem -Path (Join-Path $RepositoryRoot 'src'), (Join-Path $RepositoryRoot 'tests') -Recurse -File |
+        Where-Object { $_.Extension -in '.cs', '.xaml' -and $_.FullName -notmatch '[\\/](bin|obj)[\\/]' }
+    foreach ($file in $files) {
+        [int]$count = [System.IO.File]::ReadAllLines($file.FullName).Length
+        if ($count -gt 200) { throw "Source file exceeds 200 lines: $($file.FullName) ($count)." }
+    }
+}
+
 try {
     Push-Location $RepositoryRoot
     Assert-DotNetSdk
     Assert-LicenseHeaders
     Assert-ExplicitTypes
+    Assert-SourceFileLength
 
     Write-Section 'Restore'
     Invoke-Native dotnet restore $SolutionPath
@@ -118,7 +129,7 @@ try {
     Invoke-Native dotnet build $SolutionPath --configuration Release --no-restore
 
     Write-Section 'Test (Release)'
-    Invoke-Native dotnet test $SolutionPath --configuration Release --no-build --verbosity normal
+    Invoke-Native dotnet test $SolutionPath '-m:1' --configuration Release --no-build --verbosity normal
 
     $elapsed = (Get-Date) - $script:StartedAt
     Write-Host ''

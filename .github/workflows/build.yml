@@ -23,39 +23,22 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Verify Apache 2.0 headers (.cs files)
+      - name: Shared verification gates
         shell: pwsh
-        run: |
-          $missing = @()
-          Get-ChildItem -Path src, tests -Recurse -Filter *.cs `
-            | Where-Object { $_.FullName -notmatch '\\(bin|obj)\\' } `
-            | ForEach-Object {
-                $content = Get-Content $_.FullName -Raw
-                if ($content -notmatch 'Copyright \d{4} Julien Bombled' -or
-                    $content -notmatch 'Apache License, Version 2\.0') {
-                    $missing += $_.FullName
-                }
-            }
-          if ($missing.Count -gt 0) {
-              Write-Host "::error::Missing Apache 2.0 header in $($missing.Count) file(s):"
-              $missing | ForEach-Object { Write-Host "  - $_" }
-              exit 1
-          }
-          Write-Host "All .cs files have proper Apache 2.0 headers."
+        run: ./tools/ci-verify.ps1 -OutputDirectory artifacts
 
-      - name: Verify XAML attribution headers
+      - name: Capture visual and accessibility matrix
         shell: pwsh
-        run: pwsh -NoLogo -NoProfile -File tools/ci-xaml-headers.ps1
+        run: dotnet tests/ThemeForge.Quality/bin/Release/net10.0-windows/ThemeForge.Quality.dll visual tools/quality-settings.json artifacts/visual
 
-      - name: Restore
-        run: dotnet restore ThemeForge.slnx
-
-      - name: Build (Release)
-        run: dotnet build ThemeForge.slnx --configuration Release --no-restore
-
-      - name: Test (Release)
-        # -m:1 forces MSBuild to run the per-project VSTest invocations
-        # sequentially. Both test assemblies are net10.0-windows (WPF); running
-        # their testhosts in parallel deadlocks on shared STA / Application /
-        # Dispatcher state and hangs the run indefinitely. Do not remove -m:1.
-        run: dotnet test ThemeForge.slnx -m:1 --configuration Release --no-build --verbosity normal
+      - name: Upload validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-evidence
+          path: |
+            artifacts/visual
+            artifacts/performance
+            artifacts/document
+            artifacts/consumer-*/*.json
+            artifacts/consumer-*/failure.txt

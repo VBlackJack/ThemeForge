@@ -1,0 +1,27 @@
+{
+  "Iterations": 200,
+  "WindowCycles": 25,
+  "Width": 1280,
+  "Height": 900,
+  "Themes": [
+    "Dracula",
+    "Folio",
+    "Magellan"
+  ],
+  "Scales": [
+    1,
+    1.25,
+    1.5,
+    2
+  ],
+  "SampleText": "A long notification and field label must remain readable when the layout is enlarged, with keyboard focus, disabled controls and validation feedback visible.",
+  "ActionText": "Apply palette",
+  "DisabledText": "Unavailable action",
+  "ErrorText": "The field contains an invalid value.",
+  "MaximumSwitchP95Ms": 10,
+  "MaximumAllocatedBytesPerSwitch": 160000,
+  "MaximumRetainedBytes": 16777216,
+  "EditedPaletteName": "StudioSample",
+  "EditedBackground": "#223344",
+  "MaximumFirstGalleryMs": 5000
+}

@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ThemeForge palette v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "name",
+    "displayName",
+    "family",
+    "attribution",
+    "colors"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Za-z0-9]{0,63}$"
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "family": {
+      "enum": [
+        "Light",
+        "Dark",
+        "Root",
+        "Alt"
+      ]
+    },
+    "attribution": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    },
+    "colors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Background",
+        "CurrentLine",
+        "Selection",
+        "Foreground",
+        "Comment",
+        "Cyan",
+        "Green",
+        "Orange",
+        "Pink",
+        "Purple",
+        "Red",
+        "Yellow",
+        "Surface",
+        "SurfaceAlt",
+        "Accent",
+        "AccentHover",
+        "AccentPressed",
+        "TextPrimary",
+        "TextSecondary",
+        "Border",
+        "Success",
+        "Warning",
+        "Error",
+        "Info",
+        "Blue"
+      ],
+      "properties": {
+        "Background": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "CurrentLine": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "Selection": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "Foreground": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "Comment": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "Cyan": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "Green": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "Orange": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "Pink": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "Purple": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "Red": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "Yellow": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "Surface": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "SurfaceAlt": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "Accent": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "AccentHover": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "AccentPressed": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "TextPrimary": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "TextSecondary": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "Border": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "Success": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "Warning": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "Error": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "Info": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        },
+        "Blue": {
+          "type": "string",
+          "pattern": "^#([Ff]{2})?[A-Fa-f0-9]{6}$"
+        }
+      }
+    }
+  }
+}

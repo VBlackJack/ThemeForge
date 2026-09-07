@@ -21,14 +21,14 @@ cross-review passes. v6 carries the v5 uniform-Oklab-L* accent model, then adds
 the Bracken rename and the Drakul AA-compliant root sibling.
 
 --------------------------------------------------------------------------------
-1. Dracula Theme — MIT (Zeno Rocha)
+1. Dracula Theme - MIT (Zeno Rocha)
 --------------------------------------------------------------------------------
 
   - Dracula        Dracula Theme    (MIT)
                    https://github.com/dracula/dracula-theme
 
   Note : the canonical Dracula palette has a historical accessibility
-  shortcoming — Comment color #6272A4 ratios to 3.03 vs Background and 1.94
+  shortcoming - Comment color #6272A4 ratios to 3.03 vs Background and 1.94
   vs CurrentLine, both below WCAG 2.1 AA 4.5:1 threshold. We preserve the
   variant unchanged for canonical fidelity. See variant Drakul (below) for
   the AA-compliant sibling.

@@ -1,61 +1,59 @@
-# Hook pre-push local
+# Local pre-push hook
 
-ThemeForge versionne un hook `pre-push` qui reproduit le workflow CI GitHub
-avant chaque push. Il sert à attraper localement les écarts d'analyseurs .NET,
-les headers manquants et les régressions de build/test avant que GitHub Actions
-ne les bloque.
+English | [Français](fr/pre-push-hook.md)
 
-## Activation
+ThemeForge includes a versioned `pre-push` hook that runs the local equivalents of the GitHub CI checks to detect analyzer violations, missing license headers, and build or test failures before pushing.
 
-Chaque clone doit activer le chemin de hooks versionné :
+## Enable the hook
+
+Configure each clone:
 
 ```pwsh
 git config core.hooksPath .githooks
 ```
 
-Vérification :
+Verify the setting:
 
 ```pwsh
 git config --get core.hooksPath
 ```
 
-La sortie attendue est `.githooks`.
+Expected output: `.githooks`.
 
-## Exécution manuelle
-
-Le hook appelle d'abord le gate local principal :
+## Run manually
 
 ```pwsh
 pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File tools/ci-explicit-types.ps1
 ```
 
-Ce script exécute les checks locaux suivants :
+The script checks the .NET 10 SDK, Apache 2.0 headers on C# files, and explicit types in `src/` and `tests/` (`var` is prohibited). It then runs:
 
-- vérification du SDK .NET 10
-- headers Apache 2.0 sur les fichiers `.cs`
-- types explicites dans `src/` et `tests/` (`var` interdit)
-- `dotnet restore ThemeForge.slnx`
-- `dotnet build ThemeForge.slnx --configuration Release --no-restore`
-- `dotnet test ThemeForge.slnx --configuration Release --no-build --verbosity normal`
+```pwsh
+dotnet restore ThemeForge.slnx
+dotnet build ThemeForge.slnx --configuration Release --no-restore
+dotnet test ThemeForge.slnx -m:1 --configuration Release --no-build --verbosity normal
+```
 
-Le hook appelle ensuite `tools/ci-xaml-headers.ps1` pour vérifier
-l'attribution des palettes dans les variants XAML.
+The hook also calls `tools/ci-xaml-headers.ps1` to check palette attribution in XAML variants.
 
-## Bypass d'urgence
-
-Un push peut contourner le hook avec :
+## Emergency bypass
 
 ```pwsh
 git push --no-verify
 ```
 
-Ce bypass doit rester exceptionnel. Relance le script manuellement ensuite pour
-ne pas laisser GitHub Actions découvrir seul une régression locale.
+Use this only exceptionally. Run the scripts manually afterwards so GitHub Actions is not the first place a local regression is detected.
 
-## Limite connue
+## Maintenance
 
-Les scripts de hook dupliquent encore une partie des checks PowerShell inline du
-workflow GitHub Actions. Si les gates évoluent, il faut maintenir
-`.github/workflows/build.yml`, `tools/ci-explicit-types.ps1` et
-`tools/ci-xaml-headers.ps1` ensemble. Une future refactorisation pourra extraire
-les checks dans des scripts partagés sous `tools/checks/`.
+Pull requests, main and tagged builds call `tools/ci-verify.ps1`, which reuses the hook scripts and adds package validation, an isolated generated application, a Studio document round trip and performance budgets. The local hook runs the source, build, test and attribution subset. See [quality checks](quality.md) to run the full pipeline locally.
+
+## Publication gates
+
+The same source, build and test gates run on the tagged source before packaging. Source
+files (`.cs` and `.xaml`, excluding build output) must stay within 200 lines. Tests run
+with `-m:1` to keep the WPF test assemblies sequential.
+
+After packing the solution and template, `tools/ci-packages.ps1 -PackageDirectory artifacts/packages`
+checks the exact NOTICE, LICENSE and `licenses/Dracula-MIT.txt` bytes in every package.
+The publication workflow uses `tools/push-packages.ps1` to stop on the first failed package.

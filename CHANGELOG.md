@@ -1,9 +1,45 @@
 # Changelog
 
+English | [Français](CHANGELOG.fr.md)
+
 All notable changes to ThemeForge are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [2.2.0] - 2026-09-07
+
+### Added
+
+- Validated, versioned external JSON palettes integrated with bootstrap and preferences.
+- Studio open/save/export, editing history, draft protection, comparison, immediate
+  validation, contrast diagnostics and asynchronous daily logging.
+- Shared PR/main/tag gates, Studio round trip and isolated package consumer with
+  persisted preference restoration after restart.
+- Visual/accessibility matrix and performance workloads with configurable budgets.
+
+
+### Fixed
+
+- Reject non-finite numeric input and clamp stepping overflow before updating the value.
+- Validate accent preferences and prepare palette changes before mutating active state.
+- Clear Studio palette overrides when changing themes; reset restores the active palette.
+- Save Windows-follow intent even when the resolved theme stays unchanged, and disable
+  an existing accent follower when `FollowAccent` is false.
+- Maintain accessible button text contrast through accent states, expose a named,
+  keyboard-accessible toast close button, and restore DataGrid column resizing.
+- Respect Windows animation preferences and inherited `Motion.ReduceMotion` overrides.
+- Gate tagged publication on source checks, build, tests and packaged attribution;
+  stop package upload on the first native failure. Include NOTICE and license texts.
+- Split oversized C# files and enforce the 200-line source limit in CI.
+
+## [2.1.0] - 2026-06-20
+
+### Added
+
+- Magellan brand-derived dark theme, with attribution and trademark limits in NOTICE.
 
 ## [2.0.0] - 2026-06-14
 
